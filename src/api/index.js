@@ -40,3 +40,6 @@ export const addBlog=(data)=>ajax('/api/addBlog',data,"POST");
 
 //11.获取我的所有日志 含有分类 日志名称
 export const getAllClassBlog=(data)=>ajax('/api/getAllClassBlog',data);
+
+//12.通过blogid+-删除指定得日志
+export const deleteBlog=(blogid)=>ajax('/api/deleteBlog',blogid,"POST");

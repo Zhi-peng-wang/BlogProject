@@ -21,7 +21,14 @@
               </el-select>
             </el-form-item>
             <el-form-item label="日志内容">
-              <el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="blog_content">
+              <!--<el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="blog_content">-->
+              <quill-editor
+                v-model="content"
+                ref="myQuillEditor"
+                :options="editorOption"
+                @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
+                @change="onEditorChange($event)">
+              </quill-editor>
               </el-input>
             </el-form-item>
             <el-form-item>
@@ -29,9 +36,7 @@
               <el-button @click="reset_blog">重置</el-button>
             </el-form-item>
           </el-form>
-
         </div>
-
       </div>
     </div>
   </div>
@@ -39,13 +44,15 @@
 
 <script>
   import {addBlog, getMyBlogTwoClass} from "../../../api";
+  import { quillEditor } from 'vue-quill-editor'
   export default {
     data(){
       return{
         blog_title: '',
-        blog_content: '',
         options:[],
-        value: ''
+        value: '',
+        content:"",
+        editorOption:{}
       }
     },
     created() {
@@ -66,16 +73,22 @@
         })
     },
     methods:{
+      onEditorBlur(){//失去焦点事件
+      },
+      onEditorFocus(){//获得焦点事件
+      },
+      onEditorChange(){//内容改变事件
+      },
       send_blog(){
         console.log("提交按钮已触发");
-        let data={userid:this.$route.params.id,classid:this.value,title:this.blog_title,content:this.blog_content}
+        let data={userid:this.$route.params.id,classid:this.value,title:this.blog_title,content:this.content}
         addBlog(data)
           .then(res=>{
             console.log("提交成功");
             console.log(res);
             this.value="";
             this.blog_title="";
-            this.blog_content=""
+            this.content=""
           })
           .catch(error=>{
             console.log("提交失败");
@@ -84,7 +97,7 @@
       reset_blog(){
         this.value="";
         this.blog_title="";
-        this.blog_content=""
+        this.content=""
       }
     }
   }

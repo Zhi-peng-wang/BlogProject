@@ -2,7 +2,9 @@
   <div>
     <div class="jumbotron">
       <h2>{{this.blog_title.title}}内容:</h2><br>
-      <p>{{this.blog_title.content}}</p><br>
+        <div v-html="this.blog_title.content">
+          {{this.blog_title.content}}
+        </div>
       <hr>
     </div>
   </div>
