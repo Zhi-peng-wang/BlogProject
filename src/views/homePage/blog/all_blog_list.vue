@@ -60,7 +60,7 @@
     methods: {
       deleteBlog(blogId){
         console.log("删除按钮已经点击"+blogId);
-        deleteBlog({"blogid":blogId})
+        deleteBlog({blogid:blogId})
           .then(res=>{
             console.log(res);
           })
@@ -103,7 +103,6 @@
           })
       }
     },
-
   }
 </script>
 

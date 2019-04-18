@@ -43,3 +43,6 @@ export const getAllClassBlog=(data)=>ajax('/api/getAllClassBlog',data);
 
 //12.通过blogid+-删除指定得日志
 export const deleteBlog=(blogid)=>ajax('/api/deleteBlog',blogid,"POST");
+
+//13.通过blogid批量删除日志
+export const deleteAllBlog = (blogArray) => ajax('/api/deleteAllBlog',blogArray,"POST");

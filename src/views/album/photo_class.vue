@@ -25,7 +25,6 @@
 
 <script>
   import {getPhotoClass,getClassPhoto} from "../../api";
-  import event from "../../event.js"
   export default {
     data() {
       return {
@@ -55,8 +54,13 @@
       send_classid(classid){
         console.log("事件被触发classid："+classid);
         // let class_id=this.$route.params.classid;
-        // this.$router.push(`/${$route.params.id}/album/photo_list/${classid}`);
-        event.$emit("photo_list",classid)
+        this.$router.push(
+          {
+            path:`/${this.$route.params.id}`+"/album/photo_list",
+            query:{
+              photoid:classid
+            }
+          });
       }
     }
   };
