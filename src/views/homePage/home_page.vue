@@ -13,7 +13,7 @@
           </el-menu-item>
           <el-menu-item index="1" style="margin-left:30%">主页</el-menu-item>
           <el-menu-item index="2">
-            <router-link :to="`/${$route.params.id}`+'/album'">相册</router-link>
+            <router-link :to="`/${$route.params.id}`+'/album/photo_class'">相册</router-link>
           </el-menu-item>
           <el-menu-item index="3">
             <router-link :to="`/${$route.params.id}`+'/blog'">日志</router-link>

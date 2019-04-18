@@ -5,7 +5,8 @@
         <div class="row">
           <ul class="col-md-3" v-for="(t,index) in album" :key="index">
             <li>
-              <router-link :to="`/${$route.params.id}`+'/album/photo_list'"  @click.native="send_classid(t.classid)">
+              <router-link :to="`/${$route.params.id}`+'/album/photo_list'"
+                           @click.native="send_classid(t.classid)">
                 <div class="fj_img">
                   <div>
                     <img :src="t.url">
@@ -24,7 +25,7 @@
 </template>
 
 <script>
-  import {getPhotoClass,getClassPhoto} from "../../api";
+  import {getPhotoClass} from "../../api";
   export default {
     data() {
       return {
@@ -53,7 +54,6 @@
     methods:{
       send_classid(classid){
         console.log("事件被触发classid："+classid);
-        // let class_id=this.$route.params.classid;
         this.$router.push(
           {
             path:`/${this.$route.params.id}`+"/album/photo_list",

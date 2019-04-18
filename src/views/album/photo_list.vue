@@ -28,11 +28,19 @@
     data(){
       return{
         photo_classid:"",
-        photo_list:[]
+        photo_list:[],
+        photoID:0
       }
     },
+    created(){
+      console.log(this.$route.query.photoid);
+    },
     mounted() {
-      getClassPhoto({classid:this.photo_classid})
+      // this.getPhotoList()
+      this.photoID=this.$route.query.photoid;
+      console.log(this.photoID);
+      console.log(this.$route.query.photoid);
+      getClassPhoto({classid:16})
         .then(res=>{
           console.log("请求相册数据成功");
           console.log(res);
@@ -40,7 +48,19 @@
         }).catch(error=>{
         console.log("请求相册数据失败");
       })
-    }
+    },
+    // methods:{
+    //   getPhotoList(){
+    //     getClassPhoto({classid:this.photoID})
+    //       .then(res=>{
+    //         console.log("请求相册数据成功");
+    //         console.log(res);
+    //         this.photo_list=res.object;
+    //       }).catch(error=>{
+    //       console.log("请求相册数据失败");
+    //     })
+    //   },
+    // },
   }
 </script>
 
@@ -55,6 +75,9 @@
   .fj_img{
     width: 230px;
     height: 197px;
+  }
+  .fj_img img{
+    margin: 0px 30px;
   }
   .fj_title h4 {
     text-align: center;
