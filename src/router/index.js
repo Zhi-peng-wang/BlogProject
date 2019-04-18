@@ -79,10 +79,6 @@ export default new VueRouter({
       component:album,
       children:
         [
-          // {
-          //   path:'',
-          //   component:photo_class
-          // },
           {
             path:'photo_class',
             component:photo_class

@@ -32,15 +32,9 @@
         photoID:0
       }
     },
-    created(){
-      console.log(this.$route.query.photoid);
-    },
     mounted() {
-      // this.getPhotoList()
       this.photoID=this.$route.query.photoid;
-      console.log(this.photoID);
-      console.log(this.$route.query.photoid);
-      getClassPhoto({classid:16})
+      getClassPhoto({classid:this.photoID})
         .then(res=>{
           console.log("请求相册数据成功");
           console.log(res);
@@ -49,18 +43,6 @@
         console.log("请求相册数据失败");
       })
     },
-    // methods:{
-    //   getPhotoList(){
-    //     getClassPhoto({classid:this.photoID})
-    //       .then(res=>{
-    //         console.log("请求相册数据成功");
-    //         console.log(res);
-    //         this.photo_list=res.object;
-    //       }).catch(error=>{
-    //       console.log("请求相册数据失败");
-    //     })
-    //   },
-    // },
   }
 </script>
 

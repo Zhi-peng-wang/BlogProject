@@ -5,8 +5,7 @@
         <div class="row">
           <ul class="col-md-3" v-for="(t,index) in album" :key="index">
             <li>
-              <router-link :to="`/${$route.params.id}`+'/album/photo_list'"
-                           @click.native="send_classid(t.classid)">
+              <router-link :to="{path:`/${$route.params.id}`+'/album/photo_list',query:{photoid:t.classid}}">
                 <div class="fj_img">
                   <div>
                     <img :src="t.url">
@@ -51,18 +50,6 @@
         console.log("请求photo相册数据失败");
       })
     },
-    methods:{
-      send_classid(classid){
-        console.log("事件被触发classid："+classid);
-        this.$router.push(
-          {
-            path:`/${this.$route.params.id}`+"/album/photo_list",
-            query:{
-              photoid:classid
-            }
-          });
-      }
-    }
   };
 </script>
 

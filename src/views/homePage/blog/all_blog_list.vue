@@ -7,18 +7,21 @@
       <div class="panel-body">
         <div style="margin-left: 30px">
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+            <el-button type="danger" plain style="margin-left: 450px">批量删除</el-button>
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
             <el-checkbox v-for="(t,index) in blog_check" :label="t" :key="index" class="blog_label">
               <div>
                 <div style="width: 100px;display: inline-block">{{t.classname}}</div>
-                <div style="width: 100px;display: inline-block">{{t.title}}</div>
+                <div style="width: 100px;display: inline-block">{{t.title.slice(0,20)+"..."}}</div>
                 <div style="margin-left:150px;display: inline-block;">{{t.blogdate.slice(0,10)}}</div>
                 <div  style="margin-left:40px;display: inline-block;">
                   <el-button type="danger" plain @click="deleteBlog(t.blogid)">删除</el-button>
                 </div>
                 <div  style="margin-left:30px;display: inline-block;">
-                  <el-button type="primary" plain>编辑</el-button>
+                  <router-link :to="{path:`/${$route.params.id}`+'/home_page/add_blog',query:{blogid:t.blogid}}">
+                    <el-button type="primary" plain >编辑</el-button>
+                  </router-link>
                 </div>
               </div>
             </el-checkbox>
@@ -39,7 +42,7 @@
 </template>
 
 <script>
-  import {deleteBlog, getAllClassBlog} from "../../../api";
+  import {deleteBlog, editBlog, getAllClassBlog} from "../../../api";
   export default {
     data(){
       return{
@@ -58,8 +61,9 @@
       this.getBlogList()
     },
     methods: {
-      deleteBlog(blogId){
-        console.log("删除按钮已经点击"+blogId);
+      deleteBlog(blogid){
+        console.log("删除按钮已经点击"+blogid);
+        let blogId=blogid*1;
         deleteBlog({blogid:blogId})
           .then(res=>{
             console.log(res);
@@ -68,6 +72,17 @@
             console.log(error);
           })
       },
+      // editorBlog(blogid){
+      //   console.log("编辑按钮已触发:"+blogid);
+      //   let blogId=blogid*1;
+      //   editBlog({blogid:blogId})
+      //     .then(res=>{
+      //       console.log(res);
+      //     })
+      //     .catch(error=>{
+      //       console.log(error);
+      //     })
+      // },
       handleCurrentChange(val) {
         console.log(`当前页: ${val-1}`);
         this.page_number=`${val-1}`;

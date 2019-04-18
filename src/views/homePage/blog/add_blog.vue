@@ -2,7 +2,7 @@
   <div>
     <div class="panel panel-info">
       <div class="panel-heading">
-        添加日志
+        EditorBlog
       </div>
       <div class="panel-body">
         <div :span="24">
@@ -11,7 +11,7 @@
               <el-input v-model="blog_title"></el-input>
             </el-form-item>
             <el-form-item label="日志类型">
-              <el-select v-model="value" placeholder="请选择">
+              <el-select v-model="value">
                 <el-option  clearable
                             v-for="item in options"
                             :key="item.classid"
@@ -43,19 +43,21 @@
 </template>
 
 <script>
-  import {addBlog, getMyBlogTwoClass} from "../../../api";
+  import {addBlog, editBlog, getMyBlogTwoClass} from "../../../api";
   import { quillEditor } from 'vue-quill-editor'
   export default {
     data(){
       return{
         blog_title: '',
         options:[],
+        select_option:[],
         value: '',
         content:"",
         editorOption:{}
       }
     },
     created() {
+      //为了得到日志分类的相关内容
       const id = this.$route.params.id;
       getMyBlogTwoClass({userid:id,typeid:1,depth:2})
         .then(res=>{
@@ -70,6 +72,23 @@
         })
         .catch(error=>{
           console.log("请求数据失败");
+        });
+      //编辑日志
+      editBlog({blogid:this.$route.query.blogid})
+        .then(res=>{
+          console.log(res);
+          this.blog_title=res.object.title;
+          this.content=res.object.content;
+          let id=res.object.classid;
+          console.log(id);
+          console.log(this.options);
+          const result=this.options;
+          const blogClass=result.find(item=>item.classid===id);
+          console.log(blogClass);
+          // this.select_option=[{classid:blogClass.classid,classname:blogClass.classname}]
+        })
+        .catch(error=>{
+          console.log(error);
         })
     },
     methods:{
@@ -81,7 +100,7 @@
       },
       send_blog(){
         console.log("提交按钮已触发");
-        let data={userid:this.$route.params.id,classid:this.value,title:this.blog_title,content:this.content}
+        let data={blogid:this.$route.query.blogid,userid:this.$route.params.id,classid:this.value,title:this.blog_title,content:this.content}
         addBlog(data)
           .then(res=>{
             console.log("提交成功");
