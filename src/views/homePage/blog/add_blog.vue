@@ -53,7 +53,8 @@
         select_option:[],
         value: '',
         content:"",
-        editorOption:{}
+        editorOption:{},
+        // editActive: 0, //当前选中项
       }
     },
     created() {
@@ -79,13 +80,13 @@
           console.log(res);
           this.blog_title=res.object.title;
           this.content=res.object.content;
-          let id=res.object.classid;
-          console.log(id);
+          //如果option中存在value属性，优先获取value值即coupon.id，如果不存在，则获取option的文本内容
           console.log(this.options);
-          const result=this.options;
-          const blogClass=result.find(item=>item.classid===id);
-          console.log(blogClass);
-          // this.select_option=[{classid:blogClass.classid,classname:blogClass.classname}]
+          // sel.options[sel.selectedIndex].value;
+          console.log(id);
+          this.value = this.options[0].classid;
+          // this.value = this.options[this.selectedIndex].classid;
+          console.log(this.value);
         })
         .catch(error=>{
           console.log(error);
