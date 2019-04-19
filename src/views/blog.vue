@@ -1,18 +1,5 @@
 <template>
   <div>
-    <div class="logo">
-      <img src="holder.js/100px60">
-      <br>
-    </div>
-    <!--轮播图-->
-    <div class="branner">
-      <el-carousel :interval="2000" type="card" height="400px">
-        <el-carousel-item v-for="item in imgs" :key="item.id">
-          <img :src="item.idView" class="image" width="100%" height="100%">
-        </el-carousel-item>
-      </el-carousel>
-      <br>
-    </div>
     <div class="container">
       <!--导航-->
       <div class="nav_bar" style="width:90%;margin:0 auto">
@@ -100,12 +87,6 @@
   export default {
     data() {
       return {
-        imgs: [
-          {id: 0, idView: require("../assets/4.jpg")},
-          {id: 1, idView: require("../assets/2.jpg")},
-          {id: 2, idView: require("../assets/3.jpg")},
-          {id: 3, idView: require("../assets/1.jpg")}
-        ],
         activeIndex: '3',
         blog_url_1: [],
         blog_url_2: [],

@@ -1,6 +1,9 @@
 <template>
   <div>
-    <h1>photo_content</h1>
+    <div class="container">
+      <h1>相册得评论</h1>
+    </div>
+
   </div>
 </template>
 

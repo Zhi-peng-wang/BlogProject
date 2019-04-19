@@ -7,22 +7,23 @@
       <div class="panel-body">
         <div style="margin-left: 30px">
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-            <el-button type="danger" plain style="margin-left: 450px" @click="[deleteAllBlog(),open()]">
+            <el-button type="danger"  style="margin-left: 450px"
+                       @click="[open_all()]">
               批量删除
             </el-button>
           <div style="margin: 15px 0;"></div>
-          <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+          <el-checkbox-group v-model="checkedBlogs" @change="handlecheckedBlogsChange">
             <el-checkbox v-for="(t,index) in blog_check" :label="t" :key="index" class="blog_label">
               <div>
                 <div style="width: 100px;display: inline-block">{{t.classname}}</div>
                 <div style="width: 100px;display: inline-block">{{t.title.slice(0,20)+"..."}}</div>
                 <div style="margin-left:150px;display: inline-block;">{{t.blogdate.slice(0,10)}}</div>
                 <div  style="margin-left:40px;display: inline-block;">
-                  <el-button type="danger" plain @click="[open([t.blogid,t])]">删除</el-button>
+                  <el-button type="danger"  @click="[open([t.blogid,t])]">删除</el-button>
                 </div>
                 <div  style="margin-left:30px;display: inline-block;">
                   <router-link :to="{path:`/${$route.params.id}`+'/home_page/add_blog',query:{blogid:t.blogid}}">
-                    <el-button type="primary" plain >编辑</el-button>
+                    <el-button type="primary"  >编辑</el-button>
                   </router-link>
                 </div>
               </div>
@@ -30,6 +31,7 @@
           </el-checkbox-group>
         </div>
       </div>
+      <!--分页-->
       <div class="block" style="margin-left: 230px;">
         <el-pagination
           @current-change="handleCurrentChange"
@@ -44,25 +46,73 @@
 </template>
 
 <script>
-  import {deleteBlog, editBlog, getAllClassBlog} from "../../../api";
+  import {deleteAllBlog, deleteBlog, editBlog, getAllClassBlog} from "../../../api";
   export default {
+    inject: ['reload'],
     data(){
       return{
         blog_list:[],
         checkAll: false,
-        checkedCities: [],
+        checkedBlogs: [],
         blog_check: [],
         isIndeterminate: true,
         currentPage: 1,
         total:0,
         page_size:0,
-        page_number:0,
+        page_number:0
       }
     },
     mounted(){
       this.getBlogList()
     },
     methods: {
+      //批量删除
+      open_all() {
+        this.$confirm('此操作将永久这些日志, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then((action) => {
+          if (action === 'confirm') {     //确认的回调
+            this.deleteAllBlogAction();
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          }
+        }).catch((err) => {
+          if (err === 'cancel') {     //取消的回调
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          }
+        });
+      },
+      //批量删除
+      deleteAllBlogAction(){
+        console.log("批量删除按钮已触发");
+        console.log(this.checkedBlogs);
+        const result =this.checkedBlogs.map(item=>({
+          blogid:item.blogid
+        }));
+        console.log(result);
+        deleteAllBlog(result)
+          .then(res=>{
+            console.log(res);
+            let res_status =res.status;
+            if(res_status===200){
+              //通过声明reload方法，控制router-view的显示或隐藏，从而控制页面的再次加载
+              this.reload()
+            }else {
+              console.log("删除失败");
+            }
+          })
+          .catch(err=>{
+            console.log(err);
+          })
+      },
+      //判断单个确认选中和取消选中，等情况
       open([blogid,t]) {
         this.$confirm('此操作将永久删除该日志, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -85,9 +135,7 @@
           }
         });
       },
-      deleteAllBlog(){
-        console.log("批量删除按钮已触发");
-      },
+      //删除单个博客
       deleteBlog([blogid,t]){
         console.log("删除按钮已经点击"+blogid);
         let blogId=blogid*1;
@@ -99,7 +147,8 @@
               // console.log("此处应该跟新一下数据");
               // console.log(t);
               let index=this.blog_check.indexOf(t);
-              // console.log(index);
+              console.log(t);
+              // consomle.log(index);
               this.blog_check.splice(index,1)
             }else {
               console.log("删除失败");
@@ -109,6 +158,7 @@
             console.log(error);
           })
       },
+      //分页得相关操作
       handleCurrentChange(val) {
         console.log(`当前页: ${val-1}`);
         this.page_number=`${val-1}`;
@@ -116,14 +166,15 @@
         this.getBlogList()
       },
       handleCheckAllChange(val) {
-        this.checkedCities = val ? this.blog_check : [];
+        this.checkedBlogs = val ? this.blog_check : [];
         this.isIndeterminate = false;
       },
-      handleCheckedCitiesChange(value) {
+      handlecheckedBlogsChange(value) {
         let checkedCount = value.length;
         this.checkAll = checkedCount === this.blog_check.length;
         this.isIndeterminate = checkedCount > 0 && checkedCount < this.blog_check.length;
       },
+      //得到所有得日志列表
       getBlogList(){
         getAllClassBlog({"userid":this.$route.params.id,"pagenum":this.page_number})
           .then(res=>{

@@ -48,7 +48,7 @@
   export default {
     data(){
       return{
-        blog_title: '',
+        blog_title:"",
         options:[],
         select_option:[],
         value: '',
