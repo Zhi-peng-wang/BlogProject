@@ -6,7 +6,6 @@
       <div class="head">
         <img height="80px" src="../assets/h.png" width="80px">
       </div>
-
       <div class="content">
         <!--      <label>用户名:</label>-->
         <!--<input type="text" v-model="username" placeholder="请输入用户名">-->
@@ -17,7 +16,6 @@
         <el-input placeholder="请输入密码" v-model="password" show-password></el-input><br>
 
         <button @click="dologin" type="submit">登录</button><br>
-
         <router-link to="/register">注册账号</router-link>
 
       </div>

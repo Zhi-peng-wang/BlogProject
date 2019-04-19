@@ -7,7 +7,9 @@
       <div class="panel-body">
         <div style="margin-left: 30px">
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-            <el-button type="danger" plain style="margin-left: 450px">批量删除</el-button>
+            <el-button type="danger" plain style="margin-left: 450px" @click="[deleteAllBlog(),open()]">
+              批量删除
+            </el-button>
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
             <el-checkbox v-for="(t,index) in blog_check" :label="t" :key="index" class="blog_label">
@@ -16,7 +18,7 @@
                 <div style="width: 100px;display: inline-block">{{t.title.slice(0,20)+"..."}}</div>
                 <div style="margin-left:150px;display: inline-block;">{{t.blogdate.slice(0,10)}}</div>
                 <div  style="margin-left:40px;display: inline-block;">
-                  <el-button type="danger" plain @click="deleteBlog(t.blogid)">删除</el-button>
+                  <el-button type="danger" plain @click="[open([t.blogid,t])]">删除</el-button>
                 </div>
                 <div  style="margin-left:30px;display: inline-block;">
                   <router-link :to="{path:`/${$route.params.id}`+'/home_page/add_blog',query:{blogid:t.blogid}}">
@@ -61,28 +63,52 @@
       this.getBlogList()
     },
     methods: {
-      deleteBlog(blogid){
+      open([blogid,t]) {
+        this.$confirm('此操作将永久删除该日志, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then((action) => {
+          if (action === 'confirm') {     //确认的回调
+            this.deleteBlog([blogid,t]);
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          }
+        }).catch((err) => {
+          if (err === 'cancel') {     //取消的回调
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            });
+          }
+        });
+      },
+      deleteAllBlog(){
+        console.log("批量删除按钮已触发");
+      },
+      deleteBlog([blogid,t]){
         console.log("删除按钮已经点击"+blogid);
         let blogId=blogid*1;
         deleteBlog({blogid:blogId})
           .then(res=>{
             console.log(res);
+            const result =res.status;
+            if(result===200){
+              // console.log("此处应该跟新一下数据");
+              // console.log(t);
+              let index=this.blog_check.indexOf(t);
+              // console.log(index);
+              this.blog_check.splice(index,1)
+            }else {
+              console.log("删除失败");
+            }
           })
           .catch(error=>{
             console.log(error);
           })
       },
-      // editorBlog(blogid){
-      //   console.log("编辑按钮已触发:"+blogid);
-      //   let blogId=blogid*1;
-      //   editBlog({blogid:blogId})
-      //     .then(res=>{
-      //       console.log(res);
-      //     })
-      //     .catch(error=>{
-      //       console.log(error);
-      //     })
-      // },
       handleCurrentChange(val) {
         console.log(`当前页: ${val-1}`);
         this.page_number=`${val-1}`;

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>主页页面:{{this.$route.params.id}}</h1>
     <div class="container">
       <!--导航-->
       <div class="nav_bar" style="width:90%;margin:0 auto">
