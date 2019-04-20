@@ -12,7 +12,7 @@
             </el-form-item>
             <el-form-item label="日志类型">
               <el-select v-model="value">
-                <el-option  clearable
+                <el-option
                             v-for="item in options"
                             :key="item.classid"
                             :label="item.classname"
@@ -53,8 +53,7 @@
         select_option:[],
         value: '',
         content:"",
-        editorOption:{},
-        // editActive: 0, //当前选中项
+        editorOption:{}
       }
     },
     created() {
@@ -80,12 +79,11 @@
           console.log(res);
           this.blog_title=res.object.title;
           this.content=res.object.content;
-          //如果option中存在value属性，优先获取value值即coupon.id，如果不存在，则获取option的文本内容
+          let idx=res.object.classid;
+          //如果option中存在value属性，优先获取value值的id，如果不存在，则获取option的文本内容
           console.log(this.options);
-          // sel.options[sel.selectedIndex].value;
-          console.log(id);
-          this.value = this.options[0].classid;
-          // this.value = this.options[this.selectedIndex].classid;
+          // this.value = this.options[0].classid;
+          this.value = idx;
           console.log(this.value);
         })
         .catch(error=>{
@@ -105,10 +103,22 @@
         addBlog(data)
           .then(res=>{
             console.log("提交成功");
+            if(res.status===200){
+                this.$notify({
+                  title: '成功',
+                  message: '这是一条成功的提示消息',
+                  type: 'success'
+                });
+                this.value="";
+                this.blog_title="";
+                this.content=""
+            }else {
+              this.$notify.error({
+                title: '错误',
+                message: '所填写内容不能为空！'
+              });
+            }
             console.log(res);
-            this.value="";
-            this.blog_title="";
-            this.content=""
           })
           .catch(error=>{
             console.log("提交失败");

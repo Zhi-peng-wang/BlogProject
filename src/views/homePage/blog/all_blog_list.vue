@@ -71,7 +71,8 @@
         this.$confirm('此操作将永久这些日志, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
+          center: true
         }).then((action) => {
           if (action === 'confirm') {     //确认的回调
             this.deleteAllBlogAction();
@@ -117,7 +118,8 @@
         this.$confirm('此操作将永久删除该日志, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
+          center: true
         }).then((action) => {
           if (action === 'confirm') {     //确认的回调
             this.deleteBlog([blogid,t]);
@@ -149,7 +151,9 @@
               let index=this.blog_check.indexOf(t);
               console.log(t);
               // consomle.log(index);
-              this.blog_check.splice(index,1)
+              this.blog_check.splice(index,1);
+              //通过声明reload方法，控制router-view的显示或隐藏，从而控制页面的再次加载
+              this.reload()
             }else {
               console.log("删除失败");
             }
