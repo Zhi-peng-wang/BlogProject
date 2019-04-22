@@ -2,7 +2,7 @@
   <div>
     <div class="panel panel-info">
       <div class="panel-heading">
-        EditorBlog
+        添加日志
       </div>
       <div class="panel-body">
         <div :span="24">
@@ -10,17 +10,6 @@
             <el-form-item label="日志标题">
               <el-input v-model="blog_title"></el-input>
             </el-form-item>
-
-            <!--<el-form-item label="日志类型">-->
-              <!--<el-select v-model="value">-->
-                <!--<el-option-->
-                            <!--v-for="item in options"-->
-                            <!--:key="item.classid"-->
-                            <!--:label="item.classname"-->
-                            <!--:value="item.classid">-->
-                <!--</el-option>-->
-              <!--</el-select>-->
-            <!--</el-form-item>-->
 
             <el-form-item label="日志类型">
               <el-select v-model="dataClass.classA" placeholder="请选择一级分类">
@@ -40,7 +29,6 @@
             </el-form-item>
 
             <el-form-item label="日志内容">
-              <!--<el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="blog_content">-->
               <quill-editor
                 v-model="content"
                 ref="myQuillEditor"
@@ -48,7 +36,6 @@
                 @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
                 @change="onEditorChange($event)">
               </quill-editor>
-              </el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="send_blog">提交</el-button>
@@ -62,7 +49,7 @@
 </template>
 
 <script>
-  import {addBlog, editBlog, getClass, getMyBlogTwoClass} from "../../../api";
+  import {addBlog,getClass} from "../../../api";
   import { quillEditor } from 'vue-quill-editor'
   export default {
     data(){
@@ -83,22 +70,6 @@
       }
     },
     created() {
-      //为了得到日志分类的相关内容
-      // const id = this.$route.params.id;
-      // getMyBlogTwoClass({userid:id,typeid:1,depth:2})
-      //   .then(res=>{
-      //     console.log("请求数据成功");
-      //     console.log(res.object);
-      //     const option=res.object.map(item=>({
-      //       classid:item.classid,
-      //       classname:item.classname
-      //     }));
-      //     this.options=option;
-      //     console.log(this.options);
-      //   })
-      //   .catch(error=>{
-      //     console.log("请求数据失败");
-      //   });
       //拿到分类
       getClass({userid:this.$route.params.id,typeid:1})
         .then(res=>{
@@ -122,22 +93,6 @@
         .catch(err=>{
           console.log(err);
         });
-      //编辑日志
-      editBlog({blogid:this.$route.query.blogid})
-        .then(res=>{
-          console.log(res);
-          this.blog_title=res.object.title;
-          this.content=res.object.content;
-          let idx=res.object.classid;
-          //如果option中存在value属性，优先获取value值的id，如果不存在，则获取option的文本内容
-          console.log(this.dataClass.classB);
-          // this.value = this.options[0].classid;
-          this.dataClass.classB = idx;
-          console.log(this.dataClass.classB);
-        })
-        .catch(error=>{
-          console.log(error);
-        })
     },
     methods:{
       sendClassId(classid){

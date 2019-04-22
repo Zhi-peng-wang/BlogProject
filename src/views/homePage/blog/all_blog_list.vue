@@ -22,8 +22,8 @@
                   <el-button type="danger"  @click="[open([t.blogid,t])]">删除</el-button>
                 </div>
                 <div  style="margin-left:30px;display: inline-block;">
-                  <router-link :to="{path:`/${$route.params.id}`+'/home_page/add_blog',query:{blogid:t.blogid}}">
-                    <el-button type="primary"  >编辑</el-button>
+                  <router-link :to="{path:`/${$route.params.id}`+'/home_page/edit_blog',query:{blogid:t.blogid}}">
+                    <el-button type="primary">编辑</el-button>
                   </router-link>
                 </div>
               </div>
