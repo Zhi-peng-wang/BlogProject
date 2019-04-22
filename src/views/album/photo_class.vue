@@ -5,14 +5,17 @@
         <div class="row">
           <ul class="col-md-3" v-for="(t,index) in album" :key="index">
             <li>
-              <router-link :to="{path:`/${$route.params.id}`+'/album/photo_list',query:{photoid:t.classid}}">
+              <router-link :to="{path:`/${$route.params.id}`+'/album/photo_list',query:{classid:t.classid}}">
                 <div class="fj_img">
                   <div>
                     <img :src="t.url">
                   </div>
                 </div>
                 <div class="fj_title">
-                  <h4>{{t.classname}}</h4>
+                  <h4>{{t.classname}}
+                    (<el-badge :value="t.num" class="item" type="primary" style="margin-top: 8px">
+                    </el-badge>张)
+                  </h4>
                 </div>
               </router-link>
             </li>
@@ -42,7 +45,8 @@
           const albums = result.map(item => ({
             classid:item.classid,
             classname:item.classname,
-            url:item.url
+            url:item.url,
+            num:item.num
           }));
           this.album = albums;
           console.log(this.album);

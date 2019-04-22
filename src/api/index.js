@@ -49,3 +49,6 @@ export const deleteAllBlog = (blogArray) => ajax('/api/deleteAllBlog',blogArray,
 
 //14.通过blogid编辑相关日志
 export const editBlog = (blogid) => ajax('/api/editBlog',blogid,"POST");
+
+//15.获取相册内容和评论
+export const getPhoto = (data)=>ajax('/api/getPhoto'.data,"POST");

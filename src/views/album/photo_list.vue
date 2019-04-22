@@ -1,11 +1,10 @@
 <template>
   <div class="container">
-    <h1>photo_list页面{{this.$route.query.photoid}}</h1>
     <div class="row">
       <!-- 此处判断语句最好使用v-show 因为v-if在编辑器内报错 但是不影响结果 -->
       <ul class="col-md-4" v-for="(p,index) in photo_list" :key="index">
         <li>
-          <router-link :to="`/${$route.params.id}`+'/album/photo_content'">
+          <router-link :to="{path:`/${$route.params.id}`+'/album/photo_content',query:{photoid:p.photoid}}">
             <div class="fj_img">
               <img :src="p.thumbnail">
             </div>
@@ -29,12 +28,12 @@
       return{
         photo_classid:"",
         photo_list:[],
-        photoID:0
+        classId:0
       }
     },
     mounted() {
-      this.photoID=this.$route.query.photoid;
-      getClassPhoto({classid:this.photoID})
+      this.classId=this.$route.query.classid;
+      getClassPhoto({classid:this.classId})
         .then(res=>{
           console.log("请求相册数据成功");
           console.log(res);

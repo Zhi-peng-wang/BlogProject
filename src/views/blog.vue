@@ -29,7 +29,7 @@
     </div>
 
 
-    <div class="container">
+    <div class="container" v-loading="loading">
       <div class="row">
         <!-- 目录 -->
         <div class="col-md-4 col-xs-4" style="height: 600px;">
@@ -37,13 +37,15 @@
             <el-menu active-text-color="#ffd04b" class="el-menu-vertical-demo">
               <el-submenu v-for="(t1,index) in blog_url_1" :index="t1.url">
                 <template slot="title">
-                  {{t1.classname}}
+                  <i class="iconfont icon-VIP" style="font-size: 30px;color: gold"></i>
+                  <span>{{t1.classname}}</span>
                 </template>
                 <el-menu-item-group v-for="(t2,index) in blog_url_2" v-if="t1.classid==t2.parentid">
                   <el-menu-item :key="index">
                     <router-link :to="`/${$route.params.id}`+'/blog/blog_list'"
                                  @click.native="send_id(t2.classid)">
-                      {{t2.classname}}
+                      <i class="iconfont icon-fuwurizhi" style="font-size: 15px;color: #d4d4d4"></i>
+                      <span>{{t2.classname}}</span>
                       <el-badge :value="t2.num" class="item" type="primary" style="float: right;margin-top: 5px">
                       </el-badge>
                     </router-link>
@@ -98,10 +100,12 @@
         total:0,
         page_size:0,
         page_number:0,
-        fenye_show:true
+        fenye_show:true,
+        loading: false
       };
     },
     mounted() {
+      this.loading=true;
       let id = this.$route.params.id;
       getClass({userid: id,typeid:1})
       //得到分类名称
@@ -118,7 +122,8 @@
             if (item.depth == 2) {
               return this.blog_url_2.push(item)
             }
-          })
+          });
+          this.loading=false
         });
       this.send_id(this.blog_classid)
     },
@@ -142,6 +147,7 @@
       O_getClassBlog(){
         getClassBlog({classid:this.blog_classid,pagenum:this.page_number})
           .then(res=>{
+            this.loading=false;
             console.log(res);
             console.log("-------------------------");
             //此处的res已经拿到了res.data数据,在封装的方法中已经完成

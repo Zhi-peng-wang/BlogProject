@@ -10,16 +10,35 @@
             <el-form-item label="日志标题">
               <el-input v-model="blog_title"></el-input>
             </el-form-item>
+
+            <!--<el-form-item label="日志类型">-->
+              <!--<el-select v-model="value">-->
+                <!--<el-option-->
+                            <!--v-for="item in options"-->
+                            <!--:key="item.classid"-->
+                            <!--:label="item.classname"-->
+                            <!--:value="item.classid">-->
+                <!--</el-option>-->
+              <!--</el-select>-->
+            <!--</el-form-item>-->
+
             <el-form-item label="日志类型">
-              <el-select v-model="value">
-                <el-option
-                            v-for="item in options"
-                            :key="item.classid"
-                            :label="item.classname"
-                            :value="item.classid">
-                </el-option>
+              <el-select v-model="dataClass.classA" placeholder="请选择一级分类">
+                <el-option v-for="(c1,index) in blog_url_1"
+                           :value="c1.classid"
+                           :label="c1.classname"
+                           :key="index"
+                           @click.native="sendClassId(c1.classid)"
+                ></el-option>
               </el-select>
+
+              <el-select v-model="dataClass.classB" placeholder="请选择二级分类">
+                <el-option v-for="(c2,index) in blog_url_2_2"
+                           :value="c2.classid" :label="c2.classname" :key="index"></el-option>
+              </el-select>
+
             </el-form-item>
+
             <el-form-item label="日志内容">
               <!--<el-input type="textarea" :rows="5" placeholder="请输入内容" v-model="blog_content">-->
               <quill-editor
@@ -43,7 +62,7 @@
 </template>
 
 <script>
-  import {addBlog, editBlog, getMyBlogTwoClass} from "../../../api";
+  import {addBlog, editBlog, getClass, getMyBlogTwoClass} from "../../../api";
   import { quillEditor } from 'vue-quill-editor'
   export default {
     data(){
@@ -53,25 +72,55 @@
         select_option:[],
         value: '',
         content:"",
-        editorOption:{}
+        editorOption:{},
+        dataClass:{
+          classA:"",
+          classB:""
+        },
+        blog_url_1:[],
+        blog_url_2:[],
+        blog_url_2_2:[]
       }
     },
     created() {
       //为了得到日志分类的相关内容
-      const id = this.$route.params.id;
-      getMyBlogTwoClass({userid:id,typeid:1,depth:2})
+      // const id = this.$route.params.id;
+      // getMyBlogTwoClass({userid:id,typeid:1,depth:2})
+      //   .then(res=>{
+      //     console.log("请求数据成功");
+      //     console.log(res.object);
+      //     const option=res.object.map(item=>({
+      //       classid:item.classid,
+      //       classname:item.classname
+      //     }));
+      //     this.options=option;
+      //     console.log(this.options);
+      //   })
+      //   .catch(error=>{
+      //     console.log("请求数据失败");
+      //   });
+      //拿到分类
+      getClass({userid:this.$route.params.id,typeid:1})
         .then(res=>{
-          console.log("请求数据成功");
-          console.log(res.object);
-          const option=res.object.map(item=>({
-            classid:item.classid,
-            classname:item.classname
-          }));
-          this.options=option;
-          console.log(this.options);
+          console.log(res);
+          const result = res.object;
+          //一级标题的相关内容
+          result.map(item => {
+            if (item.depth == 1) {
+              return this.blog_url_1.push(item)
+            }
+          });
+          console.log(this.blog_url_1);
+          // 二级标题的相关内容
+          result.map(item => {
+            if (item.depth === 2) {
+              return this.blog_url_2.push(item)
+            }
+          });
+          console.log(this.blog_url_2);
         })
-        .catch(error=>{
-          console.log("请求数据失败");
+        .catch(err=>{
+          console.log(err);
         });
       //编辑日志
       editBlog({blogid:this.$route.query.blogid})
@@ -81,16 +130,30 @@
           this.content=res.object.content;
           let idx=res.object.classid;
           //如果option中存在value属性，优先获取value值的id，如果不存在，则获取option的文本内容
-          console.log(this.options);
+          console.log(this.dataClass.classB);
           // this.value = this.options[0].classid;
-          this.value = idx;
-          console.log(this.value);
+          this.dataClass.classB = idx;
+          console.log(this.dataClass.classB);
         })
         .catch(error=>{
           console.log(error);
         })
     },
     methods:{
+      sendClassId(classid){
+        console.log("一级分类被点击"+classid);
+        this.blog_url_2_2=[];
+        this.blog_url_2.find(item=>{
+          for (let i=0;i<this.blog_url_2.length;i++){
+            if(classid===item.parentid){
+              if (!~this.blog_url_2_2.indexOf(item)) {
+                this.blog_url_2_2.push(item)
+              }
+            }
+          }
+        });
+        console.log(this.blog_url_2_2);
+      },
       onEditorBlur(){//失去焦点事件
       },
       onEditorFocus(){//获得焦点事件
@@ -99,7 +162,12 @@
       },
       send_blog(){
         console.log("提交按钮已触发");
-        let data={blogid:this.$route.query.blogid,userid:this.$route.params.id,classid:this.value,title:this.blog_title,content:this.content}
+        let data={
+          blogid:this.$route.query.blogid,
+          userid:this.$route.params.id,
+          classid:this.dataClass.classB,
+          title:this.blog_title,
+          content:this.content};
         addBlog(data)
           .then(res=>{
             console.log("提交成功");
@@ -109,9 +177,11 @@
                   message: '这是一条成功的提示消息',
                   type: 'success'
                 });
-                this.value="";
+                this.dataClass.classB="";
                 this.blog_title="";
-                this.content=""
+                this.content="";
+                this.dataClass.classA="";
+                this.dataClass.classB="";
             }else {
               this.$notify.error({
                 title: '错误',
@@ -127,7 +197,9 @@
       reset_blog(){
         this.value="";
         this.blog_title="";
-        this.content=""
+        this.content="";
+        this.dataClass.classA="";
+        this.dataClass.classB="";
       }
     }
   }
