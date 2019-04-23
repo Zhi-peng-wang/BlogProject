@@ -6,7 +6,6 @@ import home_page from "../views/homePage/home_page.vue"
 import person_data from "../views/homePage/personData/person_data.vue"
 import add_blog from "../views/homePage/blog/add_blog.vue"
 import edit_blog from "../views/homePage/blog/edit_blog"
-import addBlog from "../views/homePage/blog/addBlog"
 import all_blog_list from "../views/homePage/blog/all_blog_list"
 import blog from '../views/blog'
 import blog_list from '../views/blog_list'
@@ -55,11 +54,6 @@ export default new VueRouter({
             path:'edit_blog',
             component:edit_blog
           },
-
-          // {
-          //   path:'addBlog',
-          //   component:addBlog
-          // },
           {
             path:'all_blog_list',
             component:all_blog_list

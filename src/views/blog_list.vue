@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>ajax基础：</h3><br>
+    <h3>日志列表:</h3><br>
     <div style="height: 220px">
       <ul>
         <li v-for="(t,index) in blogid_title" :key="index">

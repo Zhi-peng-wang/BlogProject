@@ -34,17 +34,16 @@
         <!-- 目录 -->
         <div class="col-md-4 col-xs-4" style="height: 600px;">
           <el-col :span="24">
-            <el-menu active-text-color="#ffd04b" class="el-menu-vertical-demo">
+            <el-menu active-text-color="#ffd04b" class="el-menu-vertical-demo"
+                     uniqueOpened>
               <el-submenu v-for="(t1,index) in blog_url_1" :index="t1.url">
                 <template slot="title">
-                  <i class="iconfont icon-VIP" style="font-size: 30px;color: gold"></i>
                   <span>{{t1.classname}}</span>
                 </template>
                 <el-menu-item-group v-for="(t2,index) in blog_url_2" v-if="t1.classid==t2.parentid">
                   <el-menu-item :key="index">
                     <router-link :to="`/${$route.params.id}`+'/blog/blog_list'"
                                  @click.native="send_id(t2.classid)">
-                      <i class="iconfont icon-fuwurizhi" style="font-size: 15px;color: #d4d4d4"></i>
                       <span>{{t2.classname}}</span>
                       <el-badge :value="t2.num" class="item" type="primary" style="float: right;margin-top: 5px">
                       </el-badge>
@@ -101,7 +100,8 @@
         page_size:0,
         page_number:0,
         fenye_show:true,
-        loading: false
+        loading: false,
+        uniqueOpened:true
       };
     },
     mounted() {
@@ -162,6 +162,7 @@
             //将此时的数据赋给上面的空数组
             this.blog_title=blog_title;
             event.$emit('toChangeTitle',this.blog_title);
+            this.loading=false;
           }).catch(error=>{
           console.log("请求数据失败"+error);
         })

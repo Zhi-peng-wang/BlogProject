@@ -26,15 +26,21 @@
           password:"",
           Tpassword:"",
           sex:"",
-          nickname:""
+          nickname:"",
+          sendPassword:""
         }
       },
       methods:{
         doRegister(){
+          if (this.password===this.Tpassword){
+            this.sendPassword=this.Tpassword
+          } else {
+            alert("俩次输入的密码不一致！");
+            return false
+          }
           let data = {
             username: this.username,
-            password: this.password,
-            Tpassword: this.Tpassword,
+            password: this.sendPassword,
             sex:this.sex,
             nickname: this.nickname
           };

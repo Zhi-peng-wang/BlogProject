@@ -13,7 +13,7 @@
 
               <el-form-item label="日志类型">
                 <el-select v-model="dataClass.classA" placeholder="请选择一级分类">
-                  <el-option v-for="(c1,index) in blog_url_1"
+                  <el-option v-for="(c1, index) in blog_url_1"
                              :value="c1.classid"
                              :label="c1.classname"
                              :key="index"
@@ -103,18 +103,10 @@
             this.blog_title=res.object.title;
             this.content=res.object.content;
             let idx=res.object.classid;
+            this.idxA=res.object.parentid;
             //如果option中存在value属性，优先获取value值的id，如果不存在，则获取option的文本内容
             // this.value = this.options[0].classid;
             // this.dataClass.classA=1;
-            if(idx===9||idx===10){
-              this.idxA=3
-            }
-            if (idx===11||idx===12){
-              this.idxA=4
-            }
-            if (idx===13||idx===14){
-              this.idxA=5
-            }
             console.log(this.idxA);
             this.dataClass.classA=this.idxA;
             this.sendClassId(this.idxA);

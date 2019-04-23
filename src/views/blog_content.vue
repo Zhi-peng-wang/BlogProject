@@ -11,83 +11,34 @@
       </div>
       <!--该篇日志的评论-->
       <div class="container">
-        <!--评论者的信息-->
-        <div class="row">
-          <div v-for="(item,index) in blogComment" :key="index">
-            <!--评论日志的人-->
-            <div>
-              <div class="panel panel-info" v-show="item.touser===blogUser">
-                <div class="panel-heading">
-                  <div class="row">
-                    <div class="col-md-2">
-                      <div style="width: 50px;height: 50px">
-                        <img src="#" alt="头像">
-                      </div>
-                    </div>
-                    <div class="col-md-10">
-                      <div style="display: inline-block">{{item.nickname}}
-                        {{item.touser}}
-                        {{item.fromuser}}
-                        {{item.commentdate}}</div>
-                      <div style="display: inline-block;float: right">
-                        <button class="btn btn-sm btn-warning">删除</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="panel-body">
-                  <div class="well well-lg" v-show="item.touser===blogUser">
-                    {{item.nickname}}:<br>
-                    <div style="margin-left: 30px">
-                      {{item.content}}
-                    </div>
-                  </div>
-                  <div v-for="(r,index) in replayComment" :key="index">
-                    <div v-show="r.touser===item.fromuser">
-                      <div class="well well-lg">
-                        {{r.nickname}}:@{{item.nickname}}<br>
-                        <div style="margin-left: 30px">
-                          {{r.content}}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+        <div class="row" v-for="(c,index) in blogComment" :key="index"  style="margin-bottom: 30px">
+          <div>
+            <div class="col-md-2" style="padding: 0">
+              <div style="width: 80px;height: 80px;margin: 0 auto">
+                <!--<img src="holder.js/100px50" alt="图片">-->
+                <p style="line-height: 80px;margin: 0;text-align: center">头像</p>
+              </div>
+            </div>
+            <div class="col-md-10" style="padding: 0">
+              <div style="height: 80px">
+                <p style="line-height: 40px;margin: 0;font-size: 18px">
+                  {{c.nickname}}：{{c.content}}
+                  <el-button type="danger" icon="el-icon-delete" size="mini" circle
+                             style="float: right;margin: 24px 30px"></el-button>
+                </p>
+                <p style="line-height: 40px;margin: 0;font-size: 12px">
+                  {{c.commentdate.slice(0,10)}}
+                  <el-button @click="replay(c.nickname)" type="primary" plain size="mini" style="margin-left: 15px">
+                    回复
+                  </el-button>
+                </p>
 
-                  <!--回复模块-->
-                  <div style="margin-top: 30px">
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label text-right" style="line-height: 30px">回复：</label>
-                      <div class="col-sm-8">
-                        <input type="text" class="form-control" placeholder="请输入">
-                      </div>
-                      <div>
-                        <button class="btn btn-info">发表</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!--添加评论-->
-        <div style="margin: 30px 0px">
-          <div class="panel panel-success">
-            <div class="panel-heading">
-              <div style="opacity: 0.5;display: inline-block">来说俩句吧！</div>
-              <div style="display: inline-block;color: red;float: right">共有{{}}条评论</div>
-            </div>
-            <div class="panel-body">
-              <div style="margin: 15px 0px">
-                <textarea class="form-control" rows="3"></textarea>
-              </div>
-              <div>
-                <button class="btn btn-info" style="display: inline-block;float: right">提交</button>
               </div>
             </div>
           </div>
 
         </div>
+        <!--对该篇日志的评论输入框-->
       </div>
     </div>
   </div>
@@ -117,13 +68,42 @@
           //这是文章的内容
           this.blogContent=res.object;
           //这是该篇文章的评论内容
-          this.blogComment=res.obj;
+          // this.blogComment=res.obj;
+          //获取本篇日志下的评论
+          const blogComments=res.obj.find(item=>{
+            for(let i=0;i<res.obj.length;i++){
+              if (item.parentid===0){
+                if (!~this.blogComment.indexOf(item)) {
+                  this.blogComment.push(item)
+                }
+              }
+            }
+          });
+          console.log(this.blogComment);
           //回复评论的数组
-          this.replayComment=res.obj;
+          // this.replayComment=res.obj;
           console.log(this.blogComment);
         }).catch(error=> {
         console.log(error)
-      })
+      });
+    },
+    methods:{
+      replay(info){
+        this.$prompt('请输入对  @'+info+'  回复', '回复', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(({ value }) => {
+          this.$message({
+            type: 'success',
+            message: '回复内容是: ' + value
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          });
+        });
+      }
     }
   }
 </script>
