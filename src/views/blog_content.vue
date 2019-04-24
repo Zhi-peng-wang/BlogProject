@@ -32,12 +32,40 @@
                     回复
                   </el-button>
                 </p>
+              </div>
+
+
+              <!--回复相关内容-->
+              <div class="row" v-for="(r,index) in replayComment">
+                <div v-if="r.parentid===c.commentid">
+                  <div class="col-md-2" style="padding: 0">
+                    <div style="width: 80px;height: 80px;margin: 0 auto">
+                      <!--<img src="holder.js/100px50" alt="图片">-->
+                      <p style="line-height: 80px;margin: 0;text-align: center">头像</p>
+                    </div>
+                  </div>
+                  <div class="col-md-10" style="padding: 0">
+                    <div style="height: 80px">
+                      <p style="line-height: 40px;margin: 0;font-size: 16px">
+                        {{r.nickname}} 回复：{{c.nickname}}：{{r.content}}
+                      </p>
+                      <p style="line-height: 40px;margin: 0;font-size: 12px">
+                        {{r.commentdate.slice(0,10)}}
+                        <el-button @click="replay(r.nickname)" type="primary" plain size="mini" style="margin-left: 15px">
+                          回复
+                        </el-button>
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
               </div>
+
+
             </div>
           </div>
-
         </div>
+
         <!--对该篇日志的评论输入框-->
       </div>
     </div>
@@ -54,7 +82,8 @@
         blogComment:[],
         replayComment:[],
         //该篇日志的作者
-        blogUser:""
+        blogUser:"",
+        commentIds:[]
       }
     },
     mounted(){
@@ -70,19 +99,35 @@
           //这是该篇文章的评论内容
           // this.blogComment=res.obj;
           //获取本篇日志下的评论
-          const blogComments=res.obj.find(item=>{
+          res.obj.find(item=>{
             for(let i=0;i<res.obj.length;i++){
               if (item.parentid===0){
                 if (!~this.blogComment.indexOf(item)) {
-                  this.blogComment.push(item)
+                  this.blogComment.push(item);
+                }
+              }
+              // this.commentIds.push(item[0])
+            }
+          });
+          console.log(this.blogComment);
+          const commentIds=res.obj.map(item=>({
+            commentid:item.commentid
+          }));
+          this.commentIds=commentIds;
+          console.log(this.commentIds);
+
+          //回复评论的数组
+          // this.replayComment=res.obj;
+          res.obj.find(item=>{
+            for(let i=0;i<res.obj.length;i++){
+              if (item.parentid===this.commentIds[i].commentid){
+                if (!~this.replayComment.indexOf(item)) {
+                  this.replayComment.push(item)
                 }
               }
             }
           });
-          console.log(this.blogComment);
-          //回复评论的数组
-          // this.replayComment=res.obj;
-          console.log(this.blogComment);
+          console.log(this.replayComment);
         }).catch(error=> {
         console.log(error)
       });
