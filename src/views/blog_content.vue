@@ -10,7 +10,7 @@
         <b>文章评论：</b>
       </div>
       <!--该篇日志的评论-->
-      <div class="container">
+      <div class="container" style="padding: 0">
         <div class="row" v-for="(c,index) in blogComment" :key="index"  style="margin-bottom: 30px">
           <div>
             <div class="col-md-2" style="padding: 0">
@@ -66,7 +66,33 @@
           </div>
         </div>
 
-        <!--对该篇日志的评论输入框-->
+        <!--没有文章评论时候展示的-->
+        <div  class="el-row" v-if="blogComment.length===0">
+          <div>
+            <el-col :span="24">
+              <el-card shadow="hover">
+                <p style="text-align: center;margin: 0">
+                  暂无评论，快来评论吧！
+                </p>
+              </el-card>
+            </el-col>
+          </div>
+
+        </div>
+
+        <div class="el-row">
+          <label style="margin-top: 15px">发表评论：</label>
+          <el-input
+            type="textarea"
+            :rows="3"
+            placeholder="请输入内容"
+            v-model="addComment"
+          style="margin-top: 15px">
+          </el-input>
+          <el-button type="primary" size="mini" style="margin-top: 15px;float: right">发表评论</el-button>
+        </div>
+
+
       </div>
     </div>
   </div>
@@ -83,7 +109,8 @@
         replayComment:[],
         //该篇日志的作者
         blogUser:"",
-        commentIds:[]
+        commentIds:[],
+        addComment:""
       }
     },
     mounted(){
@@ -106,7 +133,6 @@
                   this.blogComment.push(item);
                 }
               }
-              // this.commentIds.push(item[0])
             }
           });
           console.log(this.blogComment);

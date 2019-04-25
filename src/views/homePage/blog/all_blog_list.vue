@@ -46,7 +46,7 @@
 </template>
 
 <script>
-  import {deleteAllBlog, deleteBlog, editBlog, getAllClassBlog} from "../../../api";
+  import {deleteAllBlog, deleteBlog, getAllClassBlog} from "../../../api";
   export default {
     inject: ['reload'],
     data(){

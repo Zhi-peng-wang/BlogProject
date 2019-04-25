@@ -149,6 +149,7 @@
           .then(res=>{
             this.loading=false;
             console.log(res);
+
             console.log("-------------------------");
             //此处的res已经拿到了res.data数据,在封装的方法中已经完成
             const result =res.object.content;
