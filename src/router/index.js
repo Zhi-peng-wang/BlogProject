@@ -9,6 +9,7 @@ import edit_blog from "../views/homePage/blog/edit_blog"
 import all_blog_list from "../views/homePage/blog/all_blog_list"
 import blog from '../views/blog'
 import blog_list from '../views/blog_list'
+import new_blog_list from '../views/new_blog_list'
 import blog_content from '../views/blog_content.vue'
 import album from '../views/album.vue'
 import photo_class from '../views/album/photo_class.vue'
@@ -67,7 +68,11 @@ export default new VueRouter({
         [
           {
             path:'',
-            component:blog_list
+            component:new_blog_list
+          },
+          {
+            path:'/new_blog_list',
+            component:new_blog_list
           },
           {
             path:'blog_list',

@@ -29,11 +29,14 @@
     </div>
 
 
-    <div class="container" v-loading="loading">
+    <div class="container">
       <div class="row">
         <!-- 目录 -->
         <div class="col-md-4 col-xs-4" style="height: 600px;">
           <el-col :span="24">
+            <template>
+              <h4>日志分类</h4>
+            </template>
             <el-menu active-text-color="#ffd04b" class="el-menu-vertical-demo"
                      uniqueOpened>
               <el-submenu v-for="(t1,index) in blog_url_1" :index="t1.url">
@@ -42,8 +45,8 @@
                 </template>
                 <el-menu-item-group v-for="(t2,index) in blog_url_2" v-if="t1.classid==t2.parentid">
                   <el-menu-item :key="index">
-                    <router-link :to="`/${$route.params.id}`+'/blog/blog_list'"
-                                 @click.native="send_id(t2.classid)">
+                    <router-link :to="{path:`/${$route.params.id}`+'/blog/blog_list',query:{classid:t2.classid}}"
+                                 >
                       <span>{{t2.classname}}</span>
                       <el-badge :value="t2.num" class="item" type="primary" style="float: right;margin-top: 5px">
                       </el-badge>
@@ -57,19 +60,10 @@
         <!--这是日志的title-->
         <div class="col-md-8 col-xs-8 panel panel-primary" style="padding: 0;" >
           <div class="panel-heading">
-            <h4>详情列表</h4>
+            <h4>日志列表</h4>
           </div>
-          <div class="panel-body" @click="unShow">
+          <div class="panel-body">
             <router-view></router-view>
-          </div>
-          <div class="block" style="margin-left: 230px;" v-if="fenye_show">
-            <el-pagination
-              @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-size="page_size"
-              layout="total, prev, pager, next, jumper"
-              :total="total">
-            </el-pagination>
           </div>
         </div>
       </div>
@@ -83,25 +77,14 @@
 </template>
 
 <script>
-  import event from '@/event.js'
-  import {getClassBlog, getClass} from "../api";
+  import {getClass} from "../api";
   export default {
     data() {
       return {
         activeIndex: '3',
         blog_url_1: [],
         blog_url_2: [],
-        blog_classid:9,
         blog_title:[],
-        totalElements:"",
-        size:"",
-        currentPage: 1,
-        total:0,
-        page_size:0,
-        page_number:0,
-        fenye_show:true,
-        loading: false,
-        uniqueOpened:true
       };
     },
     mounted() {
@@ -123,51 +106,7 @@
               return this.blog_url_2.push(item)
             }
           });
-          this.loading=false
         });
-      this.send_id(this.blog_classid)
-    },
-    methods:{
-      unShow(){
-        console.log("发生了点击事件");
-        this.fenye_show=false
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val-1}`);
-        this.page_number=`${val-1}`;
-        console.log(this.page_number);
-        this.O_getClassBlog()
-      },
-      send_id(classid) {
-        console.log("blog组件传递参数classid给后台:"+classid);
-        this.blog_classid=classid;
-        this.fenye_show=true;
-        this.O_getClassBlog()
-      },
-      O_getClassBlog(){
-        getClassBlog({classid:this.blog_classid,pagenum:this.page_number})
-          .then(res=>{
-            this.loading=false;
-            console.log(res);
-
-            console.log("-------------------------");
-            //此处的res已经拿到了res.data数据,在封装的方法中已经完成
-            const result =res.object.content;
-            this.total=res.object.totalElements;
-            this.page_size=res.object.size;
-            const blog_title=result.map(item=>({
-              blogid:item.blogid,
-              classid:item.classid,
-              title:item.title,
-            }));
-            //将此时的数据赋给上面的空数组
-            this.blog_title=blog_title;
-            event.$emit('toChangeTitle',this.blog_title);
-            this.loading=false;
-          }).catch(error=>{
-          console.log("请求数据失败"+error);
-        })
-      },
     },
   };
 </script>
