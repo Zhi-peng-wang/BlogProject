@@ -7,6 +7,12 @@ import person_data from "../views/homePage/personData/person_data.vue"
 import add_blog from "../views/homePage/blog/add_blog.vue"
 import edit_blog from "../views/homePage/blog/edit_blog"
 import all_blog_list from "../views/homePage/blog/all_blog_list"
+import blogCategory from "../views/homePage/blog/blogCategory"
+import albumAll from "../views/homePage/album/albumAll"
+import albumCategory from "../views/homePage/album/albumCategory"
+import addPhoto from "../views/homePage/album/addPhoto"
+import myComment from "../views/homePage/personData/myComment"
+import myParticipate from "../views/homePage/personData/myParticipate"
 import blog from '../views/blog'
 import blog_list from '../views/blog_list'
 import new_blog_list from '../views/new_blog_list'
@@ -15,6 +21,7 @@ import album from '../views/album.vue'
 import photo_class from '../views/album/photo_class.vue'
 import photo_list from '../views/album/photo_list.vue'
 import photo_content from '../views/album/photo_content.vue'
+import leaveMessage from '../views/leaveMessage/leaveMessage'
 
 
 Vue.use(VueRouter);
@@ -56,8 +63,32 @@ export default new VueRouter({
             component:edit_blog
           },
           {
+            path:'blogCategory',
+            component:blogCategory
+          },
+          {
             path:'all_blog_list',
             component:all_blog_list
+          },
+          {
+            path:'albumAll',
+            component:albumAll
+          },
+          {
+            path:'albumCategory',
+            component:albumCategory
+          },
+          {
+            path:'addPhoto',
+            component:addPhoto
+          },
+          {
+            path:'myComment',
+            component:myComment
+          },
+          {
+            path:'myParticipate',
+            component:myParticipate
           },
         ]
     },
@@ -103,5 +134,9 @@ export default new VueRouter({
           }
         ]
     },
+    {
+      path:'/:id/leaveMessage',
+      component:leaveMessage
+    }
   ]
 })

@@ -10,17 +10,17 @@
           <el-menu-item>
             <h3>王小明</h3>
           </el-menu-item>
-          <el-menu-item index="1" style="margin-left:30%">主页</el-menu-item>
+          <el-menu-item index="1" style="margin-left:42%">主页</el-menu-item>
           <el-menu-item index="2">
             <router-link :to="`/${$route.params.id}`+'/album/photo_class'">相册</router-link>
           </el-menu-item>
           <el-menu-item index="3">
             <router-link :to="`/${$route.params.id}`+'/blog'">日志</router-link>
           </el-menu-item>
-          <el-menu-item index="4">留言</el-menu-item>
-          <el-menu-item index="5">访客</el-menu-item>
-          <el-menu-item index="6">评论</el-menu-item>
-          <el-menu-item index="7">
+          <el-menu-item index="4">
+            <router-link :to="`/${$route.params.id}`+'/leaveMessage'">留言</router-link>
+          </el-menu-item>
+          <el-menu-item index="5">
             <router-link :to="`/${$route.params.id}`+'/home_page'">个人中心</router-link>
           </el-menu-item>
         </el-menu>
@@ -46,25 +46,25 @@
                   <router-link :to="`/${$route.params.id}`+'/home_page/all_blog_list'">日志列表</router-link>
                 </button>
                 <button type="button" class="list-group-item">
-                  日志类别
+                  <router-link :to="`/${$route.params.id}`+'/home_page/blogCategory'">日志类别</router-link>
                 </button>
                 <button type="button" class="list-group-item">
-                  相册列表
+                  <router-link :to="`/${$route.params.id}`+'/home_page/albumAll'">相册列表</router-link>
                 </button>
                 <button type="button" class="list-group-item">
-                  相册类别
+                  <router-link :to="`/${$route.params.id}`+'/home_page/albumCategory'">相册类别</router-link>
                 </button>
                 <button type="button" class="list-group-item">
-                  评论我的
+                  <router-link :to="`/${$route.params.id}`+'/home_page/myComment'">评论我的</router-link>
                 </button>
                 <button type="button" class="list-group-item">
-                  我参与的
+                  <router-link :to="`/${$route.params.id}`+'/home_page/myParticipate'">我参与的</router-link>
                 </button>
                 <button type="button" class="list-group-item">
                   <router-link :to="`/${$route.params.id}`+'/home_page/add_blog'">添加日志</router-link>
                 </button>
                 <button type="button" class="list-group-item">
-                  添加图片
+                  <router-link :to="`/${$route.params.id}`+'/home_page/addPhoto'">添加图片</router-link>
                 </button>
               </div>
             </div>
@@ -83,7 +83,7 @@
   export default {
     data(){
       return{
-        activeIndex: '7',
+        activeIndex: '5',
       }
     }
   }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="panel panel-info">
+    <div class="panel panel-info" v-loading="loading">
       <div class="panel-heading">
         日志列表
       </div>
@@ -59,7 +59,8 @@
         currentPage: 1,
         total:0,
         page_size:0,
-        page_number:0
+        page_number:0,
+        loading:false,
       }
     },
     mounted(){
@@ -192,6 +193,7 @@
               blogdate:item.blogdate
             }));
             this.blog_check=checks;
+            this.loading=false;
             console.log(this.blog_check);
           })
           .catch(error=>{
