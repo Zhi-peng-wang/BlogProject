@@ -9,7 +9,9 @@
           <el-menu-item>
             <h3>王小明</h3>
           </el-menu-item>
-          <el-menu-item index="1" style="margin-left:42%">主页</el-menu-item>
+          <el-menu-item index="1" style="margin-left:42%">
+            <router-link :to="`/${$route.params.id}`+'/home'">主页</router-link>
+          </el-menu-item>
           <el-menu-item index="2">
             <router-link :to="`/${$route.params.id}`+'/album/photo_class'">相册</router-link>
           </el-menu-item>

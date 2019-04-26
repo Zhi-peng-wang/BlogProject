@@ -52,3 +52,9 @@ export const editBlog = (blogid) => ajax('/api/editBlog',blogid,"POST");
 
 //15.获取相册内容和评论
 export const getPhoto = (data)=>ajax('/api/getPhoto'.data,"POST");
+
+//16.添加评论 和回复
+export const addComment = (data)=>ajax('/api/addComment',data,"POST");
+
+//17.获取主页的个人日志
+export const getNewBlog = (data)=>ajax('/api/getNewBlog',data,"POST");

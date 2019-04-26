@@ -86,10 +86,14 @@
             type="textarea"
             :rows="3"
             placeholder="请输入内容"
-            v-model="addComment"
+            v-model="commentContent"
           style="margin-top: 15px">
           </el-input>
-          <el-button type="primary" size="mini" style="margin-top: 15px;float: right">发表评论</el-button>
+          <el-button type="primary" size="mini"
+                     @click="addComment()"
+                     style="margin-top: 15px;float: right">
+            发表评论
+          </el-button>
         </div>
 
 
@@ -110,7 +114,8 @@
         //该篇日志的作者
         blogUser:"",
         commentIds:[],
-        addComment:""
+        commentContent:"",
+
       }
     },
     mounted(){
@@ -159,6 +164,9 @@
       });
     },
     methods:{
+      addComment(){
+        console.log("asada");
+      },
       replay(info){
         this.$prompt('请输入对  @'+info+'  回复', '回复', {
           confirmButtonText: '确定',

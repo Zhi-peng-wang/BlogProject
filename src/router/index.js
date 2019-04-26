@@ -22,6 +22,8 @@ import photo_class from '../views/album/photo_class.vue'
 import photo_list from '../views/album/photo_list.vue'
 import photo_content from '../views/album/photo_content.vue'
 import leaveMessage from '../views/leaveMessage/leaveMessage'
+import logOperation from '../views/homePage/logOperation/logOperation'
+import home from '../views/home'
 
 
 Vue.use(VueRouter);
@@ -40,6 +42,14 @@ export default new VueRouter({
     {
       path:'/register',
       component:register
+    },
+    {
+      path:'/:id/home',
+      component:home
+    },
+    {
+      path:'/:id/logOperation',
+      component:logOperation
     },
     {
       path:'/:id/home_page',

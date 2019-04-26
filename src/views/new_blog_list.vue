@@ -7,7 +7,7 @@
             <router-link :to="{path:`/${$route.params.id}`+'/blog/blog_content',query:{blogid:b.blogid}}"
                          class="list-group-item">
               <span>{{b.title}}</span>
-              <span style="float: right;margin-right: 60px">{{b.blogdate.slice(0,10)}}</span>
+              <span style="float: right;margin-right: 60px">{{b.blogdate.slice(0,10)}}-{{b.blogdate.slice(11,16)}}</span>
             </router-link>
           </li>
         </ul>

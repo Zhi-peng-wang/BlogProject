@@ -17,7 +17,9 @@
               <div>
                 <div style="width: 100px;display: inline-block">{{t.classname}}</div>
                 <div style="width: 100px;display: inline-block">{{t.title.slice(0,20)+"..."}}</div>
-                <div style="margin-left:150px;display: inline-block;">{{t.blogdate.slice(0,10)}}</div>
+                <div style="margin-left:130px;display: inline-block;">
+                  {{t.blogdate.slice(0,10)}}-{{t.blogdate.slice(11,16)}}
+                </div>
                 <div  style="margin-left:40px;display: inline-block;">
                   <el-button type="danger"  @click="[open([t.blogid,t])]">删除</el-button>
                 </div>
