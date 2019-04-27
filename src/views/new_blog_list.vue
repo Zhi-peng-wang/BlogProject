@@ -2,7 +2,7 @@
   <div>
     <div style="margin-top: 30px">
       <div style="height: 440px">
-        <ul>
+        <ul style="padding-left: 20px">
           <li v-for="(b,index) in newBlogList" :key="index">
             <router-link :to="{path:`/${$route.params.id}`+'/blog/blog_content',query:{blogid:b.blogid}}"
                          class="list-group-item">

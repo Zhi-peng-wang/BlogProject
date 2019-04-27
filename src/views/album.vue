@@ -28,7 +28,10 @@
         <br>
       </div>
     </div>
-    <router-view></router-view>
+    <!--<div class="container">-->
+      <router-view></router-view>
+    <!--</div>-->
+
   </div>
 </template>
 <script>

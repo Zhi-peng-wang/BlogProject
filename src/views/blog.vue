@@ -32,7 +32,7 @@
 
 
     <div class="container">
-      <div class="row">
+      <div>
         <!-- 目录 -->
         <div class="col-md-4 col-xs-4" style="height: 600px;">
           <el-col :span="24">
@@ -41,7 +41,7 @@
             </template>
             <el-menu active-text-color="#ffd04b" class="el-menu-vertical-demo"
                      uniqueOpened>
-              <el-submenu v-for="(t1,index) in blog_url_1" :index="t1.url">
+              <el-submenu v-for="(t1,index) in blog_url_1" :index="t1.classname">
                 <template slot="title">
                   <span>{{t1.classname}}</span>
                 </template>
@@ -95,6 +95,7 @@
       getClass({userid: id,typeid:1})
       //得到分类名称
         .then((response) => {
+          console.log(response);
           const result = response.object;
           //一级标题的相关内容
           result.map(item => {
@@ -102,6 +103,7 @@
               return this.blog_url_1.push(item)
             }
           });
+          console.log(this.blog_url_1);
           // 二级标题的相关内容
           result.map(item => {
             if (item.depth == 2) {
@@ -114,6 +116,7 @@
 </script>
 
 <style>
+
   a {
     color: black;
     display: block;

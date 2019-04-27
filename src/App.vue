@@ -30,4 +30,9 @@ export default {
 </script>
 
 <style>
+  .el-menu-demo li{
+    padding: 0;
+    width: 80px;
+    text-align: center;
+  }
 </style>

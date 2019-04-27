@@ -58,3 +58,12 @@ export const addComment = (data)=>ajax('/api/addComment',data,"POST");
 
 //17.获取主页的个人日志
 export const getNewBlog = (data)=>ajax('/api/getNewBlog',data,"POST");
+
+//18.addClass 添加分类
+export const addClass = (data)=>ajax('/api/addClass',data,"POST");
+
+//19.deleteClass 删除分类
+export const deleteClass =(data)=>ajax('/api/deleteClass',data,"POST");
+
+//20.editClass 编辑分类
+export const editClass =(data)=>ajax('/api/editClass',data,"POST");

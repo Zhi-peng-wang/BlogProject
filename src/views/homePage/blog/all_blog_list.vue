@@ -80,15 +80,17 @@
           if (action === 'confirm') {     //确认的回调
             this.deleteAllBlogAction();
             this.$message({
+              showClose: true,
+              message: '删除成功!',
               type: 'success',
-              message: '删除成功!'
             });
           }
         }).catch((err) => {
           if (err === 'cancel') {     //取消的回调
             this.$message({
+              showClose: true,
+              message: '已取消删除',
               type: 'info',
-              message: '已取消删除'
             });
           }
         });
