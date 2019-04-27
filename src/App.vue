@@ -35,4 +35,7 @@ export default {
     width: 80px;
     text-align: center;
   }
+  a{
+    display: block;
+  }
 </style>

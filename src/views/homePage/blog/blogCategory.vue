@@ -11,15 +11,15 @@
               <div class="card-body">
                 <div class="row">
                   <div class="col-lg-6 col-sm-12">
-                    <label for="sel1">一级栏目：</label>
-                    <select multiple class="form-control"  style="height: 100px">
+                    <label>一级栏目：</label>
+                    <select multiple class="form-control"  style="height: 120px">
                       <option v-for="(b1,index) in blog_url_1" :key="index"
                               @click="sendClassAId([b1.classid,b1.orderclass,b1.classname])">
                         {{index+1}}:{{b1.classname}}
                       </option>
                     </select>
                     <div class="form-group">
-                      <label for="usr">栏目排序：</label>
+                      <label>栏目排序：</label>
                       <input type="text" class="form-control" v-model="orderA">
                     </div>
                     <div class="form-group">
@@ -44,7 +44,7 @@
                   <!--二级栏目-->
                   <div class="col-lg-6 col-sm-12">
                     <label>二级栏目：</label>
-                    <select multiple class="form-control" style="height: 100px">
+                    <select multiple class="form-control" style="height: 120px">
                       <option v-for="(b2,index) in blog_url_2_2"
                               @click="sendClassBId([b2.classid,b2.orderclass,b2.classname])">
                         {{b2.classname}}
@@ -85,6 +85,7 @@
   import {addClass, deleteClass, editClass, getClass} from "../../../api";
 
   export default {
+    inject: ['reload'],
     data() {
       return {
         blog_url_1:[],
@@ -138,7 +139,16 @@
         console.log(data);
         addClass(data)
           .then(res=>{
+            this.reload();
             console.log(res);
+            if (res.status==400){
+              this.$message({
+                showClose: true,
+                message: '一级分类名称已存在！',
+                type: 'error'
+              });
+            }
+
           })
           .catch(err=>{
             console.log(err);
@@ -159,6 +169,14 @@
         addClass(data)
           .then(res=>{
             console.log(res);
+            this.reload();
+            if (res.status==400){
+              this.$message({
+                showClose: true,
+                message: '二级分类名称已存在！',
+                type: 'error'
+              });
+            }
           })
           .catch(err=>{
             console.log(err);
@@ -192,6 +210,14 @@
           .then(res=>{
             console.log("一级分类删除按钮被点击");
             console.log(res);
+            this.reload();
+            if (res.status==400){
+              this.$message({
+                showClose: true,
+                message: '存在二级分类无法删除,请先删除二级分类！',
+                type: 'error'
+              });
+            }
           })
           .catch(err=>{
             console.log(err);
@@ -202,6 +228,14 @@
         deleteClass({classid:this.blogClassBId})
           .then(res=>{
             console.log(res);
+            this.reload();
+            if (res.status==400){
+              this.$message({
+                showClose: true,
+                message: '二级分类下有日志,请先删除日志！',
+                type: 'error'
+              });
+            }
           })
           .catch(err=>{
             console.log(err);
@@ -216,6 +250,14 @@
         editClass(data)
           .then(res=>{
             console.log(res);
+            this.reload();
+            if (res.status==400){
+              this.$message({
+                showClose: true,
+                message: '一级分类名称已存在！',
+                type: 'error'
+              });
+            }
           })
           .catch(err=>{
             console.log(err);
@@ -230,6 +272,14 @@
         editClass(data)
           .then(res=>{
             console.log(res);
+            this.reload();
+            if (res.status==400){
+              this.$message({
+                showClose: true,
+                message: '二级分类名称已存在！',
+                type: 'error'
+              });
+            }
           })
           .catch(err=>{
             console.log(err);

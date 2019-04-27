@@ -24,6 +24,7 @@ import photo_content from '../views/album/photo_content.vue'
 import leaveMessage from '../views/leaveMessage/leaveMessage'
 import logOperation from '../views/homePage/logOperation/logOperation'
 import home from '../views/home'
+import wrong from '../views/wrong.vue'
 
 
 Vue.use(VueRouter);
@@ -147,6 +148,15 @@ export default new VueRouter({
     {
       path:'/:id/leaveMessage',
       component:leaveMessage
+    },
+    {
+      path:'/404',
+      name:"wrong",
+      component:wrong
+    },
+    {
+      path:"*",
+      redirect:"/404"
     }
   ]
 })

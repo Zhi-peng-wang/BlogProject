@@ -3,7 +3,7 @@
     <div class="container">
       <div class="liulan">
         <div class="row">
-          <ul class="col-md-3" v-for="(t,index) in album" :key="index">
+          <ul class="col-md-3" v-for="(t,index) in album" :key="index" v-loading="loading">
             <li>
               <router-link :to="{path:`/${$route.params.id}`+'/album/photo_list',query:{classid:t.classid}}">
                 <div class="fj_img">
@@ -32,16 +32,19 @@
     data() {
       return {
         activeIndex: "2",
-        album: []
+        album: [],
+        loading:false,
       };
     },
     mounted() {
       let id = this.$route.params.id;
+      this.loading=true;
       getPhotoClass({userid:id})
         .then(res=>{
           console.log("请求photo相册数据成功");
           console.log(res);
           const result = res.object;
+          this.loading=false;
           const albums = result.map(item => ({
             classid:item.classid,
             classname:item.classname,

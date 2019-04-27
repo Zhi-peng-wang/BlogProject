@@ -160,7 +160,8 @@
           });
           console.log(this.replayComment);
         }).catch(error=> {
-        console.log(error)
+          console.log(error);
+          this.$router.push(`/wrong`)
       });
     },
     methods:{

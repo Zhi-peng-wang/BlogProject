@@ -32,7 +32,7 @@
 
 
     <div class="container">
-      <div>
+      <div class="row">
         <!-- 目录 -->
         <div class="col-md-4 col-xs-4" style="height: 600px;">
           <el-col :span="24">
@@ -41,14 +41,14 @@
             </template>
             <el-menu active-text-color="#ffd04b" class="el-menu-vertical-demo"
                      uniqueOpened>
-              <el-submenu v-for="(t1,index) in blog_url_1" :index="t1.classname">
+              <el-submenu v-for="(t1,index) in blog_url_1" :index="t1.url">
                 <template slot="title">
                   <span>{{t1.classname}}</span>
                 </template>
-                <el-menu-item-group v-for="(t2,index) in blog_url_2" v-if="t1.classid==t2.parentid">
+                <el-menu-item-group v-for="(t2,index) in blog_url_2" v-if="t1.classid==t2.parentid" v-loading="loading">
                   <el-menu-item :key="index">
                     <router-link :to="{path:`/${$route.params.id}`+'/blog/blog_list',query:{classid:t2.classid}}"
-                                 >
+                    >
                       <span>{{t2.classname}}</span>
                       <el-badge :value="t2.num" class="item" type="primary" style="float: right;margin-top: 5px">
                       </el-badge>
@@ -83,6 +83,7 @@
   export default {
     data() {
       return {
+        loading:false,
         activeIndex: '3',
         blog_url_1: [],
         blog_url_2: [],
@@ -92,18 +93,19 @@
     mounted() {
       this.loading=true;
       let id = this.$route.params.id;
-      getClass({userid: id,typeid:1})
+      getClass({userid:id,typeid:1})
       //得到分类名称
-        .then((response) => {
+        .then(response => {
           console.log(response);
           const result = response.object;
+          console.log("assddas");
+          console.log(result);
           //一级标题的相关内容
           result.map(item => {
             if (item.depth == 1 && item.parentid == 1) {
               return this.blog_url_1.push(item)
             }
           });
-          console.log(this.blog_url_1);
           // 二级标题的相关内容
           result.map(item => {
             if (item.depth == 2) {
@@ -111,12 +113,12 @@
             }
           });
         });
+      this.loading=false;
     },
   };
 </script>
 
 <style>
-
   a {
     color: black;
     display: block;

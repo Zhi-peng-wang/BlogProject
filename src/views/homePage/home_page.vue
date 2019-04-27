@@ -36,7 +36,7 @@
         <!--个人信息的分级目录-->
         <div class="col-md-4">
           <div class="panel panel-info">
-            <div class="panel-heading">`
+            <div class="panel-heading">
               <span>个人信息</span>
             </div>
             <div class="panel-body" style="padding: 15px 5px">
@@ -68,9 +68,6 @@
                 <button type="button" class="list-group-item">
                   <router-link :to="`/${$route.params.id}`+'/home_page/addPhoto'">添加图片</router-link>
                 </button>
-                <button type="button" class="list-group-item">
-                  <router-link :to="`/${$route.params.id}`+'/logOperation'">用户操作</router-link>
-                </button>
               </div>
             </div>
           </div>
@@ -95,11 +92,11 @@
 </script>
 
 <style scoped>
-  a {
-    color: black;
-    display: block;
-  }
-  li {
-    list-style: none;
-  }
+  /*a {*/
+  /*  color: black;*/
+  /*  display: block;*/
+  /*}*/
+  /*li {*/
+  /*  list-style: none;*/
+  /*}*/
 </style>

@@ -2,7 +2,7 @@
   <div>
     <h3>日志列表:</h3><br>
     <div style="height: 260px">
-      <div style="height: 220px">
+      <div style="height: 220px" v-loading="loading">
         <ul>
           <li v-for="(t,index) in blog_title" :key="index">
             <router-link :to="{path:`/${$route.params.id}`+'/blog/blog_content',query:{blogid:t.blogid}}"
@@ -21,6 +21,7 @@
           :total="total">
         </el-pagination>
       </div>
+
     </div>
 
   </div>
@@ -64,6 +65,7 @@
       },
 
       getClassBlogList(){
+        this.loading=true;
         getClassBlog({classid:this.$route.query.classid,pagenum:this.page_number})
           .then(res=>{
             this.loading=false;

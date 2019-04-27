@@ -7,19 +7,17 @@
       <div class="panel-body">
         <div style="margin-left: 30px">
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-            <el-button type="danger"  style="margin-left: 450px"
-                       @click="[open_all()]">
-              批量删除
-            </el-button>
+          <el-button type="danger"  style="margin-left: 450px"
+                     @click="[open_all()]">
+            批量删除
+          </el-button>
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="checkedBlogs" @change="handlecheckedBlogsChange">
             <el-checkbox v-for="(t,index) in blog_check" :label="t" :key="index" class="blog_label">
               <div>
                 <div style="width: 100px;display: inline-block">{{t.classname}}</div>
                 <div style="width: 100px;display: inline-block">{{t.title.slice(0,20)+"..."}}</div>
-                <div style="margin-left:130px;display: inline-block;">
-                  {{t.blogdate.slice(0,10)}}-{{t.blogdate.slice(11,16)}}
-                </div>
+                <div style="margin-left:150px;display: inline-block;">{{t.blogdate.slice(0,10)}}</div>
                 <div  style="margin-left:40px;display: inline-block;">
                   <el-button type="danger"  @click="[open([t.blogid,t])]">删除</el-button>
                 </div>
@@ -80,17 +78,15 @@
           if (action === 'confirm') {     //确认的回调
             this.deleteAllBlogAction();
             this.$message({
-              showClose: true,
-              message: '删除成功!',
               type: 'success',
+              message: '删除成功!'
             });
           }
         }).catch((err) => {
           if (err === 'cancel') {     //取消的回调
             this.$message({
-              showClose: true,
-              message: '已取消删除',
               type: 'info',
+              message: '已取消删除'
             });
           }
         });
@@ -151,11 +147,8 @@
             console.log(res);
             const result =res.status;
             if(result===200){
-              // console.log("此处应该跟新一下数据");
-              // console.log(t);
               let index=this.blog_check.indexOf(t);
               console.log(t);
-              // consomle.log(index);
               this.blog_check.splice(index,1);
               //通过声明reload方法，控制router-view的显示或隐藏，从而控制页面的再次加载
               this.reload()
@@ -185,11 +178,13 @@
       },
       //得到所有得日志列表
       getBlogList(){
+        this.loading=true;
         getAllClassBlog({"userid":this.$route.params.id,"pagenum":this.page_number})
           .then(res=>{
             const result=res.object.content;
             this.total=res.object.totalElements;
             this.page_size=res.object.size;
+            this.loading=false;
             const checks=result.map(item=>({
               blogid:item.blogid,
               classname:item.classname,
