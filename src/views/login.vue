@@ -32,7 +32,7 @@
   export default {
     data(){
       return{
-        username:"admin",
+        username:"admin123",
         password:"admin",
         note: {
           backgroundImage: "url(" + require("../assets/7.jpg") + ")",
@@ -42,6 +42,7 @@
     },
     methods:{
       dologin(){
+
         let data={'username':this.username,'password':this.password};
         login(data)
           .then(res=>{

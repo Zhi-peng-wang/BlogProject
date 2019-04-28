@@ -136,6 +136,11 @@
     },
 
     mounted() {
+
+      // this.$store.state.loginUser=this.$route.params.id;
+      console.log("打印vuex里面得全局变量");
+      console.log(this.$store.state.loginUser);
+
       this.loading=true;
       let id = this.$route.params.id;
       getUser({userid: id})
