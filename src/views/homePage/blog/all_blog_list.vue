@@ -179,7 +179,7 @@
       //得到所有得日志列表
       getBlogList(){
         this.loading=true;
-        getAllClassBlog({"userid":this.$route.params.id,"pagenum":this.page_number})
+        getAllClassBlog({"userid":localStorage.getItem("loginUser"),"pagenum":this.page_number})
           .then(res=>{
             const result=res.object.content;
             this.total=res.object.totalElements;

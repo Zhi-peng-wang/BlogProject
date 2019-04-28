@@ -101,7 +101,7 @@
     },
     mounted() {
       //拿到分类
-      getClass({userid:this.$route.params.id,typeid:1})
+      getClass({userid:localStorage.getItem("loginUser"),typeid:1})
         .then(res=>{
           console.log(res);
           const result = res.object;
@@ -128,10 +128,10 @@
       addClassA(){
         console.log("一级栏目的点击事件");
         let data={
-          userid: this.$route.params.id,
+          userid: localStorage.getItem("loginUser"),
           classname:this.classAName,
           parentid:"1",
-          // orderclass:"667",
+          orderclass:this.orderA,
           depth:"1",
           url:this.classAName,
           typeid:"1"
@@ -157,10 +157,10 @@
       addClassB(){
         console.log("二级栏目的点击事件");
         let data={
-          userid: this.$route.params.id,
+          userid: localStorage.getItem("loginUser"),
           classname:this.classBName,
           parentid:this.blogClassAId,
-          // orderclass:"667",
+          orderclass:this.orderB,
           depth:"2",
           url:this.classBName,
           typeid:"1"

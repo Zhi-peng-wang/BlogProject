@@ -71,7 +71,7 @@
     },
     created() {
       //拿到分类
-      getClass({userid:this.$route.params.id,typeid:1})
+      getClass({userid:localStorage.getItem("loginUser"),typeid:1})
         .then(res=>{
           console.log(res);
           const result = res.object;

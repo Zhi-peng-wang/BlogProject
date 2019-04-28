@@ -74,7 +74,7 @@
       },
       created(){
         //拿到分类
-        getClass({userid:this.$route.params.id,typeid:1})
+        getClass({userid: localStorage.getItem("loginUser"),typeid:1})
           .then(res=>{
             console.log(res);
             const result = res.object;
@@ -147,7 +147,7 @@
           console.log("提交按钮已触发");
           let data={
             blogid:this.$route.query.blogid,
-            userid:this.$route.params.id,
+            userid: localStorage.getItem("loginUser"),
             classid:this.dataClass.classB,
             title:this.blog_title,
             content:this.content};

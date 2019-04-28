@@ -8,7 +8,7 @@
             <img src="../assets/tx.jpg">
           </el-menu-item>
           <el-menu-item>
-            <h3>王小明</h3>
+            <h3>{{this.$route.params.id}}</h3>
           </el-menu-item>
           <el-menu-item index="1" style="margin-left:42%">
             <router-link :to="`/${$route.params.id}`+'/home'">主页</router-link>
@@ -23,7 +23,9 @@
             <router-link :to="`/${$route.params.id}`+'/leaveMessage'">留言</router-link>
           </el-menu-item>
           <el-menu-item index="5">
-            <router-link :to="`/${$route.params.id}`+'/home_page'">个人中心</router-link>
+            <router-link :to="`/${$route.params.id}`+'/home_page'">
+              {{loginUser}}
+            </router-link>
           </el-menu-item>
         </el-menu>
         <br>
@@ -88,11 +90,13 @@
         blog_url_1: [],
         blog_url_2: [],
         blog_title:[],
+        loginUser:"",
       };
     },
     mounted() {
       this.loading=true;
       let id = this.$route.params.id;
+      this.loginUser=localStorage.getItem("loginUser");
       getClass({userid:id,typeid:1})
       //得到分类名称
         .then(response => {

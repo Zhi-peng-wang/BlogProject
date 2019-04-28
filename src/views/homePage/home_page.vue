@@ -24,7 +24,7 @@
           </el-menu-item>
           <el-menu-item index="5">
             <router-link :to="`/${$route.params.id}`+'/home_page'">
-              {{this.$route.params.id}}
+              {{loginUser}}
             </router-link>
           </el-menu-item>
         </el-menu>
@@ -88,7 +88,11 @@
     data(){
       return{
         activeIndex: '5',
+        loginUser:""
       }
+    },
+    mounted(){
+      this.loginUser=localStorage.getItem("loginUser");
     }
   }
 </script>

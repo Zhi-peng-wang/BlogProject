@@ -9,7 +9,7 @@
               <img src="../assets/tx.jpg">
             </el-menu-item>
             <el-menu-item>
-              <h3>王小明</h3>
+              <h3>{{this.$route.params.id}}</h3>
             </el-menu-item>
             <el-menu-item index="1" style="margin-left:42%">
               <router-link :to="`/${$route.params.id}`+'/home'">主页</router-link>
@@ -24,7 +24,9 @@
               <router-link :to="`/${$route.params.id}`+'/leaveMessage'">留言</router-link>
             </el-menu-item>
             <el-menu-item index="5">
-              <router-link :to="`/${$route.params.id}`+'/home_page'">个人中心</router-link>
+              <router-link :to="`/${$route.params.id}`+'/home_page'">
+                {{loginUser}}
+              </router-link>
             </el-menu-item>
           </el-menu>
           <br>
@@ -38,11 +40,11 @@
             <div class="middle-box">
               <div class="middle-inner" style="border-right:1px solid #cee3e9;">
                 <p><span class="suc-tip">照片</span><br/></p>
-                <p><span class="suc-tip">6</span></p>
+                <p><span class="suc-tip">{{photonum}}</span></p>
               </div>
               <div class="middle-inner" style="border-right:1px solid #cee3e9;">
                 <p><span class="suc-tip">日志</span><br/></p>
-                <p><span class="suc-tip">21</span></p>
+                <p><span class="suc-tip">{{blognum}}</span></p>
               </div>
               <div class="middle-inner">
                 <p><span class="suc-tip">留言</span><br/></p>
@@ -100,7 +102,7 @@
              {{t.blogdate.slice(0,10)}}-{{t.blogdate.slice(11,16)}}
             </span>
               <img src="../assets/eye-line.png" style="width: 15px;height: 15px;float: left;margin:0 0 10px 20px">
-              <p style="color: #2e6da4;font-size: 11px;margin: 2px 0 0 5px;float: left;margin:0 0 10px 5px">浏览（99+）</p>
+              <p style="color: #2e6da4;font-size: 11px;margin: 2px 0 0 5px;float: left;margin:0 0 10px 5px">浏览（{{t.pv}}）</p>
               <img src="../assets/pl.png" style="width: 15px;height: 15px;float: left;margin:0 0 10px 20px">
               <p style="color: #2e6da4;font-size: 11px;margin: 2px 0 0 5px;float: left;margin:0 0 10px 5px">评论（99+）</p>
             </div>
@@ -125,9 +127,12 @@
         home: [],
         sex: "",
         email: "",
+        photonum: "",
+        blognum: "",
         nickname: "",
         blogs: [],
         loading:false,
+        loginUser:"",
         note: {
           backgroundImage: "url(" + require("../assets/zhuye.jpg") + ")",
           backgroundRepeat: "no-repeat",
@@ -136,12 +141,8 @@
     },
 
     mounted() {
-
-      // this.$store.state.loginUser=this.$route.params.id;
-      console.log("打印vuex里面得全局变量");
-      console.log(this.$store.state.loginUser);
-
       this.loading=true;
+      this.loginUser=localStorage.getItem("loginUser");
       let id = this.$route.params.id;
       getUser({userid: id})
         .then(res => {
@@ -154,8 +155,8 @@
           this.sign = result.sign;
           this.pv = result.pv;
           this.email = result.email;
-          this.personal = result.personals;
-          console.log(this.personal);
+          this.photonum = result.photonum;
+          this.blognum = result.blognum;
         });
       getNewBlog({userid: id})
         .then(res => {
@@ -175,7 +176,6 @@
           console.log("取得个人信息数据失败");
         });
       this.loading=true;
-      // this.reload();
     },
 
 

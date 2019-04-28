@@ -26,10 +26,8 @@
           <el-input v-model="ruleForm2.nickname"></el-input>
         </el-form-item>
         <el-form-item>
-          <router-link to="/login">
-            <!--            <el-button type="submit" value="注册" @click="doRegister">注册</el-button>-->
-            <el-button type="primary" @click="submitForm('ruleForm2')">注册</el-button>
-          </router-link>
+          <el-button type="primary" @click="submitForm()">注册</el-button>
+
         </el-form-item>
       </el-form>
 
@@ -109,47 +107,41 @@
         },
       }
     },
+
     methods: {
-      submitForm(formName) {
+      submitForm() {
         let data = {
           username: this.ruleForm2.name,
           password: this.ruleForm2.pass,
-          sex: this.ruleForm2.sex,
+          sex: "男",
           nickname: this.ruleForm2.nickname
         };
         console.log(data);
-        // 传递数据
+        console.log("获取成功");
         axios.post("/api/register", data)
           .then(res => {
             console.log(res.data);
+            // alert('注册成功');
           }).catch(error => {
           console.log(error);
+          // console.log('注册失败');
+          // return false;
         });
         console.log("点击注册按钮");
-        // 弹出框
-        this.$alert('成功注册', '注册页面', {
-          confirmButtonText: '确定',
-          callback: action => {
-            this.$message({
-              type: 'info',
-              message: `action: ${ action }`
-            });
-          }
-        });
-
+        // 传递数据
         // this.$refs[formName].validate((valid) => {
         //   if (valid) {
-        //     alert('注册成功!');
+        //     alert('注册成功');
+        //     // location.href = "/login"
         //   } else {
-        //     console.log('error submit!!');
+        //     console.log('注册失败');
         //     return false;
         //   }
         // });
       },
       // resetForm(formName) {
       //   this.$refs[formName].resetFields();
-      // },
-
+      // }
     }
   }
 </script>

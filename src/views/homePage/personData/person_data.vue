@@ -167,7 +167,7 @@
       }
     },
     mounted(){
-      const id = this.$route.params.id;
+      const id = localStorage.getItem("loginUser");
       this.loading=true;
       getUser({userid:id})
         .then(res=>{
