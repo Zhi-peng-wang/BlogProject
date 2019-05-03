@@ -29,16 +29,16 @@
             </el-form-item>
             <!-- 用户名-->
             <el-form-item label="用户名" prop="username">
-              <el-input v-model="ruleForm.username"></el-input>
+              <el-input v-model.trim="ruleForm.username"></el-input>
             </el-form-item>
             <!--昵称-->
             <el-form-item label="昵称" prop="nickname">
-              <el-input v-model="ruleForm.nickname"></el-input>
+              <el-input v-model.trim="ruleForm.nickname"></el-input>
             </el-form-item>
 
             <!--个签-->
             <el-form-item label="个签" prop="sign">
-              <el-input v-model="ruleForm.sign"></el-input>
+              <el-input v-model.trim="ruleForm.sign"></el-input>
             </el-form-item>
             <el-form-item label="性别" prop="sex">
               <el-select v-model="ruleForm.sex" placeholder="男">
@@ -48,15 +48,15 @@
             </el-form-item>
             <!--年龄-->
             <el-form-item label="年龄" prop="age">
-              <el-input v-model.number="ruleForm.age"></el-input>
+              <el-input v-model.number.trim="ruleForm.age"></el-input>
             </el-form-item>
             <!--电话-->
             <el-form-item label="电话" prop="Tel">
-              <el-input v-model="ruleForm.Tel"></el-input>
+              <el-input v-model.trim="ruleForm.Tel"></el-input>
             </el-form-item>
             <!--邮箱-->
             <el-form-item  label="邮箱" prop="email">
-              <el-input v-model="ruleForm.email"></el-input>
+              <el-input v-model.trim="ruleForm.email"></el-input>
             </el-form-item>
             <!--生日-->
             <el-form-item  label="生日" prop="birth">
@@ -64,7 +64,7 @@
             </el-form-item>
             <!--地址-->
             <el-form-item  label="地址" prop="add">
-              <el-input v-model="ruleForm.add"></el-input>
+              <el-input v-model.trim="ruleForm.add"></el-input>
             </el-form-item>
             <!--提交-->
             <el-form-item>

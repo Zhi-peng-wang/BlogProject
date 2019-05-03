@@ -8,7 +8,7 @@
         <div style="margin-left: 30px">
           <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
           <el-button type="danger"  style="margin-left: 450px"
-                     @click="[open_all()]">
+                     @click="[open_all()]" :disabled="checkedBlogs.length<2">
             批量删除
           </el-button>
           <div style="margin: 15px 0;"></div>
@@ -16,8 +16,8 @@
             <el-checkbox v-for="(t,index) in blog_check" :label="t" :key="index" class="blog_label">
               <div>
                 <div style="width: 100px;display: inline-block">{{t.classname}}</div>
-                <div style="width: 100px;display: inline-block">{{t.title.slice(0,20)+"..."}}</div>
-                <div style="margin-left:150px;display: inline-block;">{{t.blogdate.slice(0,10)}}</div>
+                <div style="width: 100px;display: inline-block">{{t.title.length<13?t.title:t.title.slice(0,13)+"..."}}</div>
+                <div style="margin-left:130px;display: inline-block;">{{t.blogdate.slice(0,10)}}-{{t.blogdate.slice(11,16)}}</div>
                 <div  style="margin-left:40px;display: inline-block;">
                   <el-button type="danger"  @click="[open([t.blogid,t])]">删除</el-button>
                 </div>
@@ -79,14 +79,16 @@
             this.deleteAllBlogAction();
             this.$message({
               type: 'success',
-              message: '删除成功!'
+              message: '删除成功!',
+              showClose:true
             });
           }
         }).catch((err) => {
           if (err === 'cancel') {     //取消的回调
             this.$message({
               type: 'info',
-              message: '已取消删除'
+              message: '已取消删除',
+              showClose:true
             });
           }
         });
@@ -126,14 +128,16 @@
             this.deleteBlog([blogid,t]);
             this.$message({
               type: 'success',
-              message: '删除成功!'
+              message: '删除成功!',
+              showClose:true
             });
           }
         }).catch((err) => {
           if (err === 'cancel') {     //取消的回调
             this.$message({
               type: 'info',
-              message: '已取消删除'
+              message: '已取消删除',
+              showClose:true
             });
           }
         });

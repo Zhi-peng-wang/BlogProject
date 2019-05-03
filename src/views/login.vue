@@ -14,12 +14,11 @@
           <el-button @click="dologin" type="submit">登录</el-button><br>
 
           <div class="other">
-            <span id="qqLoginBtn" style="float: left;size: 13px"></span>
+            <!--<span id="qqLoginBtn" style="float: left;size: 13px"></span>-->
             <div>
               <router-link to="/register" style="float: right;margin:50px 10px 0 0;font-size: 14px;color:#888888">免费注册账号</router-link>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -28,6 +27,9 @@
 </template>
 
 <script>
+  // QC.Login({
+  //   btnId:"qqLoginBtn"
+  // });
   import {login} from "../api";
   export default {
     data(){
@@ -73,9 +75,7 @@
       }
     }
   }
-  QC.Login({
-    btnId:"qqLoginBtn"
-  });
+
 </script>
 
 <style scoped>

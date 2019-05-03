@@ -8,26 +8,28 @@
                ref="ruleForm2" label-width="100px"
                class="demo-ruleForm" style="margin-right: 60px">
         <el-form-item label="用户名" prop="name">
-          <el-input v-model="ruleForm2.name"></el-input>
+          <el-input v-model="ruleForm2.name" placeholder="请输入您的用户名" autofocus="autofocus"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="pass">
-          <el-input type="password" v-model="ruleForm2.pass" auto-complete="off"></el-input>
+          <el-input type="password" v-model="ruleForm2.pass" placeholder="请输入您的密码"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="checkPass">
-          <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off"></el-input>
+          <el-input type="password" v-model="ruleForm2.checkPass" placeholder="请再次输入您的密码"></el-input>
         </el-form-item>
         <el-form-item label="性别" prop="sex">
-          <el-select v-model="ruleForm2.sex" placeholder="请选择" style="width: 250px">
+          <el-select v-model="ruleForm2.sex" placeholder="请选择您的性别" style="width: 250px">
             <el-option label="男" value="男"></el-option>
             <el-option label="女" value="女"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="网名" prop="nickname">
-          <el-input v-model="ruleForm2.nickname"></el-input>
+          <el-input v-model="ruleForm2.nickname" auto-complete="off" placeholder="请输入您的网名"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm()">注册</el-button>
-
+          <el-button type="primary" @click="submitForm()"
+                     :disabled="ruleForm2.name.length===0|ruleForm2.pass.length===0|ruleForm2.checkPass.length===0|ruleForm2.sex.length===0|ruleForm2.nickname.length===0">
+            注册
+          </el-button>
         </el-form-item>
       </el-form>
 
@@ -66,7 +68,6 @@
           checkPass: "",
           sex: "",
           nickname: "",
-          sendPassword: ""
         },
         rules2: {
           pass: [
@@ -90,17 +91,14 @@
             {pattern: /^[\w\s]+$/, message: '用户名不能为中文', trigger: 'blur'},
             {
               pattern: /^[a-z]*\d*[a-z]+\d+[a-z]*\d*$/i || /^[a-z]*\d*\d+[a-z]+[a-z]*\d*$/,
-              message: '密码不能为纯数字或纯英文',
+              message: '密码不能为纯数字或纯英文且数字不能开头',
               trigger: 'blur'
             }
-
           ],
           nickname: [
-            {required: true, message: '请输入网名', trigger: 'blur'},
+            {required: true, message: '请输入您的网名', trigger: 'blur'},
           ],
-
         },
-
         note: {
           backgroundImage: "url(" + require("../assets/time.jpeg") + ")",
           backgroundRepeat: "no-repeat",
@@ -117,7 +115,7 @@
           nickname: this.ruleForm2.nickname
         };
         console.log(data);
-        console.log("获取成功");
+        console.log("下面执行注册接口");
         axios.post("/api/register", data)
           .then(res => {
             console.log(res.data);

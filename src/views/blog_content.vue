@@ -28,7 +28,7 @@
                 </p>
                 <p style="line-height: 40px;margin: 0;font-size: 12px">
                   {{c.commentdate.slice(0,10)}}
-                  <el-button @click="replay(c.nickname)" type="primary" plain size="mini" style="margin-left: 15px">
+                  <el-button @click="replay(c.nickname,c.fromuser,c.commentid)" type="primary" plain size="mini" style="margin-left: 15px">
                     回复
                   </el-button>
                 </p>
@@ -41,17 +41,19 @@
                   <div class="col-md-2" style="padding: 0">
                     <div style="width: 80px;height: 80px;margin: 0 auto">
                       <!--<img src="holder.js/100px50" alt="图片">-->
-                      <p style="line-height: 80px;margin: 0;text-align: center">头像</p>
+                      <p style="line-height: 80px;margin: 0;text-align: center">
+                        头像
+                      </p>
                     </div>
                   </div>
                   <div class="col-md-10" style="padding: 0">
                     <div style="height: 80px">
                       <p style="line-height: 40px;margin: 0;font-size: 16px">
-                        {{r.nickname}} 回复：{{c.nickname}}：{{r.content}}
+                        {{r.nickname}} 回复：{{c.fromuser}}：{{r.content}}
                       </p>
                       <p style="line-height: 40px;margin: 0;font-size: 12px">
                         {{r.commentdate.slice(0,10)}}
-                        <el-button @click="replay(r.nickname)" type="primary" plain size="mini" style="margin-left: 15px">
+                        <el-button @click="replay(r.nickname,c.fromuser,c.commentid)" type="primary" plain size="mini" style="margin-left: 15px">
                           回复
                         </el-button>
                       </p>
@@ -95,19 +97,16 @@
             发表评论
           </el-button>
         </div>
-
-
       </div>
     </div>
   </div>
 </template>
 <script>
-  import {getBlog} from "../api";
+  import {addComment, getBlog} from "../api";
   export default {
     data() {
       return {
-        //日志的详情内容
-        blogContent: [],
+        blogContent: [],    //日志的详情内容
         loading:false,
         blogComment:[],
         replayComment:[],
@@ -115,7 +114,10 @@
         blogUser:"",
         commentIds:[],
         commentContent:"",
-
+        replayContent:"",      //回复的内容
+        fromuserid:"",          //回复评论者的id
+        commentId:"",           //回复那篇的评论commentid
+        // commentUser:""          //回复的第二个人的名字
       }
     },
     mounted(){
@@ -140,6 +142,7 @@
               }
             }
           });
+          console.log("打印评论");
           console.log(this.blogComment);
           const commentIds=res.obj.map(item=>({
             commentid:item.commentid
@@ -160,29 +163,81 @@
           });
           console.log(this.replayComment);
         }).catch(error=> {
-          console.log(error);
-          this.$router.push(`/wrong`)
+        console.log("dayi");
+        console.log(error);
+        // this.$router.push(`/wrong`)
       });
     },
     methods:{
       addComment(){
-        console.log("asada");
+        console.log("添加评论按钮触发");
+        let data={
+          content:this.commentContent,        //评论内容
+          fromuser:localStorage.getItem("loginUser"),   //来自谁的评论
+          touser:this.$route.params.id,       //给谁的评论
+          status:"0",       //是否已读
+          typeid:"0",       //判断是否是评论还是回复
+          parentid:"0",      //评论还是回复
+          id:this.$route.query.blogid       //日志id或者相册id
+        };
+        console.log(data);
+        addComment(data)
+          .then(res=>{
+            console.log(res);
+            console.log("评论成功打印");
+          })
+          .catch(err=>{
+            console.log("评论错误打印");
+            console.log(err);
+          })
       },
-      replay(info){
-        this.$prompt('请输入对  @'+info+'  回复', '回复', {
+      replay(nickname,fromuserid,commentId){
+        // this.commentUser=nickname;      //回复的第二个人的名字
+        this.fromuserid=fromuserid;
+        this.commentId=commentId;
+
+        // console.log("打印信息："+this.commentUser+nickname);
+
+        this.$prompt('请输入对  @'+nickname+fromuserid+'  回复', '回复', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(({ value }) => {
+
+          this.replayContent=value;
+          console.log(this.replayContent);
           this.$message({
             type: 'success',
-            message: '回复内容是: ' + value
+            message: '回复内容是: ' + value,
           });
+          this.reComment();
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '取消输入'
           });
         });
+        console.log(nickname,fromuserid,commentId);
+      },
+      reComment(){
+        console.log("回复的内容");
+        let data={
+          content:this.replayContent,        //回复的内容
+          fromuser:localStorage.getItem("loginUser"),   //来自谁的回复
+          touser:this.fromuserid,       //回复评论者的id
+          status:"0",       //是否已读
+          typeid:"1",       //判断是否是评论还是回复
+          parentid:this.commentId,      //评论还是回复
+          id:this.$route.query.blogid       //日志id或者相册id
+        };
+        console.log(data);
+        addComment(data)
+          .then(res=>{
+            console.log("点击回复的内容");
+            console.log(res);
+          })
+          .catch(err=>{
+            console.log(err);
+          })
       }
     }
   }

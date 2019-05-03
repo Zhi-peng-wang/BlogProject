@@ -69,7 +69,8 @@
           blog_url_1:[],
           blog_url_2:[],
           blog_url_2_2:[],
-          idxA:0
+          idxA:0,
+          blogOldDate:""
         }
       },
       created(){
@@ -100,6 +101,9 @@
         editBlog({blogid:this.$route.query.blogid})
           .then(res=>{
             console.log(res);
+            //blog的日期   用来保存 并传递给后台
+            this.blogOldDate=res.object.blogdate;
+
             this.blog_title=res.object.title;
             this.content=res.object.content;
             let idx=res.object.classid;
@@ -153,25 +157,23 @@
             content:this.content};
           addBlog(data)
             .then(res=>{
-              console.log("提交成功");
+              console.log("编辑接口触发");
+              console.log(res);
               if(res.status===200){
                 this.$notify({
-                  title: '成功',
-                  message: '这是一条成功的提示消息',
+                  title: '编辑日志',
+                  message: '编辑日志成功',
                   type: 'success'
                 });
-                this.dataClass.classB="";
-                this.blog_title="";
-                this.content="";
-                this.dataClass.classA="";
-                this.dataClass.classB="";
-              }else {
+                //点击编辑返回上一个页面
+                this.$router.push(`/${this.$route.params.id}/home_page/all_blog_list`);
+              }
+              else {
                 this.$notify.error({
-                  title: '错误',
-                  message: '所填写内容不能为空！'
+                  title: '编辑日志',
+                  message: '编辑日志发生错误，请检查'
                 });
               }
-              console.log(res);
             })
             .catch(error=>{
               console.log("提交失败");

@@ -38,7 +38,7 @@
               </quill-editor>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="send_blog">提交</el-button>
+              <el-button type="primary" @click="confirmAddBlog">提交</el-button>
               <el-button @click="reset_blog">重置</el-button>
             </el-form-item>
           </el-form>
@@ -66,7 +66,8 @@
         },
         blog_url_1:[],
         blog_url_2:[],
-        blog_url_2_2:[]
+        blog_url_2_2:[],
+        jumpRouter:true,      //是否容许跳转路由
       }
     },
     created() {
@@ -115,35 +116,59 @@
       },
       onEditorChange(){//内容改变事件
       },
+      confirmAddBlog(){
+        this.$confirm('确认提交', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then((action) => {
+          if (action === 'confirm') {     //确认的回调
+            this.send_blog();
+          }
+        }).catch((err) => {
+          if (err === 'cancel') {
+            this.$message({
+              type: 'info',
+              message: '取消添加',
+              showClose:true
+            });
+          }
+        });
+      },
+
       send_blog(){
-        console.log("提交按钮已触发");
+        console.log("提交函数已触发");
         let data={
           blogid:this.$route.query.blogid,
           userid:this.$route.params.id,
           classid:this.dataClass.classB,
           title:this.blog_title,
-          content:this.content};
+          content:this.content
+        };
         addBlog(data)
           .then(res=>{
-            console.log("提交成功");
+            console.log("执行提交接口");
+            console.log(res);
+            if (res.status===500){
+              this.jumpRouter=false
+            }
             if(res.status===200){
+                this.jumpRouter=true;
                 this.$notify({
-                  title: '成功',
-                  message: '这是一条成功的提示消息',
+                  title: '添加日志',
+                  message: '添加日志成功',
                   type: 'success'
                 });
-                this.dataClass.classB="";
-                this.blog_title="";
-                this.content="";
-                this.dataClass.classA="";
-                this.dataClass.classB="";
-            }else {
+              // 写一个函数，用来检测是否继续添加，还是返回日志列表界面
+              this.isAdd()
+            } else {
               this.$notify.error({
-                title: '错误',
-                message: '所填写内容不能为空！'
+                title: '添加日志',
+                message: '所填写内容不能为空！',
+                type: 'error'
               });
             }
-            console.log(res);
           })
           .catch(error=>{
             console.log("提交失败");
@@ -155,6 +180,33 @@
         this.content="";
         this.dataClass.classA="";
         this.dataClass.classB="";
+      },
+      isAdd(){
+        this.$confirm('添加成功，选择下一步操作', '提示', {
+          confirmButtonText: '返回日志列表',
+          cancelButtonText: '继续添加',
+          type: 'success',
+          center: true
+        }).then((action) => {
+          if (action === 'confirm') {     //确认的回调
+            this.$message({
+              type: 'success',
+              message: '返回日志列表',
+              showClose:true
+            });
+            //跳转
+            this.$router.push(`/${this.$route.params.id}/home_page/all_blog_list`);
+          }
+        }).catch((err) => {
+          if (err === 'cancel') {
+            this.$message({
+              type: 'success',
+              message: '继续添加',
+              showClose:true
+            });
+            this.reset_blog()
+          }
+        });
       }
     }
   }

@@ -92,6 +92,9 @@
       }
     },
     mounted(){
+      sessionStorage.setItem("sorderA", "");
+      sessionStorage.setItem("sAclassName","");
+      sessionStorage.setItem("sAclassId", "");
       this.loginUser=localStorage.getItem("loginUser");
     }
   }

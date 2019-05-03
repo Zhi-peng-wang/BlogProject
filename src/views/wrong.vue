@@ -23,7 +23,7 @@
         //         this.$router.push(`/10000/index`)
         // },
         prev () {
-          this.$router.go(-2)
+          this.$router.go(-1)
         }
       }
     }
