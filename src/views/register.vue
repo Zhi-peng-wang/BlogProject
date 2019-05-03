@@ -26,8 +26,8 @@
           <el-input v-model="ruleForm2.nickname" auto-complete="off" placeholder="请输入您的网名"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm()"
-                     :disabled="ruleForm2.name.length===0|ruleForm2.pass.length===0|ruleForm2.checkPass.length===0|ruleForm2.sex.length===0|ruleForm2.nickname.length===0">
+          <el-button type="primary" @click="submitForm('ruleForm2')"
+                     :disabled="ruleForm2.name.length===0||ruleForm2.pass.length===0||ruleForm2.checkPass.length===0||ruleForm2.sex.length===0||ruleForm2.nickname.length===0">
             注册
           </el-button>
         </el-form-item>
@@ -97,6 +97,7 @@
           ],
           nickname: [
             {required: true, message: '请输入您的网名', trigger: 'blur'},
+            {min: 2, max: 12, message: '长度在1到12个字符', trigger: 'blur'},
           ],
         },
         note: {
@@ -107,39 +108,64 @@
     },
 
     methods: {
-      submitForm() {
-        let data = {
-          username: this.ruleForm2.name,
-          password: this.ruleForm2.pass,
-          sex: "男",
-          nickname: this.ruleForm2.nickname
-        };
-        console.log(data);
-        console.log("下面执行注册接口");
-        axios.post("/api/register", data)
-          .then(res => {
-            console.log(res.data);
-            // alert('注册成功');
-          }).catch(error => {
-          console.log(error);
-          // console.log('注册失败');
-          // return false;
+      submitForm(ruleForm2) {
+        this.$refs[ruleForm2].validate((valid) => {
+          if (valid) {
+            //注册信息有效
+            let data = {
+              username: this.ruleForm2.name,
+              password: this.ruleForm2.pass,
+              sex: "男",
+              nickname: this.ruleForm2.nickname
+            };
+            console.log(data);
+            console.log("下面执行注册接口");
+            axios.post("/api/register", data)
+              .then(res => {
+                console.log(res.data);
+                if (res.data.status===200){
+                  this.$confirm('注册成功', '网页信息', {
+                    confirmButtonText: '去登录',
+                    cancelButtonText: '继续注册',
+                    type:"success",
+                    center:true,
+                  }).then(() => {
+                    this.$message({
+                      type: 'success',
+                      message: '欢迎您的到来!'
+                    });
+                    // this.$router.go(-1)
+                    //跳转到登录页要进行刷新
+                    location.href = "/login"
+                  }).catch(() => {
+                    this.$message({
+                      type: 'info',
+                      message: '继续注册'
+                    });
+                    //重置的方法
+                    this.$refs[ruleForm2].resetFields();
+                  });
+                }
+              }).catch(error => {
+              console.log(error);
+            });
+          } else {
+            this.$alert('所填内容不符合规范', '网页消息', {
+              confirmButtonText: '确定',
+              type:"error",
+              center:"true",
+              callback: action => {
+                this.$message({
+                  type: 'error',
+                  showClose: true,
+                  message: `提示: ${ '所填内容不符合规范,请认真填写' }`
+                });
+              }
+            });
+            return false;
+          }
         });
-        console.log("点击注册按钮");
-        // 传递数据
-        // this.$refs[formName].validate((valid) => {
-        //   if (valid) {
-        //     alert('注册成功');
-        //     // location.href = "/login"
-        //   } else {
-        //     console.log('注册失败');
-        //     return false;
-        //   }
-        // });
       },
-      // resetForm(formName) {
-      //   this.$refs[formName].resetFields();
-      // }
     }
   }
 </script>

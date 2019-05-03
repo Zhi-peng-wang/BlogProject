@@ -89,29 +89,30 @@
           </div>
         </el-col>
 
-        <!--        右边部分-->
+        <!--右边部分-->
         <el-col :span="16">
           <div class="txt"
                v-for="(t,index) in home" :key="index">
-
             <div class="title"> {{t.title}}</div>
             <div class="content" v-html="t.content"> {{t.content}}</div>
             <div class="fixed">
-              <img src="../assets/alarm-fill.png" style="width: 15px;height: 15px;float: left">
-              <span style="color: #2e6da4;font-size: 11px;margin: 2px 0 0 5px;float: left;margin:0 0 10px 5px">
+              <img src="../assets/alarm-fill.png" class="blogIcon">
+              <span class="blogDP">
              {{t.blogdate.slice(0,10)}}-{{t.blogdate.slice(11,16)}}
             </span>
-              <img src="../assets/eye-line.png" style="width: 15px;height: 15px;float: left;margin:0 0 10px 20px">
-              <p style="color: #2e6da4;font-size: 11px;margin: 2px 0 0 5px;float: left;margin:0 0 10px 5px">浏览（{{t.pv}}）</p>
-              <img src="../assets/pl.png" style="width: 15px;height: 15px;float: left;margin:0 0 10px 20px">
-              <p style="color: #2e6da4;font-size: 11px;margin: 2px 0 0 5px;float: left;margin:0 0 10px 5px">评论（99+）</p>
+              <img src="../assets/eye-line.png" class="blogIcon">
+              <p class="blogDP">浏览（{{t.pv}}）</p>
+              <img src="../assets/pl.png" class="blogIcon">
+              <p class="blogDP">评论（99+）</p>
+              <router-link :to="{path:`/${$route.params.id}`+'/blog/blog_content',query:{blogid:t.blogid}}"
+                           class="blogDP"
+                           style="font-size: 14px;margin:0 0 10px 300px">
+                <el-button  size="mini">阅读全文</el-button>
+              </router-link>
             </div>
           </div>
-
         </el-col>
-
       </el-row>
-
     </div>
   </div>
 </template>
@@ -168,6 +169,7 @@
             title: item.title,
             content: item.content,
             blogdate: item.blogdate,
+            blogid:item.blogid
           }));
           this.home = blogs;
           console.log(this.home);
@@ -183,6 +185,18 @@
 </script>
 
 <style scoped>
+  .blogDP{
+    color: #2e6da4;
+    font-size: 11px;
+    float: left;
+    margin:10px 0 10px 5px
+  }
+  .blogIcon{
+    width: 15px;
+    height: 15px;
+    float: left;
+    margin:10px 0 10px 10px
+  }
   a{
     display: block;
   }

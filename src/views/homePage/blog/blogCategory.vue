@@ -16,39 +16,36 @@
                              style="height: 120px">
                       <option v-for="(b1,index) in blog_url_1" :key="index"
                               @click="sendClassAId([b1.classid,b1.orderclass,b1.classname,b1])"
-                              :id="b1.classid" :value="b1.classname"  :label="index+1+':'+b1.classname">
-                        <!--{{index+1}}:{{b1.classname}}-->
+                             >
+                        {{index+1}}:{{b1.classname}}
                       </option>
                     </select>
-                    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                    <el-form :model="ruleFormA" :rules="rules" ref="ruleFormA"
+                             label-width="100px" class="demo-ruleForm">
                       <el-form-item label="栏目排序" prop="orderA">
-                        <el-input v-model="ruleForm.orderA"></el-input>
+                        <el-input type="text" v-model="ruleFormA.orderA" autofocus="autofocus"></el-input>
                       </el-form-item>
                       <el-form-item label="栏目名称" prop="classAName">
-                        <el-input v-model="ruleForm.classAName"></el-input>
+                        <el-input type="text" v-model="ruleFormA.classAName"></el-input>
+                      </el-form-item>
+                      <el-form-item>
+                        <el-button type="primary" @click="classA('ruleFormA')"
+                                   style="margin-left: -70px">
+                          添加
+                        </el-button>
+                        <el-button type="warning" @click="editA('ruleFormA')">
+                          编辑
+                        </el-button>
+                        <el-button type="danger" @click="deleteA()">
+                          删除
+                        </el-button>
+                        <el-button type="danger" @click="resetA()">
+                          重置
+                        </el-button>
                       </el-form-item>
                     </el-form>
-                    <el-button type="primary" class="btn btn-info pl-3 pr-3"
-                                @click="classA()"
-                               :disabled="ruleForm.orderA.length===0||ruleForm.orderA.length>2||ruleForm.classAName.length===0||ruleForm.classAName.length>10">
-                      添加
-                    </el-button>
-                    <el-button type="warning" class="btn btn-primary pl-3 pr-3"
-                            @click="editA()"
-                               :disabled="ruleForm.orderA.length===0||ruleForm.orderA.length>2||ruleForm.classAName.length===0||ruleForm.classAName.length>10">
-                      编辑
-                    </el-button>
-                    <el-button type="danger" class="btn btn-danger pl-3 pr-3"
-                            @click="deleteA()"
-                               :disabled="ruleForm.orderA.length===0||ruleForm.orderA.length>2||ruleForm.classAName.length===0||ruleForm.classAName.length>10">
-                      删除
-                    </el-button>
-                    <el-button type="danger" class="btn btn-danger pl-3 pr-3"
-                               @click="resetA()"
-                               :disabled="ruleForm.orderA.length===0||ruleForm.orderA.length>2||ruleForm.classAName.length===0||ruleForm.classAName.length>10">
-                      重置
-                    </el-button>
                   </div>
+
                   <!--二级栏目-->
                   <div class="col-lg-6 col-sm-12">
                     <label>二级栏目：</label>
@@ -58,34 +55,29 @@
                         {{index+1}}:{{b2.classname}}
                       </option>
                     </select>
-                    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                    <el-form :model="ruleFormB" :rules="rules" ref="ruleFormB" label-width="100px" class="demo-ruleForm">
                       <el-form-item label="栏目排序" prop="orderB">
-                        <el-input v-model="ruleForm.orderB"></el-input>
+                        <el-input v-model="ruleFormB.orderB"></el-input>
                       </el-form-item>
                       <el-form-item label="栏目名称" prop="classBName">
-                        <el-input v-model="ruleForm.classBName"></el-input>
+                        <el-input v-model="ruleFormB.classBName"></el-input>
+                      </el-form-item>
+                      <el-form-item>
+                        <el-button type="primary" @click="classB('ruleFormB')"
+                                   style="margin-left: -70px">
+                          添加
+                        </el-button>
+                        <el-button type="warning" @click="editB('ruleFormB')">
+                          编辑
+                        </el-button>
+                        <el-button type="danger" @click="deleteB()">
+                          删除
+                        </el-button>
+                        <el-button type="danger" @click="resetB()">
+                          重置
+                        </el-button>
                       </el-form-item>
                     </el-form>
-                    <el-button type="primary" class="btn btn-info pl-3 pr-3"
-                                @click="classB()"
-                               :disabled="ruleForm.orderB.length===0||ruleForm.orderB.length>2||ruleForm.classBName.length===0||ruleForm.classBName.length>10">
-                      添加
-                    </el-button>
-                    <el-button type="warning" class="btn btn-primary pl-3 pr-3"
-                            @click="editB()"
-                               :disabled="ruleForm.orderB.length===0||ruleForm.orderB.length>2||ruleForm.classBName.length===0||ruleForm.classBName.length>10">
-                      编辑
-                    </el-button>
-                    <el-button type="danger" class="btn btn-danger pl-3 pr-3"
-                            @click="deleteB()"
-                               :disabled="ruleForm.orderB.length===0||ruleForm.orderB.length>2||ruleForm.classBName.length===0||ruleForm.classBName.length>10">
-                      删除
-                    </el-button>
-                    <el-button type="danger" class="btn btn-danger pl-3 pr-3"
-                               @click="resetB()"
-                               :disabled="ruleForm.orderB.length===0||ruleForm.orderB.length>2||ruleForm.classBName.length===0||ruleForm.classBName.length>10">
-                      重置
-                    </el-button>
                   </div>
                 </div>
               </div>
@@ -109,39 +101,47 @@
         blog_url_2_2:[],
         blogClassAId:"",
         blogClassBId:"",
-        ruleForm: {
+        ruleFormA: {
           orderA:"",
           classAName:"",
+        },
+        ruleFormB: {
           orderB:"",
           classBName:"",
         },
         rules:{
-          classAName:[
-            { required: true, message: '  ', trigger: 'blur' },
-            { min: 1, max: 10, message: '1-10个字符', trigger: 'blur' },
-          ],
           orderA:[
-            { required: true, message: '  ', trigger: 'blur' },
+            { required: true, message: '必填项', trigger: 'blur' },
             {pattern:/^(([1-9]\d?)|100)$/,message:'数字1-99',trigger: 'blur'},
           ],
-          classBName:[
-            { required: true, message: '  ', trigger: 'blur' },
+          classAName:[
+            { required: true, message: '必填项', trigger: 'blur' },
             { min: 1, max: 10, message: '1-10个字符', trigger: 'blur' },
           ],
           orderB:[
-            { required: true, message: '  ', trigger: 'blur' },
+            { required: true, message: '必填项', trigger: 'blur' },
             {pattern:/^(([1-9]\d?)|100)$/,message:'数字1-99',trigger: 'blur'},
           ],
+          classBName:[
+            { required: true, message: '必填项', trigger: 'blur' },
+            { min: 1, max: 10, message: '1-10个字符', trigger: 'blur' },
+          ]
         }
       };
     },
+    // created(){
+    //   sessionStorage.setItem("sorderA", "");
+    //   sessionStorage.setItem("sAclassName", "");
+    //   sessionStorage.setItem("sorderB", "");
+    //   sessionStorage.setItem("sBclassName", "");
+    // },
     mounted() {
-      this.ruleForm.orderA=sessionStorage.getItem("sorderA");
-      this.ruleForm.classAName=sessionStorage.getItem("sAclassName");
+      this.ruleFormA.orderA=sessionStorage.getItem("sorderA");
+      this.ruleFormA.classAName=sessionStorage.getItem("sAclassName");
       this.blogClassAId=sessionStorage.getItem("sAclassId");
 
-      this.ruleForm.orderB=sessionStorage.getItem("sorderB");
-      this.ruleForm.classBName=sessionStorage.getItem("sBclassName");
+      this.ruleFormB.orderB=sessionStorage.getItem("sorderB");
+      this.ruleFormB.classBName=sessionStorage.getItem("sBclassName");
       this.blogClassBId=sessionStorage.getItem("sBclassId");
       //拿到分类
       getClass({userid:this.$route.params.id,typeid:1})
@@ -169,23 +169,41 @@
     },
     methods:{
       // 一级栏目添加弹框
-      classA(){
-        this.$confirm('确认添加?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center:true
-        }).then((action) => {
-          if (action==='confirm'){    //成功的回调
-            this.addClassA();
-          }
-        }).catch((err) => {
-          if (err==='cancel'){       //失败的回调
-            this.$message({
-              showClose: true,
-              type: 'info',
-              message: '已取消添加'
+      classA(ruleFormA){
+        this.$refs[ruleFormA].validate((valid) => {
+          if (valid) {
+            this.$confirm('确认添加?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning',
+              center:true
+            }).then((action) => {
+              if (action==='confirm'){    //成功的回调
+                this.addClassA();
+              }
+            }).catch((err) => {
+              if (err==='cancel'){       //失败的回调
+                this.$message({
+                  showClose: true,
+                  type: 'info',
+                  message: '已取消添加'
+                });
+              }
             });
+          } else {
+            this.$alert('所填内容不符合规范', '网页消息', {
+              confirmButtonText: '确定',
+              type:"error",
+              center:"true",
+              callback: action => {
+                this.$message({
+                  type: 'error',
+                  showClose: true,
+                  message: `提示: ${ '所填内容不符合规范,请认真填写' }`
+                });
+              }
+            });
+            return false;
           }
         });
       },
@@ -194,11 +212,11 @@
         console.log("一级栏目的点击事件");
         let data={
           userid: this.$route.params.id,
-          classname:this.ruleForm.classAName,
+          classname:this.ruleFormA.classAName,
           parentid:"1",
-          orderclass:this.ruleForm.orderA,
+          orderclass:this.ruleFormA.orderA,
           depth:"1",
-          url:this.ruleForm.classAName,
+          url:this.ruleFormA.classAName,
           typeid:"1"
         };
         console.log(data);
@@ -206,8 +224,8 @@
           .then(res=>{
             console.log(res);
             if (res.status==200){
-              sessionStorage.setItem("sorderA", this.ruleForm.orderA);
-              sessionStorage.setItem("sAclassName", this.ruleForm.classAName);
+              sessionStorage.setItem("sorderA", this.ruleFormA.orderA);
+              sessionStorage.setItem("sAclassName", this.ruleFormA.classAName);
               this.$message({
                 showClose: true,
                 message: '添加成功！',
@@ -228,23 +246,41 @@
           });
       },
       // 二级栏目添加弹框
-      classB(){
-        this.$confirm('确认添加?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center:true
-        }).then((action) => {
-          if (action==='confirm'){    //成功的回调
-            this.addClassB();
-          }
-        }).catch((err) => {
-          if (err==='cancel'){       //失败的回调
-            this.$message({
-              showClose: true,
-              type: 'info',
-              message: '已取消添加'
+      classB(ruleFormB){
+        this.$refs[ruleFormB].validate((valid) => {
+          if (valid) {
+            this.$confirm('确认添加?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning',
+              center:true
+            }).then((action) => {
+              if (action==='confirm'){    //成功的回调
+                this.addClassB();
+              }
+            }).catch((err) => {
+              if (err==='cancel'){       //失败的回调
+                this.$message({
+                  showClose: true,
+                  type: 'info',
+                  message: '已取消添加'
+                });
+              }
             });
+          } else {
+            this.$alert('所填内容不符合规范', '网页消息', {
+              confirmButtonText: '确定',
+              type:"error",
+              center:"true",
+              callback: action => {
+                this.$message({
+                  type: 'error',
+                  showClose: true,
+                  message: `提示: ${ '所填内容不符合规范,请认真填写' }`
+                });
+              }
+            });
+            return false;
           }
         });
       },
@@ -253,11 +289,11 @@
         console.log("二级栏目的点击事件");
         let data={
           userid: this.$route.params.id,
-          classname:this.ruleForm.classBName,
+          classname:this.ruleFormB.classBName,
           parentid:this.blogClassAId,
-          orderclass:this.ruleForm.orderB,
+          orderclass:this.ruleFormB.orderB,
           depth:"2",
-          url:this.ruleForm.classBName,
+          url:this.ruleFormB.classBName,
           typeid:"1"
         };
         console.log(data);
@@ -265,8 +301,8 @@
           .then(res=>{
             console.log(res);
             if (res.status==200){
-              sessionStorage.setItem("sorderB", this.ruleForm.orderB);
-              sessionStorage.setItem("sBclassName", this.ruleForm.classBName);
+              sessionStorage.setItem("sorderB", this.ruleFormB.orderB);
+              sessionStorage.setItem("sBclassName", this.ruleFormB.classBName);
               this.$message({
                 showClose: true,
                 message: '添加成功！',
@@ -290,23 +326,23 @@
         console.log("一级分类被点击"+classid);
         console.log(obj);
         this.selectedOption=obj;
-        this.ruleForm.orderB="";
-        this.ruleForm.classBName="";
+        this.ruleFormB.orderB="";
+        this.ruleFormB.classBName="";
         //使用session存储
         sessionStorage.setItem("sorderA", orderA);
-        this.ruleForm.orderA=sessionStorage.getItem("sorderA");
+        this.ruleFormA.orderA=sessionStorage.getItem("sorderA");
 
         sessionStorage.setItem("sAclassName", className);
-        this.ruleForm.classAName=sessionStorage.getItem("sAclassName");
+        this.ruleFormA.classAName=sessionStorage.getItem("sAclassName");
 
         sessionStorage.setItem("sAclassId", classid);
         this.blogClassAId=sessionStorage.getItem("sAclassId");
 
         sessionStorage.setItem("sAobj", obj);
         this.selectedOption=sessionStorage.getItem("sAobj");
-        sessionStorage.setItem("sorderB", "");
-        sessionStorage.setItem("sBclassName", "");
-        sessionStorage.setItem("sBclassId", "");
+        // sessionStorage.setItem("sorderB", "");
+        // sessionStorage.setItem("sBclassName", "");
+        // sessionStorage.setItem("sBclassId", "");
         this.blog_url_2_2=[];
         this.blog_url_2.find(item=>{
           for (let i=0;i<this.blog_url_2.length;i++){
@@ -323,15 +359,15 @@
       sendClassBId([classid,orderB,className]){
         console.log("二级分类被点击"+classid);
         this.blogClassBId=classid;
-        this.ruleForm.orderB=orderB;
-        this.ruleForm.classBName=className;
+        this.ruleFormB.orderB=orderB;
+        this.ruleFormB.classBName=className;
 
         //使用session存储
         sessionStorage.setItem("sorderB", orderB);
-        this.ruleForm.orderB=sessionStorage.getItem("sorderB");
+        this.ruleFormB.orderB=sessionStorage.getItem("sorderB");
 
         sessionStorage.setItem("sBclassName", className);
-        this.ruleForm.classBName=sessionStorage.getItem("sBclassName");
+        this.ruleFormB.classBName=sessionStorage.getItem("sBclassName");
 
         sessionStorage.setItem("sBclassId", classid);
         this.blogClassBId=sessionStorage.getItem("sBclassId");
@@ -440,23 +476,41 @@
           });
       },
       // 一级栏目编辑弹框
-      editA(){
-        this.$confirm('确认编辑该分类吗?', '编辑分类', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center:true
-        }).then((action) => {
-          if (action==='confirm'){    //成功的回调
-            this.editClassA();
-          }
-        }).catch((err) => {
-          if (err==='cancel'){       //失败的回调
-            this.$message({
-              showClose: true,
-              type: 'info',
-              message: '取消编辑'
+      editA(ruleFormA){
+        this.$refs[ruleFormA].validate((valid) => {
+          if (valid) {
+            this.$confirm('确认编辑?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning',
+              center:true
+            }).then((action) => {
+              if (action==='confirm'){    //成功的回调
+                this.editClassA()
+              }
+            }).catch((err) => {
+              if (err==='cancel'){       //失败的回调
+                this.$message({
+                  showClose: true,
+                  type: 'info',
+                  message: '已取消编辑'
+                });
+              }
             });
+          } else {
+            this.$alert('所填内容不符合规范', '网页消息', {
+              confirmButtonText: '确定',
+              type:"error",
+              center:"true",
+              callback: action => {
+                this.$message({
+                  type: 'error',
+                  showClose: true,
+                  message: `提示: ${ '所填内容不符合规范,请认真填写' }`
+                });
+              }
+            });
+            return false;
           }
         });
       },
@@ -464,8 +518,8 @@
       editClassA(){
         let data={
           classid:this.blogClassAId,
-          orderclass:this.ruleForm.orderA,
-          classname:this.ruleForm.classAName
+          orderclass:this.ruleFormA.orderA,
+          classname:this.ruleFormA.classAName
         };
         editClass(data)
           .then(res=>{
@@ -476,11 +530,11 @@
                 message: '编辑成功！',
                 type: 'success'
               });
-              sessionStorage.setItem("sorderA", this.ruleForm.orderA);
-              this.ruleForm.orderA=sessionStorage.getItem("sorderA");
+              sessionStorage.setItem("sorderA", this.ruleFormA.orderA);
+              this.ruleFormA.orderA=sessionStorage.getItem("sorderA");
 
-              sessionStorage.setItem("sAclassName",this.ruleForm.classAName);
-              this.ruleForm.classAName=sessionStorage.getItem("sAclassName");
+              sessionStorage.setItem("sAclassName",this.ruleFormA.classAName);
+              this.ruleFormA.classAName=sessionStorage.getItem("sAclassName");
 
               sessionStorage.setItem("sAclassId", this.blogClassAId);
               this.blogClassAId=sessionStorage.getItem("sAclassId");
@@ -503,23 +557,41 @@
 
       },
       // 二级栏目添加弹框
-      editB(){
-        this.$confirm('确认编辑?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center:true
-        }).then((action) => {
-          if (action==='confirm'){    //成功的回调
-            this.editClassB();
-          }
-        }).catch(() => {
-          if (err==='cancel'){       //失败的回调
-            this.$message({
-              showClose: true,
-              type: 'info',
-              message: '取消编辑'
+      editB(ruleFormB){
+        this.$refs[ruleFormB].validate((valid) => {
+          if (valid) {
+            this.$confirm('确认编辑?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning',
+              center:true
+            }).then((action) => {
+              if (action==='confirm'){    //成功的回调
+                this.editClassB()
+              }
+            }).catch((err) => {
+              if (err==='cancel'){       //失败的回调
+                this.$message({
+                  showClose: true,
+                  type: 'info',
+                  message: '已取消编辑'
+                });
+              }
             });
+          } else {
+            this.$alert('所填内容不符合规范', '网页消息', {
+              confirmButtonText: '确定',
+              type:"error",
+              center:"true",
+              callback: action => {
+                this.$message({
+                  type: 'error',
+                  showClose: true,
+                  message: `提示: ${ '所填内容不符合规范,请认真填写' }`
+                });
+              }
+            });
+            return false;
           }
         });
       },
@@ -527,8 +599,8 @@
       editClassB(){
         let data={
           classid:this.blogClassBId,
-          orderclass:this.ruleForm.orderB,
-          classname:this.ruleForm.classBName
+          orderclass:this.ruleFormB.orderB,
+          classname:this.ruleFormB.classBName
         };
         editClass(data)
           .then(res=>{
@@ -539,11 +611,11 @@
                 message: '编辑成功！',
                 type: 'success'
               });
-              sessionStorage.setItem("sorderB", this.ruleForm.orderB);
-              this.ruleForm.orderB=sessionStorage.getItem("sorderB");
+              sessionStorage.setItem("sorderB", this.ruleFormB.orderB);
+              this.ruleFormB.orderB=sessionStorage.getItem("sorderB");
 
-              sessionStorage.setItem("sBclassName",this.ruleForm.classBName);
-              this.ruleForm.classBName=sessionStorage.getItem("sBclassName");
+              sessionStorage.setItem("sBclassName",this.ruleFormB.classBName);
+              this.ruleFormB.classBName=sessionStorage.getItem("sBclassName");
 
               sessionStorage.setItem("sBclassId", this.blogClassBId);
               this.blogClassBId=sessionStorage.getItem("sBclassId");
@@ -565,12 +637,12 @@
           });
       },
       resetA(){
-        this.ruleForm.orderA="";
-        this.ruleForm.classAName=""
+        this.ruleFormA.orderA="";
+        this.ruleFormA.classAName=""
       },
       resetB(){
-        this.ruleForm.orderB="";
-        this.ruleForm.classBName=""
+        this.ruleFormB.orderB="";
+        this.ruleFormB.classBName=""
       },
     }
   }

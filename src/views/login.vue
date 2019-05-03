@@ -49,27 +49,32 @@
         login(data)
           .then(res=>{
             console.log(res);
-
             //sessionStorage
             // sessionStorage.setItem("loginUser", res.object.userid);
             // console.log("打印sessionStorage里面的userid:"+sessionStorage.getItem("loginUser"));
-            //
             // this.$store.state.loginUser=sessionStorage.getItem("loginUser");
             // console.log("打印vuex里面的userid:"+this.$store.state.loginUser);
-
             //localStorage
             localStorage.setItem("loginUser",res.object.userid);
             console.log("打印sessionStorage里面的userid:"+localStorage.getItem("loginUser"));
-
             this.$store.state.loginUser=localStorage.getItem("loginUser");
             console.log("打印vuex里面的userid:"+this.$store.state.loginUser);
 
-
             const id=res.object.userid;
-            if (true){
+            if (res.status===200){
+              this.$message({
+                message: '登录成功!',
+                type: 'success',
+                showClose:true
+              });
               this.$router.push(`/${id}/home`)
             }
           }).catch(error=>{
+            this.$message({
+              message: '登录失败，请检查用户名及密码!',
+              type: 'error',
+              showClose:true
+            });
           console.log("error"+error);
         })
       }
