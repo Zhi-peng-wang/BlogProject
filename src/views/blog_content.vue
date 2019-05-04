@@ -162,7 +162,7 @@
         }).catch(error=> {
         console.log("dayi");
         console.log(error);
-        // this.$router.push(`/wrong`)
+        this.$router.push(`/wrong`)
       });
     },
     methods:{

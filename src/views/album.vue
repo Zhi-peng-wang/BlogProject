@@ -22,9 +22,20 @@
             <router-link :to="`/${$route.params.id}`+'/leaveMessage'">留言</router-link>
           </el-menu-item>
           <el-menu-item index="5">
-            <router-link :to="`/${$route.params.id}`+'/home_page'">
-              {{loginUser}}
-            </router-link>
+            <el-dropdown>
+                  <span class="el-dropdown-link">
+                    {{loginUser}}<i class="el-icon-arrow-down el-icon--right" style="margin:-3px 0px 0px -3px"></i>
+                  </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>
+                  <router-link :to="`/${$route.params.id}`+'/home_page'">个人中心</router-link>
+                </el-dropdown-item>
+                <el-dropdown-item>
+                  <router-link :to="`/${$route.params.id}`+'/editPassword'">修改密码</router-link>
+                </el-dropdown-item>
+                <el-dropdown-item>退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </el-menu-item>
         </el-menu>
         <br>

@@ -25,6 +25,7 @@ import leaveMessage from '../views/leaveMessage/leaveMessage'
 import logOperation from '../views/homePage/logOperation/logOperation'
 import home from '../views/home'
 import wrong from '../views/wrong.vue'
+import editPassword from '../views/homePage/editPassword/editPassword'
 
 
 Vue.use(VueRouter);
@@ -51,6 +52,10 @@ export default new VueRouter({
     {
       path:'/:id/logOperation',
       component:logOperation
+    },
+    {
+      path:'/:id/editPassword',
+      component:editPassword
     },
     {
       path:'/:id/home_page',

@@ -36,7 +36,7 @@
                         <el-button type="warning" @click="editA('ruleFormA')">
                           编辑
                         </el-button>
-                        <el-button type="danger" @click="deleteA()">
+                        <el-button type="danger" @click="deleteA('ruleFormA')">
                           删除
                         </el-button>
                         <el-button type="danger" @click="resetA()">
@@ -70,7 +70,7 @@
                         <el-button type="warning" @click="editB('ruleFormB')">
                           编辑
                         </el-button>
-                        <el-button type="danger" @click="deleteB()">
+                        <el-button type="danger" @click="deleteB('ruleFormB')">
                           删除
                         </el-button>
                         <el-button type="danger" @click="resetB()">
@@ -246,7 +246,7 @@
           });
       },
       // 二级栏目添加弹框
-      classB(ruleFormB){
+      classB(ruleFormB) {
         this.$refs[ruleFormB].validate((valid) => {
           if (valid) {
             this.$confirm('确认添加?', '提示', {
@@ -365,10 +365,8 @@
         //使用session存储
         sessionStorage.setItem("sorderB", orderB);
         this.ruleFormB.orderB=sessionStorage.getItem("sorderB");
-
         sessionStorage.setItem("sBclassName", className);
         this.ruleFormB.classBName=sessionStorage.getItem("sBclassName");
-
         sessionStorage.setItem("sBclassId", classid);
         this.blogClassBId=sessionStorage.getItem("sBclassId");
 
@@ -376,25 +374,44 @@
         // this.selectedOption=sessionStorage.getItem("sBobj");
       },
       // 一级栏目删除弹框
-      deleteA(){
-        this.$confirm('您将删除该分类，确定继续吗？', '删除分类', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center:true
-        }).then((action) => {
-          if (action==='confirm'){    //成功的回调
-            this.deleteClassA();
-          }
-        }).catch((err) => {
-          if (err==='cancel'){       //失败的回调
-            this.$message({
-              type: 'info',
-              message: '取消删除',
-              showClose: true,
+      deleteA(ruleFormA){
+        this.$refs[ruleFormA].validate((valid) => {
+          if (valid) {
+            this.$confirm('您将删除该分类，确定继续吗？', '删除分类', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning',
+              center:true
+            }).then((action) => {
+              if (action==='confirm'){    //成功的回调
+                this.deleteClassA();
+              }
+            }).catch((err) => {
+              if (err==='cancel'){       //失败的回调
+                this.$message({
+                  type: 'info',
+                  message: '取消删除',
+                  showClose: true,
+                });
+              }
             });
+          } else {
+            this.$alert('并未选择将要删除的数据', '网页消息', {
+              confirmButtonText: '确定',
+              type:"error",
+              center:"true",
+              callback: action => {
+                this.$message({
+                  type: 'error',
+                  showClose: true,
+                  message: `提示: ${ '并未选择将要删除的数据' }`
+                });
+              }
+            });
+            return false;
           }
         });
+
       },
       // 一级栏目删除点击事件
       deleteClassA(){
@@ -426,23 +443,41 @@
           });
       },
       // 二级栏目删除弹框
-      deleteB(){
-        this.$confirm('您将删除该分类，确定继续吗？', '删除分类', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center:true
-        }).then((action) => {
-          if (action==='confirm'){    //成功的回调
-            this.deleteClassB();
-          }
-        }).catch((err) => {
-          if (err==='cancel'){       //失败的回调
-            this.$message({
-              showClose: true,
-              type: 'info',
-              message: '取消删除'
+      deleteB(ruleFormB){
+        this.$refs[ruleFormB].validate((valid) => {
+          if (valid) {
+            this.$confirm('您将删除该分类，确定继续吗？', '删除分类', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning',
+              center:true
+            }).then((action) => {
+              if (action==='confirm'){    //成功的回调
+                this.deleteClassB();
+              }
+            }).catch((err) => {
+              if (err==='cancel'){       //失败的回调
+                this.$message({
+                  type: 'info',
+                  message: '取消删除',
+                  showClose: true,
+                });
+              }
             });
+          } else {
+            this.$alert('并未选择将要删除的数据', '网页消息', {
+              confirmButtonText: '确定',
+              type:"error",
+              center:"true",
+              callback: action => {
+                this.$message({
+                  type: 'error',
+                  showClose: true,
+                  message: `提示: ${ '并未选择将要删除的数据' }`
+                });
+              }
+            });
+            return false;
           }
         });
       },
