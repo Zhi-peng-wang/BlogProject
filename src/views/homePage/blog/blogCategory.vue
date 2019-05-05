@@ -23,10 +23,10 @@
                     <el-form :model="ruleFormA" :rules="rules" ref="ruleFormA"
                              label-width="100px" class="demo-ruleForm">
                       <el-form-item label="栏目排序" prop="orderA">
-                        <el-input type="text" v-model="ruleFormA.orderA" autofocus="autofocus"></el-input>
+                        <el-input type="text" v-model.trim="ruleFormA.orderA" autofocus="autofocus"></el-input>
                       </el-form-item>
                       <el-form-item label="栏目名称" prop="classAName">
-                        <el-input type="text" v-model="ruleFormA.classAName"></el-input>
+                        <el-input type="text" v-model.trim="ruleFormA.classAName"></el-input>
                       </el-form-item>
                       <el-form-item>
                         <el-button type="primary" @click="classA('ruleFormA')"
@@ -57,10 +57,10 @@
                     </select>
                     <el-form :model="ruleFormB" :rules="rules" ref="ruleFormB" label-width="100px" class="demo-ruleForm">
                       <el-form-item label="栏目排序" prop="orderB">
-                        <el-input v-model="ruleFormB.orderB"></el-input>
+                        <el-input v-model.trim="ruleFormB.orderB"></el-input>
                       </el-form-item>
                       <el-form-item label="栏目名称" prop="classBName">
-                        <el-input v-model="ruleFormB.classBName"></el-input>
+                        <el-input v-model.trim="ruleFormB.classBName"></el-input>
                       </el-form-item>
                       <el-form-item>
                         <el-button type="primary" @click="classB('ruleFormB')"
@@ -144,7 +144,7 @@
       this.ruleFormB.classBName=sessionStorage.getItem("sBclassName");
       this.blogClassBId=sessionStorage.getItem("sBclassId");
       //拿到分类
-      getClass({userid:this.$route.params.id,typeid:1})
+      getClass({userid:localStorage.getItem("loginUser"),typeid:1})
         .then(res=>{
           console.log(res);
           const result = res.object;
@@ -211,7 +211,7 @@
       addClassA(){
         console.log("一级栏目的点击事件");
         let data={
-          userid: this.$route.params.id,
+          userid: localStorage.getItem("loginUser"),
           classname:this.ruleFormA.classAName,
           parentid:"1",
           orderclass:this.ruleFormA.orderA,
@@ -288,7 +288,7 @@
       addClassB(){
         console.log("二级栏目的点击事件");
         let data={
-          userid: this.$route.params.id,
+          userid: localStorage.getItem("loginUser"),
           classname:this.ruleFormB.classBName,
           parentid:this.blogClassAId,
           orderclass:this.ruleFormB.orderB,

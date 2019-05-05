@@ -13,7 +13,10 @@
         <el-form-item label="请确认密码" prop="checkPass">
           <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
         </el-form-item>
-        <el-button style="display:block;margin:0 auto;" @click="next">确认修改</el-button>
+        <el-form-item class="Button">
+          <el-button type="danger" style="display:block;margin-left: 50px;float: left" @click="back">取消修改</el-button>
+          <el-button type="primary" style="display:block;margin:0 auto;" @click="next">确认修改</el-button>
+        </el-form-item>
       </el-form>
       <!--跳转到登陆页面-->
       <el-row class="enter" v-if="showLogin">
@@ -51,7 +54,6 @@
           callback();
         }
       };
-
       return{
         ruleForm: {
           inpass:"",
@@ -90,9 +92,12 @@
       },
       //切换页面
       next(){
-        if(this.active++>3) this.active=0;
         this.showEdit=false;
         this.showLogin=true
+      },
+      back(){
+        // 取消修改，跳转到上一级
+        this.$router.go(-1)
       },
       xiugai() {
         this.$message({
@@ -121,24 +126,22 @@
     background-size: cover;   /*全覆盖*/
     background-position:center;
   }
-  .password{
-    width: 980px;
-    margin: 0 auto;
-  }
   .demo-ruleForm{
     margin: 0 auto;
-    width: 60%;
+    width: 40%;
     height: 100%;
-    opacity:0.6;
+    opacity:0.8;
   }
   .img{
     text-align: center;
-    opacity:0.3;
+    opacity:0.4;
+  }
+  .Button{
+    margin-top: 50px;
   }
   .bottom {
     margin-top: 30px;
     text-align: center;
     line-height: 12px;
-    opacity:0.7;
   }
 </style>

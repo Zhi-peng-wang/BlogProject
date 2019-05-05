@@ -22,7 +22,8 @@
             <div class="col-md-10" style="padding: 0">
               <div style="height: 80px">
                 <p style="line-height: 40px;margin: 0;font-size: 18px">
-                  {{c.nickname}}：{{c.content}}
+                  <!--{{c.nickname}}：{{c.content}}-->
+                  {{c.fromuser}}：{{c.content}}
                   <el-button type="danger" icon="el-icon-delete" size="mini" circle
                              style="float: right;margin: 24px 30px"></el-button>
                 </p>
@@ -49,11 +50,11 @@
                   <div class="col-md-10" style="padding: 0">
                     <div style="height: 80px">
                       <p style="line-height: 40px;margin: 0;font-size: 16px">
-                        {{r.nickname}} 回复：{{c.fromuser}}：{{r.content}}
+                        {{r.fromuser}} 回复：{{r.touser}}：{{r.content}}
                       </p>
                       <p style="line-height: 40px;margin: 0;font-size: 12px">
                         {{r.commentdate.slice(0,10)}}
-                        <el-button @click="replay(r.nickname,c.fromuser,c.commentid)" type="primary" plain size="mini" style="margin-left: 15px">
+                        <el-button @click="replay(r.nickname,r.fromuser,c.commentid)" type="primary" plain size="mini" style="margin-left: 15px">
                           回复
                         </el-button>
                       </p>
@@ -79,6 +80,7 @@
 
         </div>
 
+        <!--评论输入框-->
         <div class="el-row">
           <label style="margin-top: 15px">发表评论：</label>
           <el-input
@@ -94,6 +96,7 @@
             发表评论
           </el-button>
         </div>
+
       </div>
     </div>
   </div>
@@ -115,12 +118,18 @@
         fromuserid:"",          //回复评论者的id
         commentId:"",           //回复那篇的评论commentid
         // commentUser:""          //回复的第二个人的名字
+        commentPersonid:"",       //回复的人的id
       }
     },
     mounted(){
       this.blogUser=this.$route.params.id*1;
       this.loading=true;
-      getBlog({blogid:this.$route.query.blogid})
+      let data={
+        blogid:this.$route.query.blogid,
+        userid:this.$route.params.id,
+        fromuserid:localStorage.getItem("loginUser")
+      };
+      getBlog(data)
         .then(res=>{
           console.log("blog_list组件请求日志的详情内容成功");
           console.log(res);
@@ -166,6 +175,7 @@
       });
     },
     methods:{
+
       addComment(){
         console.log("添加评论按钮触发");
         let data={
@@ -192,6 +202,8 @@
         // this.commentUser=nickname;      //回复的第二个人的名字
         this.fromuserid=fromuserid;
         this.commentId=commentId;
+        // this.commentPersonid=fromuserid;
+
 
         // console.log("打印信息："+this.commentUser+nickname);
 

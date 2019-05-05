@@ -19,11 +19,17 @@
                 <div style="width: 100px;display: inline-block">{{t.title.length<13?t.title:t.title.slice(0,13)+"..."}}</div>
                 <div style="margin-left:130px;display: inline-block;">{{t.blogdate.slice(0,10)}}-{{t.blogdate.slice(11,16)}}</div>
                 <div  style="margin-left:40px;display: inline-block;">
-                  <el-button type="danger"  @click="[open([t.blogid,t])]">删除</el-button>
+                  <el-button type="danger"  @click="[open([t.blogid,t])]"
+                             >
+                    删除
+                  </el-button>
                 </div>
                 <div  style="margin-left:30px;display: inline-block;">
                   <router-link :to="{path:`/${$route.params.id}`+'/home_page/edit_blog',query:{blogid:t.blogid}}">
-                    <el-button type="primary">编辑</el-button>
+                    <el-button type="primary"
+                               >
+                      编辑
+                    </el-button>
                   </router-link>
                 </div>
               </div>
@@ -145,8 +151,7 @@
       //删除单个博客
       deleteBlog([blogid,t]){
         console.log("删除按钮已经点击"+blogid);
-        let blogId=blogid*1;
-        deleteBlog({blogid:blogId})
+        deleteBlog({blogid:blogid})
           .then(res=>{
             console.log(res);
             const result =res.status;

@@ -24,6 +24,7 @@
               <router-link :to="`/${$route.params.id}`+'/leaveMessage'">留言</router-link>
             </el-menu-item>
             <el-menu-item index="5">
+              <router-link :to="`/${$route.params.id}`+'/home_page'">
                 <el-dropdown>
                   <span class="el-dropdown-link">
                     {{loginUser}}<i class="el-icon-arrow-down el-icon--right" style="margin:-3px 0px 0px -3px"></i>
@@ -38,6 +39,7 @@
                     <el-dropdown-item>退出登录</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
+              </router-link>
             </el-menu-item>
           </el-menu>
           <br>
@@ -46,8 +48,7 @@
 
       <el-row :gutter="20" style="margin-left: 10px"  v-loading="loading">
         <el-col :span="8">
-          <div class="fenlei"
-               style="border: 1px solid #cee3e9;height: 90px;margin: 20px 0 0 20px;background:rgba(226,235,237,.6);">
+          <div class="fenlei">
             <div class="middle-box">
               <div class="middle-inner" style="border-right:1px solid #cee3e9;">
                 <p><span class="suc-tip">照片</span><br/></p>
@@ -65,7 +66,7 @@
           </div>
           <!--      第一个框-->
           <div class="geren">
-            <div class="col-md-4" style="height: 40px;width:338px;background: #f5f5f5;">
+            <div class="col-md-4" style="height: 40px;width:358px;background: #f5f5f5;">
               <p style=" font-weight: bold;">个人档</p>
             </div>
 
@@ -93,9 +94,44 @@
             </div>
           </div>
           <!--      第二个框-->
-          <div class="fangke">
-            <div class="col-md-4" style="height: 40px;width:338px;background: #f5f5f5;margin-bottom: 800px">
-              <p style=" font-weight: bold;">最近访客</p>
+          <div class="panel panel-warning">
+            <div class="panel-heading">
+              <b>最近访客</b>
+            </div>
+            <div class="panel-body" style="padding-bottom: 0">
+              <!--访客人员的信息-->
+              <div class="row">
+                <div class="col-md-4" style="padding: 0;" v-for="(v,index) in 9">
+                  <div>   <!--这是最外面的盒子-->
+                    <div style="margin: 5px auto;width:88px; height:88px;background: skyblue;">  <!--这是包裹图片的盒子-->
+                      <!--<img src="" alt="访客头像" width="66px" height="57px">-->
+                    </div>
+                    <div>   <!--这是访客访问的日期的盒子-->
+                      <p class="vistorDate">2019-5-1</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--访客的分页-->
+              <div>
+                <el-pagination style="text-align: right;margin-top: 15px"
+                  layout="prev, next"
+                  :total="40">
+                </el-pagination>
+              </div>
+            </div>
+
+            <div class="panel-body" style="padding: 0 0 15px 0">
+              <div class="row">
+                <div class="col-md-6">
+                  <p class="browseNum">今日浏览</p>
+                  <p class="browseNum"><b>30</b></p>
+                </div>
+                <div class="col-md-6">
+                  <p class="browseNum">总浏览量</p>
+                  <p class="browseNum"><b>6666</b></p>
+                </div>
+              </div>
             </div>
           </div>
         </el-col>
@@ -165,7 +201,6 @@
           this.nickname = result.nickname;
           this.sex = result.sex;
           this.sign = result.sign;
-          this.pv = result.pv;
           this.email = result.email;
           this.photonum = result.photonum;
           this.blognum = result.blognum;
@@ -196,6 +231,22 @@
 </script>
 
 <style scoped>
+  .vistorDate{
+    margin: 0 auto;
+    text-align: center;
+    opacity: 0.7;
+    font-size: 12px;
+  }
+  .browseNum{
+    text-align: center;
+    opacity: 0.7;
+  }
+  .fenlei{
+    border: 1px solid #cee3e9;
+    height: 90px;
+    margin: 20px 0 0 0px;
+    background:rgba(226,235,237,.6);
+  }
   .blogDP{
     color: #2e6da4;
     font-size: 11px;
@@ -249,21 +300,13 @@
     height: 194px;
     /*border-radius: 5px;*/
     border: 1px solid #cee3e9;
-    margin: 20px 0 0 20px
+    margin: 20px 0 20px 0px
   }
 
   p {
     color: black;
 
     margin: 10px 0 0 10px;
-  }
-
-  .fangke {
-    /*background: #ffffff;*/
-    background: rgba(226, 235, 237, .6);
-    height: 300px;
-    border: 1px solid #cee3e9;
-    margin: 20px 0 0 20px
   }
 
   .title {
