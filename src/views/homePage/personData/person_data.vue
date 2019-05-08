@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <!--注册页面-->
+    <headPic></headPic>
     <div>
       <div class="panel panel-info">
         <div class="panel-heading">个人资料</div>
@@ -11,22 +12,6 @@
                    ref="ruleForm"
                    label-width="100px"
                    class="demo-ruleForm" v-loading="loading">
-            <!-- 头像-->
-            <el-form-item label="头像" prop="username">
-              <span><img src="../../../assets/tx.jpg" height="50" width="50"/></span>
-              <el-upload
-                class="upload-demo"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :before-remove="beforeRemove"
-                multiple
-                :limit="1"
-                :on-exceed="handleExceed">
-                <el-button size="small" class="el-button_dj" type="primary">点击上传</el-button>
-                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
-              </el-upload>
-            </el-form-item>
             <!-- 用户名-->
             <el-form-item label="用户名" prop="username">
               <el-input v-model.trim="ruleForm.username"></el-input>
@@ -35,7 +20,6 @@
             <el-form-item label="昵称" prop="nickname">
               <el-input v-model.trim="ruleForm.nickname"></el-input>
             </el-form-item>
-
             <!--个签-->
             <el-form-item label="个签" prop="sign">
               <el-input v-model.trim="ruleForm.sign"></el-input>
@@ -63,8 +47,8 @@
               <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.birth" style="width: 100%;"></el-date-picker>
             </el-form-item>
             <!--地址-->
-            <el-form-item  label="地址" prop="add">
-              <el-input v-model.trim="ruleForm.add"></el-input>
+            <el-form-item  label="地址" prop="address">
+              <el-input v-model.trim="ruleForm.address"></el-input>
             </el-form-item>
             <!--提交-->
             <el-form-item>
@@ -80,14 +64,18 @@
 
 <script>
   import {getUser} from "../../../api";
+  import headPic from "./headPic"
   export default {
+    components:{
+      headPic
+    },
     data(){
       return{
         loading:false,
+
         ruleForm: {
           username: "",
           userimg:"",
-          imageUrl: '',
           nickname: "",
           sign:"",
           sex: "",
@@ -95,7 +83,8 @@
           Tel: "",
           email: "",
           birth: "",
-          add: "",
+          address: "",
+          imageUrl: "",
         },
         rules: {
           username: [
@@ -125,9 +114,9 @@
           birth: [
             { required: true, message: '  ', trigger: 'blur' }
           ],
-          add: [
+          address: [
             { required: false, message: '请输入详细地址', trigger: 'blur' },
-            { type: 'add', message: '请输入详细地址', trigger: ['blur', 'change'] }
+            { type: 'address', message: '请输入详细地址', trigger: ['blur'] }
           ],
           Tel: [
             { required: true, message: '请输入正确的电话号码', trigger: 'blur' },
@@ -135,6 +124,30 @@
           ],
         }
       }
+    },
+    mounted(){
+
+      const id = localStorage.getItem("loginUser");
+      this.loading=true;
+      getUser({userid:id})
+        .then(res=>{
+          console.log("请求个人信息");
+          console.log(res.object);
+          const result=res.object;
+          this.loading=false;
+          this.ruleForm.username=result.username;
+          this.ruleForm.nickname=result.nickname;
+          this.ruleForm.sign=result.sign;
+          this.ruleForm.sex=result.sex;
+          this.ruleForm.age=result.age;
+          this.ruleForm.Tel=result.phone;
+          this.ruleForm.email=result.email;
+          this.ruleForm.brith=result.birthday;
+          this.ruleForm.address=result.address;
+        })
+        .catch(error=>{
+          console.log("请求个人信息失败");
+        })
     },
     methods:{
       // 提交+重置 按钮
@@ -153,42 +166,23 @@
         this.$refs[formName].resetFields();
       },
       // 上传头像
-      handleRemove(file, fileList) {
-        console.log(file, fileList);
+      handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
       },
-      handlePreview(file) {
-        console.log(file);
-      },
-      handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-      },
-      beforeRemove(file, fileList) {
-        return this.$confirm(`确定移除 ${ file.name }？`);
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
       }
     },
-    mounted(){
-      const id = localStorage.getItem("loginUser");
-      this.loading=true;
-      getUser({userid:id})
-        .then(res=>{
-          console.log("请求个人信息");
-          console.log(res.object);
-          const result=res.object;
-          this.loading=false;
-          this.ruleForm.username=result.username;
-          this.ruleForm.nickname=result.nickname;
-          this.ruleForm.sign=result.sign;
-          this.ruleForm.sex=result.sex;
-          this.ruleForm.age=result.age;
-          this.ruleForm.Tel=result.phone;
-          this.ruleForm.email=result.email;
-          this.ruleForm.brith=result.birthday;
-          this.ruleForm.add=result.address;
-        })
-        .catch(error=>{
-          console.log("请求个人信息失败");
-        })
-    },
+
   }
 </script>
 
@@ -208,5 +202,28 @@
   }
   .el-upload__tip{
     margin-top: 15px;
+  }
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
   }
 </style>

@@ -102,8 +102,9 @@
   </div>
 </template>
 <script>
-  import {addComment, getBlog} from "../api";
+  import {addComment, addGuest, getBlog} from "../api";
   export default {
+    inject:['reload'],
     data() {
       return {
         blogContent: [],    //日志的详情内容
@@ -122,60 +123,76 @@
       }
     },
     mounted(){
+      //添加访客
+      let dataGuest={
+        userid:this.$route.params.id,
+        fromuserid:localStorage.getItem("loginUser"),
+        typeid:this.$route.query.blogid
+      };
+      addGuest(dataGuest)
+        .then(res=>{
+          console.log("成功访客信息");
+          console.log(res);
+        })
+        .catch(err=>{
+          console.log("失败访客信息");
+          console.log(err);
+        });
+
       this.blogUser=this.$route.params.id*1;
       this.loading=true;
-      let data={
-        blogid:this.$route.query.blogid,
-        userid:this.$route.params.id,
-        fromuserid:localStorage.getItem("loginUser")
-      };
-      getBlog(data)
-        .then(res=>{
-          console.log("blog_list组件请求日志的详情内容成功");
-          console.log(res);
-          this.loading=false;
-          //这是文章的内容
-          this.blogContent=res.object;
-          //这是该篇文章的评论内容
-          // this.blogComment=res.obj;
-          //获取本篇日志下的评论
-          res.obj.find(item=>{
-            for(let i=0;i<res.obj.length;i++){
-              if (item.parentid===0){
-                if (!~this.blogComment.indexOf(item)) {
-                  this.blogComment.push(item);
-                }
-              }
-            }
-          });
-          console.log("打印评论");
-          console.log(this.blogComment);
-          const commentIds=res.obj.map(item=>({
-            commentid:item.commentid
-          }));
-          this.commentIds=commentIds;
-          console.log(this.commentIds);
 
-          //回复评论的数组
-          // this.replayComment=res.obj;
-          res.obj.find(item=>{
-            for(let i=0;i<res.obj.length;i++){
-              if (item.parentid===this.commentIds[i].commentid){
-                if (!~this.replayComment.indexOf(item)) {
-                  this.replayComment.push(item)
-                }
-              }
-            }
-          });
-          console.log(this.replayComment);
-        }).catch(error=> {
-        console.log("dayi");
-        console.log(error);
-        this.$router.push(`/wrong`)
-      });
+      this.getBlogComment()
     },
     methods:{
+      getBlogComment(){
+        let data={
+          blogid:this.$route.query.blogid,
+        };
+        getBlog(data)
+          .then(res=>{
+            console.log("blog_list组件请求日志的详情内容成功");
+            console.log(res);
+            this.loading=false;
+            //这是文章的内容
+            this.blogContent=res.object;
+            //这是该篇文章的评论内容
+            // this.blogComment=res.obj;
+            //获取本篇日志下的评论
+            res.obj.find(item=>{
+              for(let i=0;i<res.obj.length;i++){
+                if (item.parentid===0){
+                  if (!~this.blogComment.indexOf(item)) {
+                    this.blogComment.push(item);
+                  }
+                }
+              }
+            });
+            console.log("打印评论");
+            console.log(this.blogComment);
+            const commentIds=res.obj.map(item=>({
+              commentid:item.commentid
+            }));
+            this.commentIds=commentIds;
+            console.log(this.commentIds);
 
+            //回复评论的数组
+            // this.replayComment=res.obj;
+            res.obj.find(item=>{
+              for(let i=0;i<res.obj.length;i++){
+                if (item.parentid===this.commentIds[i].commentid){
+                  if (!~this.replayComment.indexOf(item)) {
+                    this.replayComment.push(item)
+                  }
+                }
+              }
+            });
+            console.log(this.replayComment);
+          }).catch(error=> {
+          console.log(error);
+          this.$router.push(`/wrong`)
+        });
+      },
       addComment(){
         console.log("添加评论按钮触发");
         let data={
@@ -192,6 +209,8 @@
           .then(res=>{
             console.log(res);
             console.log("评论成功打印");
+            // this.reload()
+            this.getBlogComment({blogid:this.$route.query.blogid})
           })
           .catch(err=>{
             console.log("评论错误打印");
@@ -203,8 +222,6 @@
         this.fromuserid=fromuserid;
         this.commentId=commentId;
         // this.commentPersonid=fromuserid;
-
-
         // console.log("打印信息："+this.commentUser+nickname);
 
         this.$prompt('请输入对  @'+nickname+fromuserid+'  回复', '回复', {

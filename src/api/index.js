@@ -67,3 +67,19 @@ export const deleteClass =(data)=>ajax('/api/deleteClass',data,"POST");
 
 //20.editClass 编辑分类
 export const editClass =(data)=>ajax('/api/editClass',data,"POST");
+
+//21.addGuest 添加分类的接口
+export const addGuest = (data)=>ajax('/api/addGuest',data,"POST");
+
+//22. getGuest获取访客的接口，自定义获取数量
+export const getGuest =(data)=>ajax('/api/getGuest',data,"POST");
+
+
+
+
+
+
+
+
+
+

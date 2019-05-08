@@ -15,7 +15,6 @@
       <div class="block" style="margin-left: 230px;" v-if="fenye_show">
         <el-pagination
           @current-change="handleCurrentChange"
-          :current-page="currentPage"
           :page-size="page_size"
           layout="total, prev, pager, next, jumper"
           :total="total">

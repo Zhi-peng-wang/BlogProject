@@ -5,13 +5,13 @@
       <!--修改密码表单-->
       <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" v-if="showEdit">
         <el-form-item label="请输入原密码" prop="inpass">
-          <el-input type="password" v-model="ruleForm.inpass" autocomplete="off"></el-input>
+          <el-input type="password" v-model.trim="ruleForm.inpass" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="请输入新密码" prop="pass">
-          <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+          <el-input type="password" v-model.trim="ruleForm.pass" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="请确认密码" prop="checkPass">
-          <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+          <el-input type="password" v-model.trim="ruleForm.checkPass" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item class="Button">
           <el-button type="danger" style="display:block;margin-left: 50px;float: left" @click="back">取消修改</el-button>
@@ -64,13 +64,17 @@
         showLogin:false,
         active: 0,
         rules: {
+          inpass:[
+            { required: true, message: '请输入旧密码', trigger: 'blur' },
+          ],
           pass: [
             { validator: validatePass, trigger: 'blur' },
-            { required: false, message: '请输入新密码', trigger: 'blur' },
+            { required: true, message: '请输入新密码', trigger: 'blur' },
             { min: 2, max: 10, message: '长度在 2 到 10 个字符，允许有特殊字符及下划线，禁止纯数字或纯英文', trigger: 'blur' },
             {pattern:/^[a-z]*\d*[a-z]+\d+[a-z]*\d*$/i || /`[a-z]*\d*\d+[a-z]+[a-z]*\d*$/,message:'只允许字母+数字，数字不能在前',trigger: 'blur'},
           ],
           checkPass: [
+            { required: true, message: '请再次输入新密码', trigger: 'blur' },
             { validator: validatePass2, trigger: 'blur' }
           ]
         },

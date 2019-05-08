@@ -98,29 +98,40 @@
             <div class="panel-heading">
               <b>最近访客</b>
             </div>
-            <div class="panel-body" style="padding-bottom: 0">
-              <!--访客人员的信息-->
-              <div class="row">
-                <div class="col-md-4" style="padding: 0;" v-for="(v,index) in 9">
-                  <div>   <!--这是最外面的盒子-->
-                    <div style="margin: 5px auto;width:88px; height:88px;background: skyblue;">  <!--这是包裹图片的盒子-->
-                      <!--<img src="" alt="访客头像" width="66px" height="57px">-->
-                    </div>
-                    <div>   <!--这是访客访问的日期的盒子-->
-                      <p class="vistorDate">2019-5-1</p>
-                    </div>
+            <div class="panel-body" style="padding-bottom: 0;">
+              <div style="height: 330px">
+                <!--访客人员的信息-->
+                <div class="row">
+                  <div class="col-md-4" style="padding: 0;"
+                       v-for="(v,index) in visitorInfo.slice((currentPage-1)*PageSize,currentPage*PageSize)"
+                       :key="index">
+                    <el-tooltip  placement="top">
+                      <div slot="content" style="width: 60px;text-align: center">{{v.nickname}}</div>
+                      <div>   <!--这是最外面的盒子-->
+                        <div style="margin: 5px auto;width:88px; height:88px;background: skyblue;">  <!--这是包裹图片的盒子-->
+                          <!--<img src="" alt="访客头像" width="66px" height="57px">-->
+                        </div>
+                        <div>   <!--这是访客访问的日期的盒子-->
+                          <p class="vistorDate">{{v.guestdate.slice(0,10)}}</p>
+                        </div>
+                      </div>
+                    </el-tooltip>
+
                   </div>
                 </div>
               </div>
               <!--访客的分页-->
               <div>
                 <el-pagination style="text-align: right;margin-top: 15px"
-                  layout="prev, next"
-                  :total="40">
+                               @current-change="handleCurrentChange"
+                               :current-page="currentPage"
+                               :page-size="PageSize"
+                               layout="prev,next"
+                               :total="totalCount">
                 </el-pagination>
               </div>
             </div>
-
+            <!--浏览量-->
             <div class="panel-body" style="padding: 0 0 15px 0">
               <div class="row">
                 <div class="col-md-6">
@@ -165,7 +176,7 @@
 </template>
 
 <script>
-  import {getNewBlog, getUser} from "../api";
+  import {addGuest, getGuest, getNewBlog, getUser} from "../api";
 
   export default {
     inject: ['reload'],
@@ -181,14 +192,63 @@
         blogs: [],
         loading:false,
         loginUser:"",
+        // 默认显示第几页
+        currentPage:1,
+        // 总条数，根据接口获取数据长度(注意：这里不能为空)
+        totalCount:30,
+        // 默认每页显示的条数（可修改）
+        PageSize:9,
+        //访客信息
+        visitorInfo:[],
         note: {
           backgroundImage: "url(" + require("../assets/zhuye.jpg") + ")",
           backgroundRepeat: "no-repeat",
         },
       };
     },
-
+    created(){
+      //添加访客
+      let dataGuest={
+        userid:this.$route.params.id,
+        fromuserid:localStorage.getItem("loginUser"),
+        typeid:"index"
+      };
+      addGuest(dataGuest)
+        .then(res=>{
+          console.log("成功访客信息");
+          console.log(res);
+        })
+        .catch(err=>{
+          console.log("失败访客信息");
+          console.log(err);
+        });
+    },
     mounted() {
+      //得到访客信息
+      let getGuestData={
+        userid:this.$route.params.id,
+        typeid:"index",
+        topnum:30
+      };
+      getGuest(getGuestData)
+        .then(res=>{
+          console.log("拿到访客信息");
+          console.log(res);
+          const result = res.object;
+          console.log(result);
+          const visitorInfos=result.map(item=>({
+            fromuserid: item.fromuserid,
+            guestdate:item.guestdate,
+            nickname:item.nickname,
+            userimg:item.img
+          }));
+          this.visitorInfo=visitorInfos;
+          console.log(this.visitorInfo);
+        })
+        .catch(err=>{
+          console.log("没有拿到访客信息");
+          console.log(err);
+        });
       this.loading=true;
       this.loginUser=localStorage.getItem("loginUser");
       let id = this.$route.params.id;
@@ -225,8 +285,13 @@
         });
       this.loading=true;
     },
-
-
+    methods:{
+      // 显示第几页
+      handleCurrentChange(val) {
+        // 改变默认的页数
+        this.currentPage=val
+      },
+    }
   };
 </script>
 

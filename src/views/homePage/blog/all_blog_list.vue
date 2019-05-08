@@ -190,6 +190,7 @@
         this.loading=true;
         getAllClassBlog({"userid":localStorage.getItem("loginUser"),"pagenum":this.page_number})
           .then(res=>{
+            console.log(res);
             const result=res.object.content;
             this.total=res.object.totalElements;
             this.page_size=res.object.size;
