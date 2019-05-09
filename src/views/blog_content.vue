@@ -22,10 +22,10 @@
             <div class="col-md-10" style="padding: 0">
               <div style="height: 80px">
                 <p style="line-height: 40px;margin: 0;font-size: 18px">
-                  <!--{{c.nickname}}：{{c.content}}-->
                   {{c.fromuser}}：{{c.content}}
                   <el-button type="danger" icon="el-icon-delete" size="mini" circle
-                             style="float: right;margin: 24px 30px"></el-button>
+                             style="float: right;margin: 24px 30px"
+                              @click="deleteCom(c.commentid)"></el-button>
                 </p>
                 <p style="line-height: 40px;margin: 0;font-size: 12px">
                   {{c.commentdate.slice(0,10)}}
@@ -52,6 +52,9 @@
                       <p style="line-height: 40px;margin: 0;font-size: 16px">
                         {{r.fromuser}} 回复：{{r.touser}}：{{r.content}}
                       </p>
+                      <el-button type="danger" icon="el-icon-delete" size="mini" circle
+                                 style="float: right;margin: -10px 45px"
+                                 @click="deleteCom(r.commentid)"></el-button>
                       <p style="line-height: 40px;margin: 0;font-size: 12px">
                         {{r.commentdate.slice(0,10)}}
                         <el-button @click="replay(r.nickname,r.fromuser,c.commentid)" type="primary" plain size="mini" style="margin-left: 15px">
@@ -102,7 +105,7 @@
   </div>
 </template>
 <script>
-  import {addComment, addGuest, getBlog} from "../api";
+  import {addComment, addGuest, deleteComment, getBlog} from "../api";
   export default {
     inject:['reload'],
     data() {
@@ -145,6 +148,45 @@
       this.getBlogComment()
     },
     methods:{
+      //删除评论以及评论下的回复
+      deleteCom(id){
+        this.$confirm('此操作将永久删除该评论, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then((action) => {
+          if (action === 'confirm') {     //确认的回调
+            let data ={
+              commentid:id
+            };
+            deleteComment(data)
+              .then(res=>{
+                console.log("删除接口 成功返回");
+                console.log(res);
+                this.getBlogComment()
+              })
+              .catch(err=>{
+                console.log("删除接口 失败返回");
+                console.log(err);
+              });
+            this.$message({
+              type: 'success',
+              message: '评论删除成功!',
+              showClose:true
+            });
+          }
+        }).catch((err) => {
+          if (err === 'cancel') {     //取消的回调
+            this.$message({
+              type: 'info',
+              message: '已取消删除评论',
+              showClose:true
+            });
+          }
+        });
+      },
+      //得到评论和回复的数组
       getBlogComment(){
         let data={
           blogid:this.$route.query.blogid,
@@ -154,10 +196,10 @@
             console.log("blog_list组件请求日志的详情内容成功");
             console.log(res);
             this.loading=false;
+            this.blogComment=[];      //此处将评论数组清空
+            this.replayComment=[];    //此处将回复的数组清空
             //这是文章的内容
             this.blogContent=res.object;
-            //这是该篇文章的评论内容
-            // this.blogComment=res.obj;
             //获取本篇日志下的评论
             res.obj.find(item=>{
               for(let i=0;i<res.obj.length;i++){
@@ -193,6 +235,7 @@
           this.$router.push(`/wrong`)
         });
       },
+      //添加评论
       addComment(){
         console.log("添加评论按钮触发");
         let data={
@@ -207,28 +250,32 @@
         console.log(data);
         addComment(data)
           .then(res=>{
-            console.log(res);
-            console.log("评论成功打印");
-            // this.reload()
-            this.getBlogComment({blogid:this.$route.query.blogid})
+            if (res.status===200){
+              console.log(res);
+              console.log("评论成功打印");
+              this.getBlogComment();
+              this.commentContent="";
+              this.$notify({
+                title: '评论成功',
+                message: '感谢您的评论！',
+                type: 'success'
+              });
+            }
           })
           .catch(err=>{
             console.log("评论错误打印");
             console.log(err);
           })
       },
+      //回复的弹框
       replay(nickname,fromuserid,commentId){
         // this.commentUser=nickname;      //回复的第二个人的名字
         this.fromuserid=fromuserid;
         this.commentId=commentId;
-        // this.commentPersonid=fromuserid;
-        // console.log("打印信息："+this.commentUser+nickname);
-
         this.$prompt('请输入对  @'+nickname+fromuserid+'  回复', '回复', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
         }).then(({ value }) => {
-
           this.replayContent=value;
           console.log(this.replayContent);
           this.$message({
@@ -244,6 +291,7 @@
         });
         console.log(nickname,fromuserid,commentId);
       },
+      //回复的操作
       reComment(){
         console.log("回复的内容");
         let data={
@@ -258,8 +306,17 @@
         console.log(data);
         addComment(data)
           .then(res=>{
-            console.log("点击回复的内容");
-            console.log(res);
+            if (res.status===200){
+              console.log("点击回复的内容");
+              console.log(res);
+              this.getBlogComment();
+              this.replayContent="";
+              this.$notify({
+                title: '回复成功',
+                message: '您的回复很快就能被看到啦！',
+                type: 'success'
+              });
+            }
           })
           .catch(err=>{
             console.log(err);

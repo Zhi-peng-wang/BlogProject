@@ -69,7 +69,8 @@
         album_url_2: [],
         album_url_2_2: [],
         imageUrl:"",
-        limitImage:6
+        limitImage:6,
+        fileData:[]
       }
     },
     mounted() {
@@ -100,10 +101,12 @@
     methods: {
       // 自定义上传方法
       addAttachment(file) {
+        console.log(file);
       // 用于显示图片
         this.imageUrl = URL.createObjectURL(file.file);
       //保存一份文件信息，用于上传
-        this.fileData = file.file;
+        this.fileData.push(file.file);
+        console.log(this.fileData);
       },
       // 上传数据
       addUpload() {
@@ -113,6 +116,7 @@
         formData.append("title", "hello898989");
         formData.append("classid", 15);
         formData.append("pv", 15);
+        console.log(formData);
         console.log("上传图片的点击事件已触发");
         console.log(this.fileData);
         // 上传方法接口
