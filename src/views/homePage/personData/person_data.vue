@@ -1,7 +1,8 @@
 <template>
   <div class="container">
-    <!--注册页面-->
+    <!--头像-->
     <headPic></headPic>
+    <!--个人信息-->
     <div>
       <div class="panel panel-info">
         <div class="panel-heading">个人资料</div>

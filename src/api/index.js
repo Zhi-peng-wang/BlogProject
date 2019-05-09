@@ -74,6 +74,12 @@ export const addGuest = (data)=>ajax('/api/addGuest',data,"POST");
 //22. getGuest获取访客的接口，自定义获取数量
 export const getGuest =(data)=>ajax('/api/getGuest',data,"POST");
 
+//23/删除评论 deleteComment
+export const deleteComment =(data)=>ajax('/api/deleteComment',data,"POST");
+
+//24.在相册里添加图片addPhoto
+export const addPhoto =(data)=>ajax('/api/addPhoto',data,"POST");
+
 
 
 

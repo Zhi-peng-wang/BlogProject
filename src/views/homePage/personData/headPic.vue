@@ -4,17 +4,27 @@
       <div class="panel-heading">
         我的头像
       </div>
-      <el-upload
-        class="avatar-uploader"
-        :show-file-list="false"
-        action="/api/uploadUserImg"
-        :data="userInfo"
-        :on-success="handleAvatarSuccess"
-        :before-upload="beforeAvatarUpload"
-        :on-error="imgUploadError">
-        <img v-if="imageUrl" :src="imageUrl" class="avatar">
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </el-upload>
+      <div style="margin: 30px">
+        <el-form>
+          <el-form-item label="头像:">
+            <el-upload
+              class="avatar-uploader"
+              name="file"
+              :show-file-list="false"
+              action="/api/uploadUserImg"
+              :data="userInfo"
+              :on-success="handleAvatarSuccess"
+              :before-upload="beforeAvatarUpload"
+              :on-error="imgUploadError">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar">
+              <!--<img v-if="imageUrl" src="http://192.168.43.238:8090/userImg/ba314cb6f7b546809692c392a5a47e2e.jpg" class="avatar">-->
+              <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            </el-upload>
+          </el-form-item>
+        </el-form>
+        <!--<img :src="imageUrl" alt="">-->
+      </div>
+
     </div>
   </div>
 </template>
@@ -29,7 +39,6 @@
         userInfo:{
           userid:""
         },
-        showImageUrl:"../static/userImg/dc4d4b79d7024a408190cc687ba0f8c4.jpg"
       }
     },
     mounted(){
@@ -39,14 +48,14 @@
         .then(res=>{
           console.log("头像那边成功打印消息");
           console.log(res);
-          this.showImageUrl=res.object.userimg;
-          console.log(this.showImageUrl);
+          this.imageUrl=res.object.userimg;
+          console.log("imageUrl:"+this.imageUrl);
         })
         .catch(err=>{
           console.log("头像那边失败打印消息");
           console.log(err);
         });
-      this.imageURL=this.showImageUrl;
+
     },
     methods: {
 

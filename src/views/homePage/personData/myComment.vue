@@ -36,7 +36,7 @@
         dialogVisible: false,
         productImgs: [],
         isMultiple: true,
-        imgLimit: 1,
+        imgLimit: 6,
         userInfo:{
           userid:""
         },

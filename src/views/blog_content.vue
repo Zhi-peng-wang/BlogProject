@@ -202,7 +202,7 @@
           status:"0",       //是否已读
           typeid:"0",       //判断是否是评论还是回复
           parentid:"0",      //评论还是回复
-          id:this.$route.query.blogid       //日志id或者相册id
+          uuid:this.$route.query.blogid       //日志id或者相册id
         };
         console.log(data);
         addComment(data)
@@ -253,7 +253,7 @@
           status:"0",       //是否已读
           typeid:"1",       //判断是否是评论还是回复
           parentid:this.commentId,      //评论还是回复
-          id:this.$route.query.blogid       //日志id或者相册id
+          uuid:this.$route.query.blogid       //日志id或者相册id
         };
         console.log(data);
         addComment(data)
