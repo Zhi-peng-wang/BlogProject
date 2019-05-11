@@ -37,5 +37,9 @@ export default {
   }
   a{
     display: block;
+    text-decoration: none;
+  }
+  a:hover{
+    text-decoration: none;
   }
 </style>

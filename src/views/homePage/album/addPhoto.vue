@@ -27,26 +27,25 @@
               </el-select>
             </el-form-item>
 
-            <!--upload-->
-            <!--图片上传-->
-            <el-upload
-              action=""
-              accept="image/*"
-              multiple
-              class="avatar-uploader"
-              list-type="picture-card"
-              :limit="limitImage"
-              :http-request="addAttachment">
-              <i class="el-icon-plus"></i>
-            </el-upload>
+            <el-form-item label="上传图片:">
+              <!--upload-->
+              <!--图片上传-->
+              <el-upload
+                action=""
+                accept="image/*"
+                multiple
+                class="avatar-uploader"
+                list-type="picture-card"
+                :limit="limitImage"
+                :http-request="addAttachment">
+                <i class="el-icon-plus"></i>
+              </el-upload>
+            </el-form-item>
 
-            <el-button @click="addUpload">上传图片</el-button>
-              </el-form-item>
-
-              <el-form-item>
-                <el-button type="primary">提交</el-button>
-                <el-button>重置</el-button>
-              </el-form-item>
+            <!--点击按钮-->
+            <el-form-item>
+              <el-button @click="confirmAddUploadPhoto" type="primary">上传图片</el-button>
+            </el-form-item>
           </el-form>
         </div>
       </div>
@@ -68,9 +67,10 @@
         album_url_1: [],
         album_url_2: [],
         album_url_2_2: [],
-        imageUrl:"",
-        limitImage:6,
-        fileData:[]
+        imageUrl: "",
+        limitImage: 50,
+        fileData: [],
+        loading:""
       }
     },
     mounted() {
@@ -102,31 +102,81 @@
       // 自定义上传方法
       addAttachment(file) {
         console.log(file);
-      // 用于显示图片
+        // 用于显示图片
         this.imageUrl = URL.createObjectURL(file.file);
-      //保存一份文件信息，用于上传
+        //保存一份文件信息，用于上传
+        //   this.fileData=file.file;
         this.fileData.push(file.file);
         console.log(this.fileData);
+      },
+      //确认提交按钮
+      confirmAddUploadPhoto(){
+        this.$confirm('确认上传', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then((action) => {
+          if (action === 'confirm') {     //确认的回调
+            //确认回调时就要loading，在后台返回状态码为200或者上传失败时清除loading
+            this.setTimer();
+            this.addUpload();
+          }
+        }).catch((err) => {
+          if (err === 'cancel') {
+            this.$message({
+              type: 'info',
+              message: '取消上传',
+              showClose:true
+            });
+          }
+        });
       },
       // 上传数据
       addUpload() {
         var formData = new FormData();
-        formData.append("file", this.fileData);
+        for (let i = 0; i < this.fileData.length; i++) {
+          formData.append("file", this.fileData[i]);
+        }
         formData.append("userid", localStorage.getItem("loginUser"));
-        formData.append("title", "hello898989");
-        formData.append("classid", 15);
-        formData.append("pv", 15);
+        formData.append("title", this.albumTitle);
+        formData.append("classid", this.dataClass.classB);
         console.log(formData);
+
         console.log("上传图片的点击事件已触发");
         console.log(this.fileData);
         // 上传方法接口
         addPhoto(formData)
           .then(res => {
-          console.log('上传图片接口-数据成功。', res)
+            if(res.status===200){
+              // 图片上传成功，清除定时器
+              this.loadingClose();
+              this.$notify({
+                title: '图片上传',
+                message: '图片上传成功!',
+                type: 'success'
+              });
+              this.$router.push(`/${this.$route.params.id}`+'/home_page/albumAll')
+            }
+            console.log(formData);
+            console.log('上传图片接口-数据成功。', res)
           })
-          .catch(err=>{
+          .catch(err => {
             console.log(err);
           })
+      },
+      //在上传图片之后有一定的反应时间
+      setTimer() {
+        this.loading = this.$loading({
+          lock: true,
+          text: '正在上传图片，请稍后',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+      },
+      //关闭loading
+      loadingClose(){
+        this.loading.close();
       },
       sendClassId(classid) {
         console.log("一级分类被点击" + classid);
@@ -154,9 +204,11 @@
     position: relative;
     overflow: hidden;
   }
+
   .avatar-uploader .el-upload:hover {
     border-color: #409EFF;
   }
+
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
@@ -165,6 +217,7 @@
     line-height: 178px;
     text-align: center;
   }
+
   .avatar {
     width: 178px;
     height: 178px;

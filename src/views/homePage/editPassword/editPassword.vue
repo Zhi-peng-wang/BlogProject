@@ -3,7 +3,7 @@
     <div class="password">
       <div class="logo">修改密码</div>
       <!--修改密码表单-->
-      <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" v-if="showEdit">
+      <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
         <el-form-item label="请输入原密码" prop="inpass">
           <el-input type="password" v-model.trim="ruleForm.inpass" autocomplete="off"></el-input>
         </el-form-item>
@@ -14,27 +14,20 @@
           <el-input type="password" v-model.trim="ruleForm.checkPass" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item class="Button">
-          <el-button type="danger" style="display:block;margin-left: 50px;float: left" @click="back">取消修改</el-button>
-          <el-button type="primary" style="display:block;margin:0 auto;" @click="next">确认修改</el-button>
+          <el-button style="display:block;margin-left: 50px;float: left" @click="next">确认</el-button>
+          <el-button style="display:block;margin:0 auto;" @click="back">返回</el-button>
         </el-form-item>
       </el-form>
-      <!--跳转到登陆页面-->
-      <el-row class="enter" v-if="showLogin">
-        <div class="img">
-          <img src="../../../assets/denglu.jpg" height="355" width="450"/>
-        </div>
-        <div class="bottom clearfix">
-          <el-button @click="xiugai">现在登陆</el-button>
-        </div>
-      </el-row>
     </div>
   </div>
 </template>
 
 <script>
-  import axios from "axios"
+  import {editPassword} from "../../../api";
+
   export default {
-    data(){
+    data() {
+      // 密码验证
       var validatePass = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入新密码'));
@@ -54,98 +47,151 @@
           callback();
         }
       };
-      return{
+
+      return {
         ruleForm: {
-          inpass:"",
+          inpass: '',
           pass: '',
           checkPass: '',
+          timer: null
         },
-        showEdit:true,
-        showLogin:false,
-        active: 0,
         rules: {
-          inpass:[
-            { required: true, message: '请输入旧密码', trigger: 'blur' },
+          inpass: [
+            {required: true, message: '请输入原密码', trigger: 'blur'},
           ],
           pass: [
-            { validator: validatePass, trigger: 'blur' },
-            { required: true, message: '请输入新密码', trigger: 'blur' },
-            { min: 2, max: 10, message: '长度在 2 到 10 个字符，允许有特殊字符及下划线，禁止纯数字或纯英文', trigger: 'blur' },
-            {pattern:/^[a-z]*\d*[a-z]+\d+[a-z]*\d*$/i || /`[a-z]*\d*\d+[a-z]+[a-z]*\d*$/,message:'只允许字母+数字，数字不能在前',trigger: 'blur'},
+            {validator: validatePass, trigger: 'blur'},
+            {required: true, message: '请输入新密码', trigger: 'blur'},
+            {min: 2, max: 10, message: '长度在 2 到 10 个字符，允许有特殊字符及下划线，禁止纯数字或纯英文', trigger: 'blur'},
+            {
+              pattern: /^[a-z]*\d*[a-z]+\d+[a-z]*\d*$/i || /`[a-z]*\d*\d+[a-z]+[a-z]*\d*$/,
+              message: '只允许字母+数字，数字不能在前',
+              trigger: 'blur'
+            },
           ],
           checkPass: [
-            { required: true, message: '请再次输入新密码', trigger: 'blur' },
-            { validator: validatePass2, trigger: 'blur' }
+            {validator: validatePass2, trigger: 'blur'},
+            {required: true, message: '请再次输入密码', trigger: 'blur'},
           ]
         },
       };
     },
+    destroyed: function () {
+      // 每次离开当前界面时，清除定时器
+      clearInterval(this.timer);
+      this.timer = null
+    },
     methods: {
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
+      setTimer() {
+        const loading = this.$loading({
+          lock: true,
+          text: '恭喜您密码修改成功，三秒之后自动跳转登录页！',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        setTimeout(() => {
+          loading.close();
+        }, 3000);
+        if(this.timer == null) {
+          this.timer = setInterval( () => {
+            console.log('开始定时...3秒之后跳转页面');
+            this.$router.push('/login')
+          }, 3000)
+        }
+      },
+
+      //修改密码
+      next(ruleForm) {
+        this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            alert('登陆成功!');
+            if (valid) {
+              this.$confirm('确认修改?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning',
+                center: true
+              }).then(() => {
+                //此处执行修改密码函数
+                this.editPassword();
+                this.$message({
+                  message: '修改成功！',
+                  type: 'success'
+                });
+                this.setTimer()
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '修改失败'
+                });
+              });
+            }
           } else {
-            console.log('登陆失败!!');
+            this.$alert('所填内容不符合规范', '网页消息', {
+              confirmButtonText: '确定',
+              type: "error",
+              center: "true",
+              callback: action => {
+                this.$message({
+                  type: 'error',
+                  showClose: true,
+                  message: `提示: ${'所填内容不符合规范,请认真填写'}`
+                });
+              }
+            });
             return false;
           }
         });
       },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
-      },
-      //切换页面
-      next(){
-        this.showEdit=false;
-        this.showLogin=true
-      },
-      back(){
-        // 取消修改，跳转到上一级
+      // 取消修改，跳转到上一级
+      back() {
         this.$router.go(-1)
       },
-      xiugai() {
-        this.$message({
-          message: '登陆成功',
-          type: 'success'
-        });
-      },
-    }
+      editPassword() {
+        let data = {
+          userid: localStorage.getItem('loginUser'),
+          oldpassword: this.ruleForm.inpass,
+          password: this.ruleForm.pass,
+          resetpassword: this.ruleForm.checkPass
+        };
+        editPassword(data)
+          .then(res => {
+            console.log(res);
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      }
+    },
   }
 </script>
 
 <style scoped>
-  .logo{
+  .logo {
     font-size: 27px;
     margin-top: 30px;
     margin-bottom: 80px;
     text-align: center;
-    opacity:0.7;
+    opacity: 0.7;
   }
-  .revise{
-    position: fixed;  /*绝对定位*/
+
+  .revise {
+    position: fixed; /*绝对定位*/
     width: 100%;
     height: 100%;
     background-image: url("../../../assets/xiugai.jpg");
     background-repeat: no-repeat;
-    background-size: cover;   /*全覆盖*/
-    background-position:center;
+    background-size: cover; /*全覆盖*/
+    background-position: center;
   }
-  .demo-ruleForm{
+
+  .demo-ruleForm {
     margin: 0 auto;
     width: 40%;
     height: 100%;
-    opacity:0.8;
+    opacity: 0.6;
   }
-  .img{
-    text-align: center;
-    opacity:0.4;
-  }
-  .Button{
+
+  .Button {
     margin-top: 50px;
-  }
-  .bottom {
-    margin-top: 30px;
-    text-align: center;
-    line-height: 12px;
   }
 </style>

@@ -6,7 +6,9 @@
       </div>
       <div class="panel-body">
         <div style="margin-left: 30px">
-          <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+          <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">
+            全选
+          </el-checkbox>
           <el-button type="danger"  style="margin-left: 450px"
                      @click="[open_all()]" :disabled="checkedBlogs.length<2">
             批量删除
@@ -19,7 +21,7 @@
                 <div style="width: 100px;display: inline-block">{{t.title.length<13?t.title:t.title.slice(0,13)+"..."}}</div>
                 <div style="margin-left:130px;display: inline-block;">{{t.blogdate.slice(0,10)}}-{{t.blogdate.slice(11,16)}}</div>
                 <div  style="margin-left:40px;display: inline-block;">
-                  <el-button type="danger"  @click="[open([t.blogid,t])]"
+                  <el-button type="danger"  @click="[open(t.blogid,t)]"
                              >
                     删除
                   </el-button>

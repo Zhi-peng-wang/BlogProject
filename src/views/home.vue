@@ -1,50 +1,8 @@
 <template>
   <div :style="note" class="note">
     <div class="container">
-      <div class="container">
-        <div class="nav_bar">
-          <!-- <img src="holder.js/100px60" /> -->
-          <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
-            <el-menu-item>
-              <img src="../assets/tx.jpg">
-            </el-menu-item>
-            <el-menu-item>
-              <h3>{{this.$route.params.id}}</h3>
-            </el-menu-item>
-            <el-menu-item index="1" style="margin-left:42%">
-              <router-link :to="`/${$route.params.id}`+'/home'">主页</router-link>
-            </el-menu-item>
-            <el-menu-item index="2">
-              <router-link :to="`/${$route.params.id}`+'/album/photo_class'">相册</router-link>
-            </el-menu-item>
-            <el-menu-item index="3">
-              <router-link :to="`/${$route.params.id}`+'/blog'">日志</router-link>
-            </el-menu-item>
-            <el-menu-item index="4">
-              <router-link :to="`/${$route.params.id}`+'/leaveMessage'">留言</router-link>
-            </el-menu-item>
-            <el-menu-item index="5">
-              <router-link :to="`/${$route.params.id}`+'/home_page'">
-                <el-dropdown>
-                  <span class="el-dropdown-link">
-                    {{loginUser}}<i class="el-icon-arrow-down el-icon--right" style="margin:-3px 0px 0px -3px"></i>
-                  </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item>
-                      <router-link :to="`/${$route.params.id}`+'/home_page'">个人中心</router-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item>
-                      <router-link :to="`/${$route.params.id}`+'/editPassword'">修改密码</router-link>
-                    </el-dropdown-item>
-                    <el-dropdown-item>退出登录</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </router-link>
-            </el-menu-item>
-          </el-menu>
-          <br>
-        </div>
-      </div>
+      <!--导航条-->
+      <navBar></navBar>
 
       <el-row :gutter="20" style="margin-left: 10px"  v-loading="loading">
         <el-col :span="8">
@@ -67,7 +25,8 @@
           <!--      第一个框-->
           <div class="geren">
             <div class="col-md-4" style="height: 40px;width:358px;background: #f5f5f5;">
-              <p style=" font-weight: bold;">个人档</p>
+              <p style=" font-weight: bold;float: left">个人档</p>
+              <p style=" font-weight: bold;float: right"><router-link :to="`/${$route.params.id}`+'/myself'">个人资料</router-link></p>
             </div>
 
             <div>
@@ -109,14 +68,13 @@
                       <div slot="content" style="width: 60px;text-align: center">{{v.nickname}}</div>
                       <div>   <!--这是最外面的盒子-->
                         <div style="margin: 5px auto;width:88px; height:88px;background: skyblue;">  <!--这是包裹图片的盒子-->
-                          <!--<img src="" alt="访客头像" width="66px" height="57px">-->
+                          <img :src="v.userimg" alt="访客头像">
                         </div>
                         <div>   <!--这是访客访问的日期的盒子-->
                           <p class="vistorDate">{{v.guestdate.slice(0,10)}}</p>
                         </div>
                       </div>
                     </el-tooltip>
-
                   </div>
                 </div>
               </div>
@@ -134,13 +92,16 @@
             <!--浏览量-->
             <div class="panel-body" style="padding: 0 0 15px 0">
               <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <p class="browseNum">今日浏览</p>
                   <p class="browseNum"><b>30</b></p>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <p class="browseNum">总浏览量</p>
                   <p class="browseNum"><b>6666</b></p>
+                </div>
+                <div class="col-md-4">
+                  <p class="browseNum" style=" font-weight: bold;padding-top: 30px;"><router-link :to="`/${$route.params.id}`+'/visitCenter'">更多访客</router-link></p>
                 </div>
               </div>
             </div>
@@ -177,8 +138,11 @@
 
 <script>
   import {addGuest, getGuest, getNewBlog, getUser} from "../api";
-
+  import navBar from "./nav/navBar"
   export default {
+    components:{
+      navBar
+    },
     inject: ['reload'],
     data() {
       return {
@@ -200,6 +164,8 @@
         PageSize:9,
         //访客信息
         visitorInfo:[],
+        //头像信息
+        imgUrl:"",
         note: {
           backgroundImage: "url(" + require("../assets/zhuye.jpg") + ")",
           backgroundRepeat: "no-repeat",
@@ -207,6 +173,9 @@
       };
     },
     created(){
+      //修改vuex中的默认激活的值
+      this.$store.commit('activeNav', "1");
+
       //添加访客
       let dataGuest={
         userid:this.$route.params.id,
@@ -249,11 +218,14 @@
           console.log("没有拿到访客信息");
           console.log(err);
         });
+
       this.loading=true;
       this.loginUser=localStorage.getItem("loginUser");
       let id = this.$route.params.id;
       getUser({userid: id})
         .then(res => {
+          //获取头像信息
+          this.imageUrl=res.object.userimg;
           console.log("获取个人信息数据成功");
           console.log(res);
           const result = res.object;

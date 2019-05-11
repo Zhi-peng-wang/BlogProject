@@ -26,7 +26,9 @@ import logOperation from '../views/homePage/logOperation/logOperation'
 import home from '../views/home'
 import wrong from '../views/wrong.vue'
 import editPassword from '../views/homePage/editPassword/editPassword'
-
+import visitCenter from '../views/homePage/visitCenter/visitCenter'
+import myself from '../views/homePage/myself/myself'
+import albumList from '../views/homePage/album/albumList'
 
 Vue.use(VueRouter);
 
@@ -48,6 +50,14 @@ export default new VueRouter({
     {
       path:'/:id/home',
       component:home
+    },
+    {
+      path:'/:id/visitCenter',
+      component:visitCenter
+    },
+    {
+      path:'/:id/myself',
+      component:myself
     },
     {
       path:'/:id/logOperation',
@@ -89,6 +99,10 @@ export default new VueRouter({
           {
             path:'albumAll',
             component:albumAll
+          },
+          {
+            path:'albumList',
+            component:albumList
           },
           {
             path:'albumCategory',

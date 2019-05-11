@@ -17,7 +17,6 @@
               :before-upload="beforeAvatarUpload"
               :on-error="imgUploadError">
               <img v-if="imageUrl" :src="imageUrl" class="avatar">
-              <!--<img v-if="imageUrl" src="http://192.168.43.238:8090/userImg/ba314cb6f7b546809692c392a5a47e2e.jpg" class="avatar">-->
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
           </el-form-item>
@@ -31,7 +30,6 @@
 
 <script>
   import {getUser} from "../../../api";
-
   export default {
     data() {
       return {

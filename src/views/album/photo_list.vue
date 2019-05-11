@@ -6,10 +6,10 @@
         <li>
           <router-link :to="{path:`/${$route.params.id}`+'/album/photo_content',query:{photoid:p.photoid}}">
             <div class="fj_img">
-              <img :src="p.thumbnail">
+              <img :src="p.thumbnail" width="100%" height="200px">
             </div>
             <div class="fj_date">
-              <p>{{p.photodate.slice(0,10)}}</p>
+              <p>{{p.photodate.slice(0,10)}}-{{p.photodate.slice(11,16)}}</p>
             </div>
             <div class="fj_title">
               <h4>{{p.title}}</h4>

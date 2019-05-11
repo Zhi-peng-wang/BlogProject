@@ -13,7 +13,7 @@
                 </div>
                 <div class="fj_title">
                   <h4>{{t.classname}}
-                    (<el-badge :value="t.num" class="item" type="primary" style="margin-top: 8px">
+                    (<el-badge :value="t.num" style="margin-top: 8px">
                     </el-badge>张)
                   </h4>
                 </div>

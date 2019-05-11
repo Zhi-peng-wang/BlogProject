@@ -64,7 +64,7 @@
 </template>
 
 <script>
-  import {getUser} from "../../../api";
+  import {addEdit, getUser} from "../../../api";
   import headPic from "./headPic"
   export default {
     components:{
@@ -73,7 +73,6 @@
     data(){
       return{
         loading:false,
-
         ruleForm: {
           username: "",
           userimg:"",
@@ -81,7 +80,7 @@
           sign:"",
           sex: "",
           age: "",
-          Tel: "",
+          Tel: 0,
           email: "",
           birth: "",
           address: "",
@@ -117,7 +116,6 @@
           ],
           address: [
             { required: false, message: '请输入详细地址', trigger: 'blur' },
-            { type: 'address', message: '请输入详细地址', trigger: ['blur'] }
           ],
           Tel: [
             { required: true, message: '请输入正确的电话号码', trigger: 'blur' },
@@ -127,7 +125,6 @@
       }
     },
     mounted(){
-
       const id = localStorage.getItem("loginUser");
       this.loading=true;
       getUser({userid:id})
@@ -153,15 +150,55 @@
     methods:{
       // 提交+重置 按钮
       submitForm(formName) {
-        console.log(data);
+        // console.log(data);
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            this.$confirm('确认上传', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning',
+              center: true
+            }).then((action) => {
+              if (action === 'confirm') {     //确认的回调
+              //  确认的方法执行
+              this.changeUerrInfo()
+              }
+            }).catch((err) => {
+              if (err === 'cancel') {
+                this.$message({
+                  type: 'info',
+                  message: '取消上传',
+                  showClose:true
+                });
+              }
+            });
           } else {
             console.log('error submit!!');
             return false;
           }
         });
+      },
+      changeUerrInfo(){
+        console.log("修改个人信息事件触发");
+        let data={
+          userid:this.$route.params.id,
+          username:this.ruleForm.username,
+          nickname:this.ruleForm.nickname,
+          sign:this.ruleForm.sign,
+          sex:this.ruleForm.sex,
+          age:this.ruleForm.age,
+          phone:this.ruleForm.Tel,
+          email:this.ruleForm.email,
+          birthday:this.ruleForm.brith,
+          address:this.ruleForm.address,
+        };
+        addEdit(data)
+          .then(res=>{
+            console.log(res);
+          })
+          .catch(err=>{
+            console.log(err);
+          })
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();

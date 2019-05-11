@@ -30,7 +30,7 @@ export const getClassPhoto=(classid)=>ajax('/api/getClassPhoto',classid,"POST");
 export const getUser=(userid)=>ajax('/api/getUser',userid,"POST");
 
 //8.修改个人信息
-export const register=(from_data)=>ajax('/api/register',from_data,"POST");
+export const addEdit=(from_data)=>ajax('/api/addEdit',from_data,"POST");
 
 //9.在添加日志组件中得到分类，将其转换为select下拉菜单
 export const getMyBlogTwoClass=(data)=>ajax('/api/getMyBlogTwoClass',data,"POST");
@@ -51,7 +51,7 @@ export const deleteAllBlog = (blogArray) => ajax('/api/deleteAllBlog',blogArray,
 export const editBlog = (blogid) => ajax('/api/editBlog',blogid,"POST");
 
 //15.获取相册内容和评论
-export const getPhoto = (data)=>ajax('/api/getPhoto'.data,"POST");
+export const getPhoto = (data)=>ajax('/api/getPhoto',data,"POST");
 
 //16.添加评论 和回复
 export const addComment = (data)=>ajax('/api/addComment',data,"POST");
@@ -79,6 +79,12 @@ export const deleteComment =(data)=>ajax('/api/deleteComment',data,"POST");
 
 //24.在相册里添加图片addPhoto
 export const addPhoto =(data)=>ajax('/api/addPhoto',data,"POST");
+
+//25.editPassword修改密码
+export const editPassword =(data)=>ajax('/api/editPassword',data,"POST");
+
+//26.删除相册下的图片deleteAllPhoto
+export const deleteAllPhoto =(data)=>ajax('/api/deleteAllPhoto',data,"POST");
 
 
 
