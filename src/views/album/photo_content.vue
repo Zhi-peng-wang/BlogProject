@@ -1,12 +1,14 @@
 <template>
   <div>
     <div class="container">
-      <!--<h1>相册得评论{{this.$route.query.photoid}}</h1>-->
       <div class="row">
         <div class="col-md-8">
           <div class="panel panel-info">
             <div class="panel-heading">
-              图片的详细信息
+              <el-breadcrumb separator="/">
+                <el-breadcrumb-item :to="`/${$route.params.id}`+'/album/photo_class'">返回上一级</el-breadcrumb-item>
+                <el-breadcrumb-item>相册下图片</el-breadcrumb-item>
+              </el-breadcrumb>
             </div>
             <div class="panel-body">
               <img :src="imgUrl" alt="" width="715px" height="600px">
@@ -18,8 +20,16 @@
             <div class="panel-heading">
               评论
             </div>
+            <!--该相片的内容-->
             <div class="panel-body">
-              <!--评论的展示-->
+              <p>
+                这里应该有一个头像和名字加上回复的内容:{{photoContent}}<br>
+                暂时后台没有给，先预留位置
+              </p>
+            </div>
+
+            <!--评论的展示-->
+            <div class="panel-body">
               <div class="row" v-for="(c,index) in photoComment" :key="index">
                 <div>
                   <div class="col-md-3" style="padding: 0">
@@ -74,8 +84,6 @@
                   </div>
                 </div>
               </div>
-
-
 
               <!--没有图片评论时候展示的-->
               <div class="el-row" v-if="photoComment.length===0">
@@ -136,6 +144,7 @@
           replayContent: "",      //回复的内容
           fromuserid: "",          //回复评论者的id
           commentId: "",           //回复那篇的评论commentid
+          photoContent:""
         }
       },
       mounted(){
@@ -270,7 +279,10 @@
           getPhoto({photoid:this.$route.query.photoid})
             .then(res=>{
               console.log(res);
+              //得到相片的路径
               this.imgUrl=res.object.photo;
+              //得到该相片的相关内容
+              this.photoContent=res.object.title;
               this.commaRE=res.obj;
               this.loading = false;
               this.photoComment = [];      //此处将评论数组清空

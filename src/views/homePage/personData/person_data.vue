@@ -80,7 +80,7 @@
           sign:"",
           sex: "",
           age: "",
-          Tel: 0,
+          Tel: "",
           email: "",
           birth: "",
           address: "",

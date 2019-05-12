@@ -14,7 +14,6 @@ export const login=(data) => ajax('/api/login' ,data,"POST");
 export const getClass=(userid)=>ajax('/api/getClass',userid,"POST");
 
 //3.获取日志的标题
-// export const getClassBlog=(classid)=>ajax('/api/getClassBlog',classid,"POST");
 export const getClassBlog=(classid)=>ajax('/api/getClassBlog',classid);
 
 //4.获取日志的内容
@@ -69,7 +68,7 @@ export const deleteClass =(data)=>ajax('/api/deleteClass',data,"POST");
 export const editClass =(data)=>ajax('/api/editClass',data,"POST");
 
 //21.addGuest 添加分类的接口
-export const addGuest = (data)=>ajax('/api/addGuest',data,"POST");
+export const addGuest = (data)=>ajax('/api/addGuest',data,"POST") ;
 
 //22. getGuest获取访客的接口，自定义获取数量
 export const getGuest =(data)=>ajax('/api/getGuest',data,"POST");
@@ -85,6 +84,12 @@ export const editPassword =(data)=>ajax('/api/editPassword',data,"POST");
 
 //26.删除相册下的图片deleteAllPhoto
 export const deleteAllPhoto =(data)=>ajax('/api/deleteAllPhoto',data,"POST");
+
+//27.添加留言接口
+export const  addBbs = (data)=>ajax('/api/addBbs',data,"POST");
+
+//28.得到留言及回复留言的相关内容
+export const getBbs = (data)=>ajax('/api/getBbs',data,"POST");
 
 
 

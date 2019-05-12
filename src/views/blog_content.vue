@@ -21,29 +21,26 @@
             </div>
             <div class="col-md-10" style="padding: 0">
               <div style="height: 80px" class="father">
-                <div style="line-height: 40px;margin: 0;font-size: 18px">
-                  {{c.fromuser}}：{{c.content}}
+                <div style="line-height: 20px;font-size: 12px">
+                  <p style="font-size: 14px">
+                    {{c.commentdate.slice(0,10)}}
+                  </p>
+                  <p class="content" >
+                    {{c.fromuser}}：{{c.content}}
+                    <img src="../assets/hui.png"
+                         @click="replay(c.nickname,c.fromuser,c.commentid)"
+                         class="child"
+                         style="width: 15px;height: 15px">
+                    <img src="../assets/shanchu.png"
+                         @click="deleteCom(c.commentid)"
+                         class="child"
+                         style="width: 15px;height: 15px">
+                  </p>
                 </div>
-                <div style="line-height: 40px;margin: 0;font-size: 12px">
-                  {{c.commentdate.slice(0,10)}}
-                  <div @click="replay(c.nickname,c.fromuser,c.commentid)"
-                       type="primary"
-                       plain size="mini"
-                       style="margin-left: 15px"
-                       class="child">
-                    <img src="../assets/hui.png" style="width: 15px;height: 15px">
-                  </div>
-                  <div plain size="mini" class="child"
-                       style="margin-left:5px"
-                       @click="deleteCom(c.commentid)">
-                    <img src="../assets/shanchu.png" style="width: 15px;height: 15px">
-                  </div>
-                </div>
-
               </div>
 
 
-              <!--回复相关内容-->
+              <!--回复的展示-->
               <div class="row" v-for="(r,index) in replayComment">
                 <div v-if="r.parentid===c.commentid">
                   <div class="col-md-2" style="padding: 0">
@@ -54,25 +51,21 @@
                   </div>
                   <div class="father">
                     <div class="col-md-10" style="padding: 0">
-                      <div style="height: 80px">
-                        <p style="line-height: 40px;margin: 0;font-size: 16px">
-                          {{r.nickname}} 回复：{{c.fromuser}}：{{r.content}}
-                        </p>
-                        <div style="line-height: 40px;margin: 0;font-size: 12px">
+                      <div style="height: 60px;line-height: 20px;margin:15px 0px 0px 20px;font-size: 12px">
+                        <p style="font-size: 14px">
                           {{r.commentdate.slice(0,10)}}
-                          <div @click="replay(r.nickname,r.fromuser,c.commentid)"
-                               type="primary"
-                               plain size="mini"
-                               style="margin-left: 15px"
-                               class="child">
-                            <img src="../assets/hui.png" style="width: 15px;height: 15px">
-                          </div>
-                          <div plain size="mini" class="child"
-                               style="margin-left: 5px"
-                               @click="deleteCom(r.commentid)">
-                            <img src="../assets/shanchu.png" style="width: 15px;height: 15px">
-                          </div>
-                        </div>
+                        </p>
+                        <p class="content">
+                          {{r.nickname}} 回复：{{c.fromuser}}：{{r.content}}
+                          <img src="../assets/hui.png"
+                               @click="replay(r.nickname,r.fromuser,c.commentid)"
+                               class="child"
+                               style="width: 15px;height: 15px">
+                          <img src="../assets/shanchu.png"
+                               @click="deleteCom(r.commentid)"
+                               class="child"
+                               style="width: 15px;height: 15px">
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -134,8 +127,12 @@
         fromuserid: "",          //回复评论者的id
         commentId: "",           //回复那篇的评论commentid
         commentPersonid: "",       //回复的人的id
-        seen: true,
-        current: 0
+        seen:true,
+        current:0,
+        //评论删除图标显示
+        showComment:false,
+        //回复的删除图标显示
+        showReplay:false,
       }
     },
     mounted() {
@@ -343,5 +340,11 @@
 
   .father:hover .child {
     display: inline;
+  }
+  .content{
+    margin: 0;
+    width: 570px;
+    word-wrap:break-word;
+    word-break:break-all;
   }
 </style>
