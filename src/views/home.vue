@@ -239,7 +239,7 @@
         });
       getNewBlog({userid: id})
         .then(res => {
-          console.log("获取个人信息数据成功11");
+          console.log("得到最新的5个博客");
           console.log(res);
           const result = res.object;
           this.loading=false;

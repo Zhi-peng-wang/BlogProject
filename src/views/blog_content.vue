@@ -11,61 +11,123 @@
       </div>
       <!--该篇日志的评论-->
       <div class="container" style="padding: 0">
-        <div class="row" v-for="(c,index) in blogComment" :key="index" style="margin-bottom: 30px">
+        <div :key="index"
+             class="row"
+             v-for="(c,index) in blogComment">
           <div>
-            <div class="col-md-2" style="padding: 0">
-              <div style="width: 80px;height: 80px;margin: 0 auto">
-                <img :src="c.userimg"
-                     alt="图片" width="60px" height="60px" style="margin: 10px">
-              </div>
-            </div>
-            <div class="col-md-10" style="padding: 0">
-              <div style="height: 80px" class="father">
-                <div style="line-height: 20px;font-size: 12px">
-                  <p style="font-size: 14px">
-                    {{c.commentdate.slice(0,10)}}
-                  </p>
-                  <p class="content" >
-                    {{c.fromuser}}：{{c.content}}
-                    <img src="../assets/hui.png"
-                         @click="replay(c.nickname,c.fromuser,c.commentid)"
-                         class="child"
-                         style="width: 15px;height: 15px">
-                    <img src="../assets/shanchu.png"
-                         @click="deleteCom(c.commentid)"
-                         class="child"
-                         style="width: 15px;height: 15px">
-                  </p>
+            <div>
+              <div class="col-md-2" style="padding-bottom:33px;">
+                <div style="width: 80px;margin: 0 auto">
+                  <img :src="c.userimg"
+                       alt="图片" height="60px" style="margin: 10px" width="60px">
                 </div>
               </div>
-
-
-              <!--回复的展示-->
-              <div class="row" v-for="(r,index) in replayComment">
-                <div v-if="r.parentid===c.commentid">
-                  <div class="col-md-2" style="padding: 0">
-                    <div style="width: 80px;height: 80px;margin: 0 auto">
-                      <img :src="c.userimg"
-                           alt="图片" width="60px" height="60px" style="margin: 10px">
-                    </div>
+              <div class="col-md-10" style="padding: 0">
+                <div class="father" style="padding-bottom: 30px;">
+                  <div style="line-height: 40px;margin: 0;font-size: 18px">
+                    {{c.nickname}}：
+                    <p v-html="c.content.replace(/\#[\u4E00-\u9FA5]{1,3}\;/gi, emotion)">{{c.content}}</p>
                   </div>
-                  <div class="father">
-                    <div class="col-md-10" style="padding: 0">
-                      <div style="height: 60px;line-height: 20px;margin:15px 0px 0px 20px;font-size: 12px">
-                        <p style="font-size: 14px">
-                          {{r.commentdate.slice(0,10)}}
-                        </p>
-                        <p class="content">
-                          {{r.nickname}} 回复：{{c.fromuser}}：{{r.content}}
-                          <img src="../assets/hui.png"
-                               @click="replay(r.nickname,r.fromuser,c.commentid)"
-                               class="child"
-                               style="width: 15px;height: 15px">
-                          <img src="../assets/shanchu.png"
-                               @click="deleteCom(r.commentid)"
-                               class="child"
-                               style="width: 15px;height: 15px">
-                        </p>
+                    <div style="margin: 0;font-size: 12px">
+                      {{c.commentdate.slice(0,10)}}
+                      <el-popover
+                        placement="top-start"
+                        width="400"
+                        trigger="hover">
+                        <p>回复：{{c.nickname}}</p>
+                        <!--回复输入框-->
+                        <div>
+                          <div>
+                            <!--文本输入框-->
+                            <textarea class="text" rows="3" style="width: 370px" v-model="replayContent"></textarea>
+                            <img @click="showToggle()" class="face" src="../assets/face.png">
+                          </div>
+                          <el-button @click="replay(c.nickname,c.fromuser,c.commentid)" size="mini"
+                                     style="margin: 5px 20px 0 0;float: right"
+                                     type="primary">
+                            回复{{c.nickname}}
+                          </el-button>
+                          <!-- 表情选择框-->
+                          <Emotion :height="200" @emotion="handleEmotionReplay" v-if="isShow"></Emotion>
+                        </div>
+
+                      <div class="child"
+                           plain size="mini"
+                           style="margin-left: 15px"
+                           slot="reference"
+                           type="primary">
+                        <img src="../assets/hui.png" style="width: 15px;height: 15px">
+                      </div>
+                      </el-popover>
+
+                      <div @click="deleteCom(c.commentid)" class="child" plain
+                           size="mini"
+                           style="margin-left:5px">
+                        <img src="../assets/shanchu.png" style="width: 15px;height: 15px">
+                      </div>
+                    </div>
+
+                </div>
+
+                <!--回复相关内容-->
+                <div class="row" v-for="(r,index) in replayComment">
+                  <div v-if="r.parentid===c.commentid">
+                    <div class="col-md-2" style="padding: 0">
+                      <div style="padding-bottom: 30px;">
+                        <img :src="r.userimg"
+                             alt="图片" height="60px" style="margin: 10px" width="60px">
+                      </div>
+                    </div>
+                    <div class="father">
+                      <div class="col-md-10" style="padding-bottom: 50px;">
+                        <div style="height: 80px">
+                          <p style="line-height: 40px;margin: 0;font-size: 16px">
+                            {{r.nickname}} 回复：{{r.touser}}：
+                            <span v-html="r.content.replace(/\#[\u4E00-\u9FA5]{1,3}\;/gi, emotion)">
+                              {{r.content}}
+                            </span>
+                          </p>
+                          <div style="line-height: 40px;margin: 0;font-size: 12px">
+                            {{r.commentdate.slice(0,10)}}
+                            <el-popover
+                              placement="top-start"
+                              width="400"
+                              trigger="hover">
+                              <p>回复：{{r.nickname}}</p>
+                              <!--回复输入框-->
+                              <div>
+                                <div>
+                                  <!--文本输入框-->
+                                  <textarea class="text" rows="3" style="width: 370px" v-model="replayContent"></textarea>
+                                  <img @click="showToggle()" class="face" src="../assets/face.png">
+                                </div>
+                                <el-button @click="replay(r.nickname,r.fromuser,c.commentid)" size="mini"
+                                           style="margin: 5px 20px 0 0;float: right"
+                                           type="primary">
+                                  回复{{r.nickname}}
+                                </el-button>
+                                <!-- 表情选择框-->
+                                <Emotion :height="200" @emotion="handleEmotionReplay" v-if="isShow"></Emotion>
+                              </div>
+
+                              <div class="child"
+                                   plain size="mini"
+                                   style="margin-left: 15px"
+                                   slot="reference"
+                                   type="primary">
+                                <img src="../assets/hui.png" style="width: 15px;height: 15px">
+                              </div>
+                            </el-popover>
+
+
+
+                            <div @click="deleteCom(r.commentid)" class="child" plain
+                                 size="mini"
+                                 style="margin-left: 5px">
+                              <img src="../assets/shanchu.png" style="width: 15px;height: 15px">
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -74,7 +136,6 @@
             </div>
           </div>
         </div>
-
         <!--没有文章评论时候展示的-->
         <div class="el-row" v-if="blogComment.length===0">
           <div>
@@ -90,28 +151,35 @@
         </div>
         <!--评论输入框-->
         <div class="el-row">
-          <label style="margin-top: 15px">发表评论：</label>
-          <el-input
-            type="textarea"
-            :rows="3"
-            placeholder="请输入内容"
-            v-model="commentContent"
-            style="margin-top: 15px">
-          </el-input>
-          <el-button type="primary" size="mini"
-                     @click="addComment()"
-                     style="margin-top: 15px;float: right">
+          <label>发表评论：</label>
+          <div>
+            <!--            文本输入框-->
+            <textarea class="text" rows="5" v-model="commentContent"></textarea>
+            <img @click="showToggle()" class="face" src="../assets/face.png">
+          </div>
+          <el-button @click="addComment()" size="mini"
+                     style="margin: 5px 20px 0 0;float: right"
+                     type="primary">
             发表评论
           </el-button>
+          <!--            表情选择框-->
+          <Emotion :height="200" @emotion="handleEmotion" v-if="isShow"></Emotion>
         </div>
       </div>
+
     </div>
   </div>
+
 </template>
 <script>
   import {addComment, addGuest, getBlog, deleteComment} from "../api";
+  import Emotion from '@/components/Emotion/index'
+
   export default {
     inject: ['reload'],
+    components: {
+      Emotion
+    },
     data() {
       return {
         blogContent: [],    //日志的详情内容
@@ -126,13 +194,13 @@
         replayContent: "",      //回复的内容
         fromuserid: "",          //回复评论者的id
         commentId: "",           //回复那篇的评论commentid
+        // commentUser:""          //回复的第二个人的名字
         commentPersonid: "",       //回复的人的id
-        seen:true,
-        current:0,
-        //评论删除图标显示
-        showComment:false,
-        //回复的删除图标显示
-        showReplay:false,
+        seen: true,
+        current: 0,
+        content: '',
+        comment: '',
+        isShow: false,
       }
     },
     mounted() {
@@ -240,7 +308,7 @@
             console.log(this.replayComment);
           }).catch(error => {
           console.log(error);
-          // this.$router.push(`/wrong`)
+          this.$router.push(`/wrong`)
         });
       },
       //添加评论
@@ -275,29 +343,12 @@
             console.log(err);
           })
       },
-      //回复的弹框
+      //回复事件
       replay(nickname, fromuserid, commentId) {
-        // this.commentUser=nickname;      //回复的第二个人的名字
+        this.isShow=!this.isShow;
         this.fromuserid = fromuserid;
         this.commentId = commentId;
-        this.$prompt('请输入对  @' + nickname + fromuserid + '  回复', '回复', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-        }).then(({value}) => {
-          this.replayContent = value;
-          console.log(this.replayContent);
-          this.$message({
-            type: 'success',
-            message: '回复内容是: ' + value,
-          });
-          this.reComment();
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消输入'
-          });
-        });
-        console.log(nickname, fromuserid, commentId);
+        this.reComment();
       },
       //回复的操作
       reComment() {
@@ -329,8 +380,30 @@
           .catch(err => {
             console.log(err);
           })
-      }
-    }
+      },
+      // 评论的回复将匹配结果替换表情图片
+      handleEmotionReplay(i) {
+        this.replayContent += i
+      },
+      // 将匹配结果替换表情图片
+      handleEmotion(i) {
+        this.commentContent += i
+      },
+      // 将匹配结果替换表情图片
+      emotion(res) {
+        let word = res.replace(/\#|\;/gi, '')
+        const list = ['微笑', '撇嘴', '色', '发呆', '得意', '流泪', '害羞', '闭嘴', '睡', '大哭', '尴尬', '发怒', '调皮', '呲牙', '惊讶', '难过', '酷', '冷汗', '抓狂', '吐', '偷笑', '可爱', '白眼', '傲慢', '饥饿', '困', '惊恐', '流汗', '憨笑', '大兵', '奋斗', '咒骂', '疑问', '嘘', '晕', '折磨', '衰', '骷髅', '敲打', '再见', '擦汗', '抠鼻', '鼓掌', '糗大了', '坏笑', '左哼哼', '右哼哼', '哈欠', '鄙视', '委屈', '快哭了', '阴险', '亲亲', '吓', '可怜', '菜刀', '西瓜', '啤酒', '篮球', '乒乓', '咖啡', '饭', '猪头', '玫瑰', '凋谢', '示爱', '爱心', '心碎', '蛋糕', '闪电', '炸弹', '刀', '足球', '瓢虫', '便便', '月亮', '太阳', '礼物', '拥抱', '强', '弱', '握手', '胜利', '抱拳', '勾引', '拳头', '差劲', '爱你', 'NO', 'OK', '爱情', '飞吻', '跳跳', '发抖', '怄火', '转圈', '磕头', '回头', '跳绳', '挥手', '激动', '街舞', '献吻', '左太极', '右太极']
+        let index = list.indexOf(word)
+        return `<img src="https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/${index}.gif" align="middle">`
+      },
+      // 表情框点击显示
+      showToggle() {
+        this.isShow = !this.isShow;
+      },
+      showReply() {
+
+      },
+    },
   }
 </script>
 <style>
@@ -341,10 +414,42 @@
   .father:hover .child {
     display: inline;
   }
-  .content{
+
+  .fixed {
+    position: absolute;
+    /*bottom: 0px;*/
+    /*padding: 0px;*/
+    /*margin: 0 0 0 10px;*/
+  }
+
+  .text {
+    display: block;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    width: 600px;
+    resize: none;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    border-radius: 8px;
+  }
+
+  .text-place {
+    height: 80px;
+    box-sizing: border-box;
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: #ddd5d5;
+  }
+
+  .text-place p {
+    display: flex;
+    align-items: center;
     margin: 0;
-    width: 570px;
-    word-wrap:break-word;
-    word-break:break-all;
+  }
+
+  .face {
+    width: 17px;
+    height: 17px;
+    margin-left: 20px
   }
 </style>

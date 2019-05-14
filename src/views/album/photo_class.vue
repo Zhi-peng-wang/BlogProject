@@ -8,7 +8,7 @@
               <router-link :to="{path:`/${$route.params.id}`+'/album/photo_list',query:{classid:t.classid}}">
                 <div class="fj_img">
                   <div>
-                    <img :src="t.url">
+                    <img :src="t.url" width="200px" height="200px">
                   </div>
                 </div>
                 <div class="fj_title">

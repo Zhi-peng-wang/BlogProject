@@ -56,6 +56,7 @@
             // console.log("打印vuex里面的userid:"+this.$store.state.loginUser);
             //localStorage
             localStorage.setItem("loginUser",res.object.userid);
+            localStorage.setItem("token",res.object.token);
             console.log("打印sessionStorage里面的userid:"+localStorage.getItem("loginUser"));
             this.$store.state.loginUser=localStorage.getItem("loginUser");
             console.log("打印vuex里面的userid:"+this.$store.state.loginUser);

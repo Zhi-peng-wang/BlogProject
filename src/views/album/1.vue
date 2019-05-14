@@ -28,116 +28,123 @@
               </p>
             </div>
 
-            <!--评论的展示-->
             <div class="panel-body">
+              <!--评论的展示-->
               <div class="row" v-for="(c,index) in photoComment" :key="index">
                 <div>
                   <div class="col-md-3" style="padding: 0">
-                    <div style="width: 80px;height: 80px;margin: 0 auto">
+                    <div style="width: 80px;margin: 0 auto;padding-bottom:3px;">
                       <img :src="c.userimg"
                            alt="图片" width="60px" height="60px" style="margin: 10px">
                     </div>
                   </div>
                   <div class="col-md-9" style="padding: 0">
-                    <div style="height: 60px" class="father">
-                      <div style="line-height: 20px;margin-top: 10px;padding-top:10px;font-size: 12px">
+                    <div style="padding-bottom:3px;" class="father">
+                      <div style="font-size: 12px">
                         <p class="content">
-                          {{c.fromuser}}：<span v-html="c.content.replace(/\#[\u4E00-\u9FA5]{1,3}\;/gi, emotion)">{{c.content}}</span>
-
+                          {{c.nickname}}：</p>
+                        <p v-html="c.content.replace(/\#[\u4E00-\u9FA5]{1,3}\;/gi, emotion)">
+                          {{c.content}}
+                        </p>
+                        <div style="margin: 0;font-size: 12px">
                           <el-popover
                             placement="top-start"
                             width="400"
-                            trigger="click">
-                        <p>回复：{{c.nickname}}</p>
-                        <!--回复输入框-->
-                        <div>
-                          <div>
-                            <!--文本输入框-->
-                            <textarea class="text" rows="3" style="width: 370px" v-model="replayContent"></textarea>
-                            <img @click="showToggle()" class="face" src="../../assets/face.png">
+                            trigger="hover">
+                            <p>回复：{{c.nickname}}</p>
+                            <!--回复输入框-->
+                            <div>
+                              <div>
+                                <!--文本输入框-->
+                                <textarea class="text" rows="3" style="width: 370px" v-model="replayContent"></textarea>
+                                <img @click="showToggle()" class="face" src="../../assets/face.png">
+                              </div>
+                              <el-button @click="replay(c.nickname,c.fromuser,c.commentid)" size="mini"
+                                         style="margin: 5px 20px 0 0;float: right"
+                                         type="primary">
+                                回复{{c.nickname}}
+                              </el-button>
+                              <!-- 表情选择框-->
+                              <Emotion :height="200" @emotion="handleEmotionReplay" v-if="isShow"></Emotion>
+                            </div>
+
+                            <div class="child"
+                                 plain size="mini"
+                                 style="margin-left: 15px"
+                                 slot="reference"
+                                 type="primary">
+                              <img src="../../assets/hui.png" style="width: 15px;height: 15px">
+                            </div>
+                          </el-popover>
+
+                          <div @click="deleteCom(c.commentid)" class="child" plain
+                               size="mini"
+                               style="margin-left:5px">
+                            <img src="../../assets/shanchu.png" style="width: 15px;height: 15px">
                           </div>
-                          <el-button @click="replay(c.nickname,c.fromuser,c.commentid)" size="mini"
-                                     style="margin: 5px 20px 0 0;float: right"
-                                     type="primary">
-                            回复{{c.nickname}}
-                          </el-button>
-                          <!-- 表情选择框-->
-                          <Emotion :height="200" @emotion="handleEmotionReplay" v-if="isShow"></Emotion>
                         </div>
-                        <div class="child"
-                             plain size="mini"
-                             style="margin-left: 15px"
-                             slot="reference"
-                             type="primary">
-                          <img src="../../assets/hui.png" style="width: 15px;height: 15px">
-                        </div>
-                        <div @click="deleteCom(c.commentid)" class="child" plain
-                             size="mini"
-                             slot="reference"
-                             style="margin-left:5px">
-                          <img src="../../assets/shanchu.png" style="width: 15px;height: 15px">
-                        </div>
-                        </el-popover>
-                        </p>
+
                       </div>
 
 
                     </div>
-
-                    <!--回复的展示-->
+                    <!--回复相关内容-->
                     <div class="row" v-for="(r,index) in replayPhotoComment">
                       <div v-if="r.parentid===c.commentid">
                         <div class="col-md-2" style="padding: 0">
-                          <div style="width: 80px;height: 80px;margin: 0 auto">
-                            <img :src="c.userimg"
-                                 alt="图片" width="60px" height="60px" style="margin: 10px">
+                          <div style="padding-bottom: 30px;">
+                            <img :src="r.userimg"
+                                 alt="图片" height="60px" style="margin: 10px" width="60px">
                           </div>
                         </div>
                         <div class="father">
-                          <div class="col-md-10" style="padding: 0">
-                            <div style="height: 60px;line-height: 20px;margin:15px 0px 0px 20px;font-size: 12px">
-                              <p class="content" style="margin-left: 10px">
+                          <div class="col-md-10" style="padding-bottom: 10px;">
+                            <div style="height: 80px">
+                              <p style="line-height: 20px;margin: 10px 20px;font-size: 12px">
                                 {{r.nickname}} 回复：{{r.touser}}：
                                 <span v-html="r.content.replace(/\#[\u4E00-\u9FA5]{1,3}\;/gi, emotion)">
-                                    {{r.content}}
-                                  </span>
+                                  {{r.content}}
+                                </span>
+                              </p>
+                              <div style="line-height: 20px;margin: 0px 20px;font-size: 12px">
                                 <el-popover
                                   placement="top-start"
                                   width="400"
-                                  trigger="click">
-                              <p>回复：{{r.nickname}}</p>
-                              <!--回复输入框-->
-                              <div>
-                                <div>
-                                  <!--文本输入框-->
-                                  <textarea class="text" rows="3" style="width: 370px"
-                                            v-model="replayContent"></textarea>
-                                  <img @click="showToggle()" class="face" src="../../assets/face.png">
-                                </div>
-                                <el-button @click="replay(r.nickname,r.fromuser,c.commentid)" size="mini"
-                                           style="margin: 5px 20px 0 0;float: right"
-                                           type="primary">
-                                  回复{{r.nickname}}
-                                </el-button>
-                                <!-- 表情选择框-->
-                                <Emotion :height="200" @emotion="handleEmotionReplay" v-if="isShow"></Emotion>
-                              </div>
+                                  trigger="hover">
+                                  <p>回复：{{r.nickname}}</p>
+                                  <!--回复输入框-->
+                                  <div>
+                                    <div>
+                                      <!--文本输入框-->
+                                      <textarea class="text" rows="3" style="width: 370px" v-model="replayContent"></textarea>
+                                      <img @click="showToggle()" class="face" src="../../assets/face.png">
+                                    </div>
+                                    <el-button @click="replay(r.nickname,r.fromuser,c.commentid)" size="mini"
+                                               style="margin: 5px 20px 0 0;float: right"
+                                               type="primary">
+                                      回复{{r.nickname}}
+                                    </el-button>
+                                    <!-- 表情选择框-->
+                                    <Emotion :height="200" @emotion="handleEmotionReplay" v-if="isShow"></Emotion>
+                                  </div>
 
-                              <div class="child"
-                                   plain size="mini"
-                                   style="margin-left: 15px"
-                                   slot="reference"
-                                   type="primary">
-                                <img src="../../assets/hui.png" style="width: 15px;height: 15px">
+                                  <div class="child"
+                                       plain size="mini"
+                                       style="margin-left: 15px"
+                                       slot="reference"
+                                       type="primary">
+                                    <img src="../../assets/hui.png" style="width: 15px;height: 15px">
+                                  </div>
+                                </el-popover>
+
+
+
+                                <div @click="deleteCom(r.commentid)" class="child" plain
+                                     size="mini"
+                                     style="margin-left: 5px">
+                                  <img src="../../assets/shanchu.png" style="width: 15px;height: 15px">
+                                </div>
                               </div>
-                              <div @click="deleteCom(r.commentid)" class="child" plain
-                                   size="mini"
-                                   slot="reference"
-                                   style="margin-left: 5px">
-                                <img src="../../assets/shanchu.png" style="width: 15px;height: 15px">
-                              </div>
-                              </el-popover>
-                              </p>
                             </div>
                           </div>
                         </div>
@@ -160,29 +167,39 @@
                 </el-col>
               </div>
             </div>
-
             <!--评论输入框-->
             <div class="el-row">
-              <label>发表评论：</label>
+              <label style="margin-top: 15px">发表评论：</label>
               <div>
                 <!--            文本输入框-->
-                <textarea class="text" rows="5" v-model="commentContent" style="width: 350px"></textarea>
-                <img @click="showToggle()" class="face" src="../../assets/face.png">
+                <el-input
+                  type="textarea"
+                  :rows="3"
+                  placeholder="请输入内容"
+                  v-model="commentContent"
+                  style="margin-top: 15px">
+                </el-input>
+
+                <img src="../../assets/face.png" @click="showToggle()" class="fa">
               </div>
               <el-button @click="addPhotoComment()" size="mini"
-                         style="margin: 5px 20px 0 0;float: right"
+                         style="margin: 0px 20px 0 0;float: right"
                          type="primary">
                 发表评论
               </el-button>
               <!--            表情选择框-->
-              <Emotion :height="200" @emotion="handleEmotion" v-if="!isShow"></Emotion>
+              <emotion :height="280"
+                       @emotion="handleEmotion"
+                       v-show="isShow"
+                       style="margin: 30px 0 20px 0"></emotion>
             </div>
+
           </div>
         </div>
       </div>
     </div>
   </div>
-  </div>
+
 </template>
 
 <script>
@@ -221,7 +238,7 @@
     methods: {
       //回复的弹框 new
       replay(nickname, fromuserid, commentId) {
-        this.isShow = !this.isShow;
+        this.isShow=!this.isShow;
         this.fromuserid = fromuserid;
         this.commentId = commentId;
         this.reComment();
@@ -311,7 +328,7 @@
         addComment(data)
           .then(res => {
             if (res.status === 200) {
-              this.commentContent = "";
+              this.commentContent="";
               console.log(res);
               console.log("评论成功打印");
               this.$notify({
@@ -443,13 +460,11 @@
     align-items: center;
     margin: 0;
   }
-
   .fa {
     width: 17px;
     height: 17px;
     margin: 20px 0 0 20px
   }
-
   .face {
     width: 17px;
     height: 17px;

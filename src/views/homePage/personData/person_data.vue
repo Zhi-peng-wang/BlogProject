@@ -140,7 +140,7 @@
           this.ruleForm.age=result.age;
           this.ruleForm.Tel=result.phone;
           this.ruleForm.email=result.email;
-          this.ruleForm.brith=result.birthday;
+          this.ruleForm.birth=result.birthday;
           this.ruleForm.address=result.address;
         })
         .catch(error=>{
@@ -189,7 +189,7 @@
           age:this.ruleForm.age,
           phone:this.ruleForm.Tel,
           email:this.ruleForm.email,
-          birthday:this.ruleForm.brith,
+          birthday:this.ruleForm.birth,
           address:this.ruleForm.address,
         };
         addEdit(data)
