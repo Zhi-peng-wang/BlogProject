@@ -12,7 +12,7 @@
           </li>
         </ul>
       </div>
-      <div class="block" style="margin-left: 230px;" v-if="fenye_show">
+      <div class="block" style="text-align: center">
         <el-pagination
           @current-change="handleCurrentChange"
           :page-size="page_size"
@@ -39,7 +39,6 @@
         total:0,
         page_size:0,
         page_number:0,
-        fenye_show:true,
         loading: false,
         uniqueOpened:true
       }
@@ -52,10 +51,6 @@
       '$route':'getClassBlogList'
     },
     methods: {
-      unShow(){
-        console.log("发生了点击事件");
-        this.fenye_show=false
-      },
       handleCurrentChange(val) {
         console.log(`当前页: ${val-1}`);
         this.page_number=`${val-1}`;

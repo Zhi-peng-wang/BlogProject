@@ -3,8 +3,6 @@
 函数的返回值: promise对象
  */
 import ajax from './ajax'
-// const BASE_URL = 'http://localhost:4000'
-const BASE_URL = '/api';
 
 //1.用户登录接口
 //          自定义接口名称和后台保持一致     接口名称
@@ -89,7 +87,10 @@ export const deleteAllPhoto =(data)=>ajax('/api/deleteAllPhoto',data,"POST");
 export const  addBbs = (data)=>ajax('/api/addBbs',data,"POST");
 
 //28.得到留言及回复留言的相关内容
-export const getBbs = (data)=>ajax('/api/getBbs',data,"POST");
+export const getBbs = (data)=>ajax('/api/getBbs',data);
+
+//29.删除留言接口
+export const deleteBbs = (data)=>ajax('/api/deleteBbs',data,"PSOT");
 
 
 

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import ElementUI from 'element-ui'
 import login from '../views/login'
 import register from "../views/register"
 import home_page from "../views/homePage/home_page.vue"
@@ -32,7 +33,7 @@ import albumList from '../views/homePage/album/albumList'
 
 Vue.use(VueRouter);
 
-export default new VueRouter({
+const router = new VueRouter({
   mode: 'history',
   routes:[
     {
@@ -49,19 +50,31 @@ export default new VueRouter({
     },
     {
       path:'/:id/home',
-      component:home
+      component:home,
+      meta: {
+        requiresAuth: true      // 要求验证的页面,在此情况下其子页面也会被验证.
+      },
     },
     {
       path:'/:id/visitCenter',
-      component:visitCenter
+      component:visitCenter,
+      meta: {
+        requiresAuth: true      // 要求验证的页面,在此情况下其子页面也会被验证.
+      },
     },
     {
       path:'/:id/myself',
-      component:myself
+      component:myself,
+      meta: {
+        requiresAuth: true      // 要求验证的页面,在此情况下其子页面也会被验证.
+      },
     },
     {
       path:'/:id/logOperation',
-      component:logOperation
+      component:logOperation,
+      meta: {
+        requiresAuth: true      // 要求验证的页面,在此情况下其子页面也会被验证.
+      },
     },
     {
       path:'/:id/editPassword',
@@ -70,6 +83,9 @@ export default new VueRouter({
     {
       path:'/:id/home_page',
       component:home_page,
+      meta: {
+        requiresAuth: true      // 要求验证的页面,在此情况下其子页面也会被验证.
+      },
       children:
         [
           {
@@ -125,6 +141,9 @@ export default new VueRouter({
     {
       path:'/:id/blog',
       component:blog,
+      meta: {
+        requiresAuth: true      // 要求验证的页面,在此情况下其子页面也会被验证.
+      },
       children:
         [
           {
@@ -148,6 +167,9 @@ export default new VueRouter({
     {
       path:'/:id/album',
       component:album,
+      meta: {
+        requiresAuth: true      // 要求验证的页面,在此情况下其子页面也会被验证.
+      },
       children:
         [
           {
@@ -166,7 +188,10 @@ export default new VueRouter({
     },
     {
       path:'/:id/leaveMessage',
-      component:leaveMessage
+      component:leaveMessage,
+      meta: {
+        requiresAuth: true      // 要求验证的页面,在此情况下其子页面也会被验证.
+      },
     },
     {
       path:'/404',
@@ -178,4 +203,20 @@ export default new VueRouter({
       redirect:"/404"
     }
   ]
-})
+});
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {     // 哪些需要验证
+    if (!sessionStorage.getItem("token")) {                      // token存在条件
+      next({
+        path: '/',                                               // 验证失败要跳转的页面
+      });
+      alert("请先进行登录!!!")
+    } else {
+      next()
+    }
+  } else {
+    next()                                                       // 确保一定要调用 next()
+  }
+});
+
+export default router

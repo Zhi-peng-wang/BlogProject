@@ -1,9 +1,9 @@
 <template>
   <div>
     <div class="container">
-      <!--导航-->
+      <!--导航条-->
       <navBar></navBar>
-      <!--<h1>这是留言页面</h1>-->
+      <!--欢迎语句-->
       <div class="row">
         <el-card shadow="always">
           <p style="text-align: center;margin: 0;font-size: 26px;font-family: 幼圆;font-weight: 900">
@@ -11,9 +11,7 @@
           </p>
         </el-card>
       </div>
-
-
-      <!--留言输入框-->
+      <!--留言的输入框-->
       <div class="el-row">
         <label style="margin-top: 15px">发表您的留言：</label>
         <el-input
@@ -24,26 +22,27 @@
           style="margin-top: 15px">
         </el-input>
         <img @click="showToggle()" class="face" src="../../assets/face.png">
-
         <el-button type="primary" size="mini"
-                   @click="addBbs()"
+                   @click="addBbsMsg()"
                    style="margin-top: 15px;float: right">
           发表留言
         </el-button>
         <emotion :height="300" @emotion="handleEmotion" v-if="!isShow"></emotion>
       </div>
-      <!--留言输入框-->
-
-      <!--留言展示区域-->
+      <!--与上方产生间隔-->
       <div style="height: 30px"></div>
+      <!--留言及留言的回复的显示区域-->
       <div class="row" style="margin: 30px 0px" v-for="(m,index) in msg" :key="index">
+        <!--留言的卡片-->
         <el-card shadow="hover"
                  style="margin-bottom: 30px">
           <div class="row" style="height: 80px">
             <div class="col-md-2">
-              <img :src="m.userimg" alt="留言头像" width="80px" height="80px">
+              <img :src="m.userimg" alt="留言头像" style="margin-left: 50px" width="80px" height="80px">
             </div>
             <div class="col-md-9">
+
+              <!--留言数据-->
               <div class="row">
                 <h4>{{m.nickname}}</h4>
               </div>
@@ -51,83 +50,135 @@
                 <p v-html="m.bbscontent.replace(/\#[\u4E00-\u9FA5]{1,3}\;/gi, emotion)">{{m.bbscontent}}</p>
               </div>
               <div class="row">
-                <p style="float: left;color: #C0C0C0">{{m.bbsdate.slice(0,10)}}</p>
-                <p style="float: left;margin-left: 20px;color: #3366CC" @click="showReplay()">回复</p>
-                <p style="float: left;margin-left: 15px;color: #3366CC">删除</p>
-              </div>
-            </div>
-          </div>
+                <p style="float: left;color: #C0C0C0">
+                  {{m.bbsdate.slice(0,10)}}-{{m.bbsdate.slice(11,16)}}
+                </p>
+                <el-popover
+                  placement="top-start"
+                  width="400"
+                  trigger="click">
+                  <p>回复：{{m.nickname}}</p>
+                  <!--回复输入框-->
+                  <div>
+                    <div>
+                      <!--文本输入框-->
+                      <textarea class="text" rows="3" style="width: 370px" v-model="msgTextarea"></textarea>
+                      <img @click="showToggle()" class="face" src="../../assets/face.png">
+                    </div>
+                    <el-button @click="replay(m.bbsid,m.userid)" size="mini"
+                               style="margin: 5px 20px 0 0;float: right"
+                               type="primary">
+                      回复{{m.nickname}}
+                    </el-button>
+                    <!-- 表情选择框-->
+                    <Emotion :height="200" @emotion="handleEmotionReplay" v-if="isShow"></Emotion>
+                  </div>
+                  <img src="../../assets/hui.png"
+                       slot="reference"
+                       style="margin-left: 20px;width: 15px;height: 15px">
+                </el-popover>
 
-          <!--              留言的评论-->
-          <div v-if="!Show">
-            <!--              回复的输入框-->
-            <textarea class="text" rows="5" v-model="replayContent"></textarea>
-            <!--              留言的回复-->
-            <img @click="showFace()" class="face" src="../../assets/face.png">
-            <button
-              size="mini"
-              type="primary"
-              @click="replay(m.nickname,m.fromuser,m.bbsid)"
-              style="margin:4px 40px 10px 0;float: left">
-              发表
-            </button>
-            <emotion :height="300" @emotion="handleEmotion" v-if="!faceShow"></emotion>
-          </div>
-          <!--              留言的评论-->
-          <!--回复的展示-->
-          <div class="row" v-for="(r,index) in replayComment">
-            <div v-if="r.parentid===m.bbsid">
-              <div class="col-md-2" style="padding: 0">
-                <div style="width: 80px;margin: 0 auto;padding-bottom:3px;">
-                  <img :src="r.userimg"
-                       alt="图片" width="60px" height="60px" style="margin: 10px">
-                </div>
+                <img src="../../assets/shanchu.png"
+                     @click="deleteMsg(m.bbsid)"
+                     v-if="bigPower||m.fromuserid===loginuser"
+                     style="margin-left: 5px;width: 15px;height: 15px">
               </div>
-              <div style="padding: 0">
-                <div class="col-md-10" style="padding-bottom:3px;">
-                  <div style="line-height: 20px;margin:15px 0px 0px 20px;font-size: 12px">
-                    <p class="content">
-                      {{r.nickname}} 回复：{{m.fromuser}}：
-                      <span v-html="r.content.replace(/\#[\u4E00-\u9FA5]{1,3}\;/gi, emotion)">
-                              {{r.content}}
-                            </span>
-                    </p>
+
+              <!--对留言回复的数据-->
+              <div class="row" v-for="(r,index) in replayMsg" :key="index">
+                <div v-if="r.parentid===m.bbsid">
+                  <div class="row">
+                    <div class="col-md-2" style="width:116px;height: 90px">
+                      <div style="margin: 0 auto">
+                        <img :src="r.userimg" alt="留言头像" width="80px" height="80px">
+                      </div>
+                    </div>
+                    <div class="col-md-9">
+                      <div class="row">
+                        <h4>{{r.nickname}} 回复：{{m.nickname}}</h4>
+                      </div>
+                      <div class="row">
+                        <p v-html="r.bbscontent.replace(/\#[\u4E00-\u9FA5]{1,3}\;/gi, emotion)">{{r.bbscontent}}</p>
+                      </div>
+                      <div class="row">
+                        <p style="float: left;color: #C0C0C0">
+                          {{r.bbsdate.slice(0,10)}}-{{r.bbsdate.slice(11,16)}}
+                        </p>
+                        <el-popover
+                          placement="top-start"
+                          width="400"
+                          trigger="click">
+                          <p>回复：{{r.nickname}}</p>
+                          <!--回复输入框-->
+                          <div>
+                            <div>
+                              <!--文本输入框-->
+                              <textarea class="text" rows="3" style="width: 370px" v-model="msgTextarea2"></textarea>
+                              <img @click="showToggle()" class="face" src="../../assets/face.png">
+                            </div>
+                            <el-button @click="replay2(m.bbsid,r.userid)" size="mini"
+                                       style="margin: 5px 20px 0 0;float: right"
+                                       type="primary">
+                              回复{{r.nickname}}
+                            </el-button>
+                            <!-- 表情选择框-->
+                            <Emotion :height="200" @emotion="handleEmotionReplay2" v-if="isShow"></Emotion>
+                          </div>
+                          <img src="../../assets/hui.png"
+                               slot="reference"
+                               style="margin-left: 20px;width: 15px;height: 15px">
+                        </el-popover>
+                        <img src="../../assets/shanchu.png"
+                             @click="deleteMsg2(r.bbsid)"
+                             v-if="bigPower||r.fromuserid===loginuser"
+                             style="margin-left: 5px;width: 15px;height: 15px">
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <!--回复的展示-->
         </el-card>
       </div>
-      <!--留言展示区域-->
+      <!--分页展示-->
+      <div class="block" style="text-align: center">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :page-size="page_size"
+          layout="prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
+      </div>
 
     </div>
   </div>
 </template>
-
 <script>
-  import navBar from "../nav/navBar.vue"
-  import {addBbs, getBbs} from "../../api";
+  import navBar from "../nav/navBar"
+  import {addBbs, deleteBbs, getBbs} from "../../api";
   import Emotion from '@/components/Emotion/index'
 
   export default {
+    inject: ['reload'],
     components: {
       navBar, Emotion
     },
     data() {
       return {
-        leaveMsg: "",
-        msg: [],       //留言的数组
-        isShow: true,
-        Show: true,
-        faceShow: true,
-        replayContent: "",      //回复的内容
-        commentIds: [],
-        commentId: "",           //回复那篇的评论commentid
-        replayComment: [],//该篇日志的作者
-        content: '',
-        comment: '',
+        leaveMsg: "",      //留言框里面的内容
+        isShow: true,   //点击表情的按钮是否展示
+        msg: [],         //留言的数组
+        replayMsg: [],     //回复留言的相关数据
+        bbsIds: [],         //每条评论的bbsid数组
+        msgTextarea: "",     //评论下的回复
+        msgTextarea2: "",
+        loginuser: "",           //localstorange里面的数据
+        leaveMsgOwner: "",        //文章得到所有者的权限问题
+        bigPower: false,         //文章所有者的权限问题
+        page_size:0,           //一页多少条
+        page_number:0,          //当前页码数
+        total:0,
       }
     },
     created() {
@@ -135,154 +186,188 @@
       this.$store.commit('activeNav', "4");
     },
     mounted() {
-      this.getBbsMethods()
+      this.loginuser = localStorage.getItem("loginUser");
+      //  调用得到留言相关内容的方法
+      this.getBbsMethods();
     },
     methods: {
-      //得到留言及回复留言的相关内容
-      getBbsMethods() {
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val-1}`);
+        this.page_number=`${val-1}`;
+        console.log(this.page_number);
+        //重新调用相关方法得到相应页上的内容
+        this.getBbsMethods()
+      },
+      //删除的方法
+      deleteMsg(id) {
         let data = {
-          touserid: this.$route.params.id
+          bbsid: id
         };
-        getBbs(data)
+        deleteBbs(data)
           .then(res => {
-            console.log("留言的相关内容");
+            console.log("删除操作执行成功");
             console.log(res);
-            //获取留言
-            this.msg = res.object;
-            // this.msg ="";    //此处将回复的数组清空
-            this.replayComment = [];    //此处将回复的数组清空
-            console.log(this.msg);
-
-            const commentIds = res.obj.map(item => ({
-              bbsid: item.bbsid
-            }));
-            this.commentIds = commentIds;
-            console.log(this.commentIds);
-            //回复评论的数组
-            res.obj.find(item => {
-              for (let i = 0; i < res.obj.length; i++) {
-                if (item.parentid === this.commentIds[i].bbsid) {
-                  if (!~this.replayComment.indexOf(item)) {
-                    this.replayComment.push(item)
-                  }
-                }
-              }
-            });
-            console.log(this.replayComment);
-          }).catch(err => {
-          console.log(err);
-        })
+          })
+          .catch(err => {
+            console.log("删除操作执行失败");
+            console.log(err);
+          })
       },
-      //确认的弹框
-      confirmAddMsg() {
-        console.log("留言的按钮被点击");
-        this.$confirm('确认发表该留言吗？, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-          center: true
-        }).then((action) => {
-          if (action === 'confirm') {     //确认的回调
-            //添加留言的方法
-            this.addBbs();
-          }
-        }).catch((err) => {
-          if (err === 'cancel') {     //取消的回调
-            this.$message({
-              type: 'info',
-              message: '已取消',
-              showClose: true
-            });
-          }
-        });
-
-      },
-      //添加留言的接口
-      addBbs() {
-        console.log("接口的方法");
+      //删除的方法
+      deleteMsg2(id) {
         let data = {
-          userid: localStorage.getItem("loginUser"),
+          bbsid: id
+        };
+        deleteBbs(data)
+          .then(res => {
+            console.log("删除操作执行成功");
+            console.log(res);
+          })
+          .catch(err => {
+            console.log("删除操作执行失败");
+            console.log(err);
+          })
+      },
+      //回复的方法
+      replay(bbsid, userid) {
+        let data = {
+          fromuserid: localStorage.getItem("loginUser"),
+          userid: this.$route.params.id,
+          bbscontent: this.msgTextarea,
+          touserid: userid,
+          parentid: bbsid,
+          typeid: 1,
+          status: 0,
+        };
+        console.log(data);
+        addBbs(data)
+          .then(res => {
+            console.log(res);
+            this.reload()
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      },
+      replay2(bbsid, userid) {
+        let data = {
+          fromuserid: localStorage.getItem("loginUser"),
+          userid: this.$route.params.id,
+          bbscontent: this.msgTextarea2,
+          touserid: userid,
+          parentid: bbsid,
+          typeid: 1,
+          status: 0,
+        };
+        console.log(data);
+        addBbs(data)
+          .then(res => {
+            console.log(res);
+            this.reload()
+          })
+          .catch(err => {
+            console.log(err);
+          })
+      },
+      // 留言的回复将匹配结果替换表情图片
+      handleEmotionReplay(i) {
+        this.msgTextarea += i
+      },
+      // 留言的回复将匹配结果替换表情图片
+      handleEmotionReplay2(i) {
+        this.msgTextarea2 += i
+      },
+      //添加留言的方法
+      addBbsMsg() {
+        let data = {
+          fromuserid: localStorage.getItem("loginUser"),
+          userid: this.$route.params.id,
           bbscontent: this.leaveMsg,
-          touserid: this.$route.params.id,//给谁的评论
+          touserid: this.$route.params.id,
           parentid: 0,
           typeid: 0,
           status: 0
         };
-        console.log(data);
         addBbs(data)
           .then(res => {
+            console.log("成功添加留言");
             console.log(res);
-            if (res.status === 200) {
-              // this.getBlogComment();
-              this.leaveMsg = "";
-              this.$message({
-                type: 'success',
-                message: '留言成功!',
-                showClose: true
-              });
-            } else {
-              this.$message({
-                type: 'error',
-                message: '服务器正忙，请稍后再试',
-                showClose: true
-              });
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          });
-        this.isShow = !this.isShow
-      },
-
-      //回复的操作
-      reComment() {
-        console.log("回复的内容");
-        let data = {
-          userid: localStorage.getItem("loginUser"),
-          bbscontent: this.replayContent,
-          touserid: this.$route.params.id,//给谁的评论
-          parentid: this.commentId,
-          typeid: 1,
-          status: 0
-        };
-        console.log(data);
-        addBbs(data)
-          .then(res => {
-            console.log("点击回复的内容");
-            console.log(res);
-            // 重点
-            this.getBbsMethods();
-            this.replayContent = "";
             this.$notify({
-              title: '回复成功',
-              message: '您的回复很快就能被看到啦！',
+              title: '留言成功',
+              message: '感谢您的留言！',
               type: 'success'
             });
-            // if (res.status === 200) {
-            //
-            // } else {
-            //   this.$notify({
-            //     title: '回复失败',
-            //     message: '出错了！！！',
-            //     type: 'error'
-            //   });
-            // }
+            this.reload();
+          })
+          .catch(err => {
+            console.log("添加留言失败");
+            console.log(err);
+          })
+      },
+      //得到留言相关内容
+      getBbsMethods() {
+        let data = {
+          userid: this.$route.params.id,
+          pagenum: this.page_number
+        };
+        getBbs(data)
+          .then(res => {
+            console.log("得到留言及留言的回复的内容");
+            console.log(res);
+            const result = res.object.content;
+            this.total=res.object.totalElements;
+            this.page_size=res.object.size;
+            this.msg=[];
+
+            //留言版的版主的所有者id(最大权限问题)
+            this.leaveMsgOwner = this.$route.params.id;
+            console.log("留言板版主所有者的id");
+            console.log(this.leaveMsgOwner);
+            //判断是否有删除的权限（最大的权限问题）
+            if (this.leaveMsgOwner === localStorage.getItem("loginUser")) {
+              this.bigPower = true
+            }
+
+            console.log(result);
+            result.find(item => {
+              for (let i = 0; i < res.object.content.length; i++) {
+                if (item.parentid === "0") {
+                  if (!~this.msg.indexOf(item)) {
+                    this.msg.push(item);
+                    console.log("此处打印只包含留言的相关内容");
+                  }
+                }
+              }
+            });
+            console.log(this.msg);
+            //拿到留言的bbsid数组值
+            const ids = result.map(item => ({
+              bbsid: item.bbsid
+            }));
+            this.bbsIds = ids;
+            //  提取留言的回复内容
+            result.find(item => {
+              for (let i = 0; i < res.object.content.length; i++) {
+                if (item.parentid === this.bbsIds[i].bbsid) {
+                  if (!~this.replayMsg.indexOf(item)) {
+                    this.replayMsg.push(item)
+                  }
+                }
+              }
+            });
+            console.log(this.replayMsg);
           })
           .catch(err => {
             console.log(err);
           })
-        // console.log(nickname, fromuserid, commentId);
       },
-      //回复的弹框 new
-      replay(nickname, fromuserid, commentId) {
-        this.isShow = !this.isShow;
-        this.fromuserid = fromuserid;
-        this.commentId = commentId;
-        this.reComment();
+      // 表情框点击显示
+      showToggle() {
+        this.isShow = !this.isShow
       },
       // 将匹配结果替换表情图片
       handleEmotion(i) {
-        this.replayContent += i
+        this.leaveMsg += i
       },
       // 将匹配结果替换表情图片
       emotion(res) {
@@ -291,36 +376,14 @@
         let index = list.indexOf(word)
         return `<img src="https://res.wx.qq.com/mpres/htmledition/images/icon/emotion/${index}.gif" align="middle">`
       },
-      // 表情框点击显示
-      showToggle() {
-        this.isShow = !this.isShow
-      },
-      showReplay() {
-        this.Show = !this.Show
-      },
-      showFace() {
-        this.faceShow = !this.faceShow
-      },
     }
   }
 </script>
-
 <style scoped>
   .face {
     float: left;
     width: 17px;
     height: 17px;
     margin: 10px 20px 0 20px
-  }
-
-  .text {
-    display: block;
-    /*margin: 0 auto;*/
-    margin-bottom: 10px;
-    width: 800px;
-    resize: none;
-    box-sizing: border-box;
-    padding: 5px 10px;
-    border-radius: 8px;
   }
 </style>

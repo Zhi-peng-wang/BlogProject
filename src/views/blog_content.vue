@@ -62,6 +62,7 @@
 
                       <div @click="deleteCom(c.commentid)" class="child" plain
                            size="mini"
+                           v-if="bigPower||c.fromuser===loginuser"
                            style="margin-left:5px">
                         <img src="../assets/shanchu.png" style="width: 15px;height: 15px">
                       </div>
@@ -118,11 +119,9 @@
                                 <img src="../assets/hui.png" style="width: 15px;height: 15px">
                               </div>
                             </el-popover>
-
-
-
                             <div @click="deleteCom(r.commentid)" class="child" plain
                                  size="mini"
+                                 v-if="bigPower||r.fromuser===loginuser"
                                  style="margin-left: 5px">
                               <img src="../assets/shanchu.png" style="width: 15px;height: 15px">
                             </div>
@@ -201,9 +200,16 @@
         content: '',
         comment: '',
         isShow: false,
+        loginuser:"",           //localstorange里面的数据
+        artivleOwner:"",        //文章得到所有者的权限问题
+        bigPower:false,         //文章所有者的权限问题
       }
     },
+    created(){
+      this.getBlogComment()
+    },
     mounted() {
+      this.loginuser=localStorage.getItem("loginUser");
       //添加访客
       let dataGuest = {
         userid: this.$route.params.id,
@@ -222,7 +228,7 @@
 
       this.blogUser = this.$route.params.id * 1;
       this.loading = true;
-      this.getBlogComment()
+
     },
     methods: {
       //删除评论以及评论下的回复
@@ -271,13 +277,23 @@
         };
         getBlog(data)
           .then(res => {
-            console.log("blog_list组件请求日志的详情内容成功");
+            console.log("请求日志的详情内容成功");
             console.log(res);
             this.loading = false;
             this.blogComment = [];      //此处将评论数组清空
             this.replayComment = [];    //此处将回复的数组清空
             //这是文章的内容
             this.blogContent = res.object;
+
+            //日志的所有者id(最大权限问题)
+            this.artivleOwner=res.object.userid;
+            console.log("日志所有者的id");
+            console.log(this.artivleOwner);
+            //判断是否有删除的权限（最大的权限问题）
+            if(this.artivleOwner===localStorage.getItem("loginUser")){
+              this.bigPower=true
+            }
+
             //获取本篇日志下的评论
             res.obj.find(item => {
               for (let i = 0; i < res.obj.length; i++) {
@@ -290,6 +306,8 @@
             });
             console.log("打印评论");
             console.log(this.blogComment);
+
+
             const commentIds = res.obj.map(item => ({
               commentid: item.commentid
             }));
@@ -400,9 +418,7 @@
       showToggle() {
         this.isShow = !this.isShow;
       },
-      showReply() {
 
-      },
     },
   }
 </script>

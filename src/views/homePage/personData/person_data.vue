@@ -27,8 +27,8 @@
             </el-form-item>
             <el-form-item label="性别" prop="sex">
               <el-select v-model="ruleForm.sex" placeholder="男">
-                <el-option label="男" value="shanghai"></el-option>
-                <el-option label="女" value="beijing"></el-option>
+                <el-option label="男" value="男"></el-option>
+                <el-option label="女" value="女"></el-option>
               </el-select>
             </el-form-item>
             <!--年龄-->

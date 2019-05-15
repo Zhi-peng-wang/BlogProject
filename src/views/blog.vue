@@ -45,11 +45,6 @@
         </div>
       </div>
     </div>
-
-    <div class="footer">
-      <br>
-      <img src="holder.js/100px30" alt>
-    </div>
   </div>
 </template>
 

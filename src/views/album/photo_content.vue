@@ -74,6 +74,7 @@
                         <div @click="deleteCom(c.commentid)" class="child" plain
                              size="mini"
                              slot="reference"
+                             v-if="bigPower||c.fromuser===loginuser"
                              style="margin-left:5px">
                           <img src="../../assets/shanchu.png" style="width: 15px;height: 15px">
                         </div>
@@ -133,6 +134,7 @@
                               <div @click="deleteCom(r.commentid)" class="child" plain
                                    size="mini"
                                    slot="reference"
+                                   v-if="bigPower||r.fromuser===loginuser"
                                    style="margin-left: 5px">
                                 <img src="../../assets/shanchu.png" style="width: 15px;height: 15px">
                               </div>
@@ -213,6 +215,9 @@
         content: '',
         comment: '',
         isShow: false,
+        loginuser:"",           //localstorange里面的数据
+        photoOwner:"",        //得到相册所有者的权限问题
+        bigPower:false,         //相册所有者的权限问题
       }
     },
     mounted() {
@@ -341,6 +346,15 @@
             this.loading = false;
             this.photoComment = [];      //此处将评论数组清空
             this.replayPhotoComment = [];    //此处将回复的数组清空
+
+            //相册的所有者id(最大权限问题)
+            this.photoOwner=res.object.userid;
+            console.log("相册所有者的id");
+            console.log(this.photoOwner);
+            //判断是否有删除的权限（最大的权限问题）
+            if(this.photoOwner===localStorage.getItem("loginUser")){
+              this.bigPower=true
+            }
 
             //获取该相片下的评论
             res.obj.find(item => {

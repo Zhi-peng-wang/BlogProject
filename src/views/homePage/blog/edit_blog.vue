@@ -106,6 +106,7 @@
 
             this.blog_title=res.object.title;
             this.content=res.object.content;
+
             let idx=res.object.classid;
             this.idxA=res.object.parentid;
             //如果option中存在value属性，优先获取value值的id，如果不存在，则获取option的文本内容
